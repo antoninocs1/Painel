@@ -1,0 +1,33 @@
+# Compilados / gerados pelo Delphi
+*.exe
+*._ex
+*.dcu
+*.rsm
+*.identcache
+*.dproj.local
+*.ddp
+*.res1
+__history/
+__recovery/
+Win32/
+Win64/
+
+# Dados pessoais e configuração local (gerados em tempo de execução)
+Painel.csv
+Painel.DAT
+Painel.CNF
+Painel.ini
+PAINEL.TXT
+
+# Backups, utilitários de terceiros e arquivos do sistema
+_Backup_Antes_Claude/
+Painel1/
+Imagens/
+Thumbs.db
+*.arj
+UMain.txt
+.vscode/
+
+# Scripts locais
+*.bat
+*.BAT

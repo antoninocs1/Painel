@@ -1,0 +1,41 @@
+{ Esta função tem o propósito de fazer com que um aplicativo inicie automaticamente no logon do Windows, incluindo para tanto, as informações necessárias para sua execução no registro do sistema.
+
+Além de fornecer a opção de cadastrar um programa na inicialização, esta função também possibilita o inverso, que é a remoção do mesmo. Desse modo o programador poderá tornar sua aplicação customizável, permitindo ao usuário decidir se deseja que o programa seja iniciado com o sistema ou não.
+
+Outra funcionalidade é a de escolher se a função deve fazer que o programa inicie automaticamente no logon do usuário atual ou de todos usuários.
+Esse recurso só tem real utilidade em sistemas multi-usuário como o Windows XP, no entanto, não há problema algum utilizá-la em Windows 9x.
+
+Nota: Talvez o usuário precise de recursos administrativos em sua conta para cadastrar o programa na inicialização de todos usuários. }
+
+
+USES Forms, Registry;
+
+procedure AutoInicializa(const TodosUsuarios: boolean = False; const Apaga: boolean = False);
+var
+Registro : TRegistry;
+begin
+Registro := TRegistry.create;
+try
+Registro.RootKey:=byte(TodosUsuarios)+$80000001;
+if Registro.OpenKey('\Software\Microsoft\Windows\CurrentVersion\Run',True) then
+if not Apaga then
+Registro.WriteString(Application.Title,Application.ExeName)
+else
+Registro.DeleteValue(Application.Title);
+Registro.CloseKey;
+finally
+Registro.Free;
+end;
+end;
+
+
+
+{ Utilização: }
+
+AutoInicializa(False); // Inicia o programa no logon do usuário atual
+
+AutoInicializa(True); // Inicia o programa no logon de todos usuários
+
+AutoInicializa(False,True); // Apaga o programa do logon do usuário atual
+
+AutoInicializa(True,True); // Apaga o programa do logon de todos usuários 

@@ -165,6 +165,16 @@ var
   Txt1: Text;
   StEdtPrc: Boolean;
 
+type
+  { Data de nascimento de um contato (ver LeAniversarios) }
+  TAniversario = record
+    Dia, Mes, Ano: Word; { Ano = 0 se não informado }
+    Nome: string;
+  end;
+
+function ArquivoContatos: string;
+function LeAniversarios(out Lista: TArray<TAniversario>): Boolean;
+
 implementation
 
 uses UWarn, UMain, USelDate;
@@ -1117,5 +1127,64 @@ begin
   FAnim.Running[BmpAnimator1]:= not FAnim.Running[BmpAnimator1];
 end;
 
-end.
+{----------------------------------------------------------------------------}
+{-------------------Aniversários (usados pelo calendário)--------------------}
+{ Arquivo dos contatos: na pasta do Painel ou, se não existir lá, na pasta
+  atual (a mesma usada por OpenEdsFile). }
+function ArquivoContatos: string;
+begin
+  Result:= GetRunDir+Prg+'.DAT';
+  if not FileExists(Result) then Result:= ExpandFileName(Prg+'.DAT');
+end;
 
+{ Lê as datas de nascimento (campo Nasc, 'dd/mm/aaaa') de todos os contatos.
+  Abre o arquivo à parte, só para leitura, sem mexer no EdsFile que o
+  cadastro mantém aberto. }
+function LeAniversarios(out Lista: TArray<TAniversario>): Boolean;
+var F: file of Eds;
+  R: Eds;
+  ModoAnterior: Byte;
+  S: string;
+  D, M, A, N: Integer;
+begin
+  Result:= False;
+  Lista:= nil;
+  if not FileExists(ArquivoContatos) then Exit;
+  ModoAnterior:= FileMode;
+  FileMode:= fmOpenRead or fmShareDenyNone;
+  try
+    try
+      AssignFile(F, ArquivoContatos);
+      Reset(F);
+      try
+        N:= 0;
+        while not Eof(F) do
+        begin
+          Read(F, R);
+          S:= string(R.Nasc);
+          D:= StrToIntDef(Trim(Copy(S, 1, 2)), 0);
+          M:= StrToIntDef(Trim(Copy(S, 4, 2)), 0);
+          A:= StrToIntDef(Trim(Copy(S, 7, 4)), 0);
+          if (Trim(string(R.Nome))='') or (M<1) or (M>12) or (D<1) or
+             (D>MonthDays[True][M]) then Continue;
+          if (A<1900) or (A>2100) then A:= 0;
+          SetLength(Lista, N+1);
+          Lista[N].Dia:= D;
+          Lista[N].Mes:= M;
+          Lista[N].Ano:= A;
+          Lista[N].Nome:= Trim(string(R.Nome));
+          Inc(N);
+        end;
+      finally
+        CloseFile(F);
+      end;
+      Result:= True;
+    except
+      Lista:= nil; { arquivo em uso ou corrompido: tenta de novo depois }
+    end;
+  finally
+    FileMode:= ModoAnterior;
+  end;
+end;
+
+end.

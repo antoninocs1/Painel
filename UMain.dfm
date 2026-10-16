@@ -5,13 +5,13 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsNone
   Caption = #171'Painel'#187
-  ClientHeight = 342
+  ClientHeight = 340
   ClientWidth = 247
-  Color = clBtnFace
+  Color = 16249836
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Segoe UI'
   Font.Style = []
   KeyPreview = True
   PopupMenu = PopupMenu2
@@ -27,47 +27,50 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 247
-    Height = 342
+    Height = 340
     Align = alClient
     AutoSize = True
-    BevelInner = bvLowered
+    BevelOuter = bvNone
     BorderWidth = 3
-    Color = clSkyBlue
+    Color = 16249836
     TabOrder = 0
     OnMouseDown = FormMouseDown
     object Panel2: TPanel
-      Left = 5
-      Top = 5
-      Width = 237
+      Left = 3
+      Top = 3
+      Width = 241
       Height = 60
       Align = alTop
       BorderStyle = bsSingle
+      Color = 14150903
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -11
-      Font.Name = 'MS Sans Serif'
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       TabOrder = 0
       object LabelEffect1: TLabel
         Left = 1
         Top = 1
-        Width = 231
+        Width = 235
         Height = 54
         Align = alClient
         Alignment = taCenter
         AutoSize = False
-        Color = 15329990
+        Color = clSkyBlue
         Font.Charset = ANSI_CHARSET
-        Font.Color = clTeal
+        Font.Color = 4866104
         Font.Height = -32
-        Font.Name = 'Comic Sans MS'
+        Font.Name = 'Segoe UI Semibold'
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
+        PopupMenu = PopupMenu2
         Transparent = False
         Layout = tlCenter
         ExplicitLeft = 0
+        ExplicitWidth = 231
       end
       object SpeedButton6: TSpeedButton
         Left = 198
@@ -114,12 +117,13 @@ object MainForm: TMainForm
       end
     end
     object Panel3: TPanel
-      Left = 5
-      Top = 65
-      Width = 237
+      Left = 3
+      Top = 63
+      Width = 241
       Height = 30
       Align = alTop
       BorderStyle = bsSingle
+      Color = 14150903
       Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -9
@@ -130,19 +134,20 @@ object MainForm: TMainForm
       object LabelEffect2: TLabel
         Left = 1
         Top = 1
-        Width = 231
+        Width = 235
         Height = 24
         Align = alClient
         Alignment = taCenter
         AutoSize = False
-        Color = 13888749
+        Color = clBeige
         Font.Charset = ANSI_CHARSET
-        Font.Color = clOlive
+        Font.Color = 4866104
         Font.Height = -16
-        Font.Name = 'Comic Sans MS'
+        Font.Name = 'Segoe UI Semibold'
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
+        PopupMenu = PopupMenu2
         Transparent = False
         Layout = tlCenter
         ExplicitLeft = 13
@@ -150,9 +155,9 @@ object MainForm: TMainForm
       end
     end
     object Panel12: TPanel
-      Left = 5
-      Top = 95
-      Width = 237
+      Left = 3
+      Top = 93
+      Width = 241
       Height = 7
       Align = alTop
       TabOrder = 2
@@ -172,10 +177,10 @@ object MainForm: TMainForm
       end
     end
     object Panel5: TPanel
-      Left = 5
-      Top = 102
-      Width = 237
-      Height = 222
+      Left = 3
+      Top = 100
+      Width = 241
+      Height = 224
       Align = alClient
       AutoSize = True
       BevelInner = bvLowered
@@ -190,14 +195,14 @@ object MainForm: TMainForm
       object Panel8: TPanel
         Left = 2
         Top = 2
-        Width = 233
+        Width = 237
         Height = 27
         Align = alTop
         TabOrder = 0
         object PageScroller1: TPageScroller
           Left = 1
           Top = 1
-          Width = 231
+          Width = 235
           Height = 25
           Align = alClient
           AutoScroll = True
@@ -207,11 +212,11 @@ object MainForm: TMainForm
           object ToolBar1: TToolBar
             Left = 0
             Top = 0
-            Width = 231
+            Width = 235
             Height = 25
             Align = alClient
             AutoSize = True
-            ButtonWidth = 24
+            ButtonWidth = 29
             Images = ImageList1
             TabOrder = 0
             TabStop = True
@@ -225,7 +230,7 @@ object MainForm: TMainForm
               OnClick = ToolButton1Click
             end
             object ToolButton2: TToolButton
-              Left = 24
+              Left = 29
               Top = 0
               Hint = 'Encerrar Programa'
               ImageIndex = 3
@@ -234,7 +239,7 @@ object MainForm: TMainForm
               OnClick = ToolButton2Click
             end
             object ToolButton3: TToolButton
-              Left = 48
+              Left = 58
               Top = 0
               Hint = 'Bloco de Notas'
               ImageIndex = 4
@@ -243,7 +248,7 @@ object MainForm: TMainForm
               OnClick = Notas1Click
             end
             object ToolButton4: TToolButton
-              Left = 72
+              Left = 87
               Top = 0
               Hint = 'Calculadora'
               ImageIndex = 5
@@ -252,7 +257,7 @@ object MainForm: TMainForm
               OnClick = Calculadora1Click
             end
             object ToolButton5: TToolButton
-              Left = 96
+              Left = 116
               Top = 0
               Hint = 'Executar'
               ImageIndex = 6
@@ -261,7 +266,7 @@ object MainForm: TMainForm
               OnClick = Executar1Click
             end
             object ToolButton6: TToolButton
-              Left = 120
+              Left = 145
               Top = 0
               Hint = 'Esconder'
               ImageIndex = 7
@@ -270,7 +275,7 @@ object MainForm: TMainForm
               OnClick = ToolButton6Click
             end
             object ToolButton7: TToolButton
-              Left = 144
+              Left = 174
               Top = 0
               Hint = 'Minimizar'
               ImageIndex = 8
@@ -279,7 +284,7 @@ object MainForm: TMainForm
               OnClick = ToolButton7Click
             end
             object ToolButton8: TToolButton
-              Left = 168
+              Left = 203
               Top = 0
               Hint = 'P'#225'gina Posterior'
               ImageIndex = 21
@@ -293,9 +298,9 @@ object MainForm: TMainForm
       object PageControl1: TPageControl
         Left = 2
         Top = 29
-        Width = 233
-        Height = 191
-        ActivePage = TabSheet4
+        Width = 237
+        Height = 193
+        ActivePage = TabSheet3
         Align = alClient
         TabHeight = 4
         TabOrder = 1
@@ -305,8 +310,8 @@ object MainForm: TMainForm
           object Image1: TImage
             Left = 0
             Top = 0
-            Width = 225
-            Height = 177
+            Width = 229
+            Height = 179
             Align = alClient
             Center = True
             ParentShowHint = False
@@ -450,8 +455,8 @@ object MainForm: TMainForm
           object MonthCalendar1: TMonthCalendar
             Left = 0
             Top = 17
-            Width = 225
-            Height = 160
+            Width = 229
+            Height = 162
             Align = alClient
             AutoSize = True
             CalColors.MonthBackColor = 16707800
@@ -469,12 +474,12 @@ object MainForm: TMainForm
           object Panel11: TPanel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 17
             Align = alTop
             TabOrder = 1
             object LabelX6: TLabel
-              Left = 135
+              Left = 139
               Top = 1
               Width = 89
               Height = 15
@@ -495,7 +500,7 @@ object MainForm: TMainForm
             object LabelX3: TLabel
               Left = 1
               Top = 1
-              Width = 134
+              Width = 138
               Height = 15
               Align = alClient
               AutoSize = False
@@ -503,12 +508,13 @@ object MainForm: TMainForm
               Color = clSkyBlue
               Font.Charset = ANSI_CHARSET
               Font.Color = clNavy
-              Font.Height = -9
+              Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
               ParentColor = False
               ParentFont = False
               Transparent = False
+              Layout = tlCenter
               ExplicitWidth = 98
             end
             object SpeedButton1: TSpeedButton
@@ -555,297 +561,38 @@ object MainForm: TMainForm
           ImageIndex = 3
           object Gauge1: TGauge
             Left = 0
-            Top = 148
-            Width = 225
-            Height = 29
+            Top = 149
+            Width = 229
+            Height = 13
             Hint = 'Ocupa'#231#227'o da CPU'
-            Align = alClient
+            Align = alTop
             BackColor = clWindow
             ForeColor = clNavy
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlack
-            Font.Height = -8
-            Font.Name = 'Small Fonts'
+            Font.Height = -9
+            Font.Name = 'Calibri'
             Font.Style = []
             ParentFont = False
             ParentShowHint = False
             Progress = 0
             ShowHint = True
-            ExplicitLeft = 2
-          end
-          object Panel25: TPanel
-            Left = 0
-            Top = 26
-            Width = 225
-            Height = 90
-            Align = alTop
-            BevelInner = bvLowered
-            TabOrder = 0
-            object Splitter2: TSplitter
-              Left = 85
-              Top = 2
-              Width = 2
-              Height = 86
-            end
-            object Panel26: TPanel
-              Left = 2
-              Top = 2
-              Width = 83
-              Height = 86
-              Align = alLeft
-              TabOrder = 0
-              object UseMemGauge: TGauge
-                Left = 1
-                Top = 11
-                Width = 81
-                Height = 11
-                Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
-                Align = alTop
-                BackColor = clWindow
-                ForeColor = 16637322
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentFont = False
-                ParentShowHint = False
-                Progress = 0
-                ShowHint = True
-              end
-              object RamGauge: TGauge
-                Left = 1
-                Top = 32
-                Width = 81
-                Height = 11
-                Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
-                Align = alTop
-                BackColor = clWindow
-                ForeColor = 16637322
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentFont = False
-                ParentShowHint = False
-                Progress = 0
-                ShowHint = True
-                ExplicitLeft = -1
-                ExplicitTop = 36
-              end
-              object SwapGauge: TGauge
-                Left = 1
-                Top = 53
-                Width = 81
-                Height = 11
-                Hint = 'Arquivo de pagina'#231#227'o (SWAP) em uso ou livre (%)'
-                Align = alTop
-                BackColor = clWindow
-                ForeColor = 16637322
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentFont = False
-                ParentShowHint = False
-                Progress = 0
-                ShowHint = True
-              end
-              object VirtualGauge: TGauge
-                Left = 1
-                Top = 74
-                Width = 81
-                Height = 11
-                Hint = 'Mem'#243'ria confirmada (RAM + SWAP) em uso ou livre (%)'
-                Align = alTop
-                BackColor = clWindow
-                ForeColor = 16637322
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentFont = False
-                ParentShowHint = False
-                Progress = 0
-                ShowHint = True
-              end
-              object Label14: TLabel
-                Left = 1
-                Top = 64
-                Width = 62
-                Height = 10
-                Align = alTop
-                Caption = 'RAM + SWAP =>'
-                Color = 13287844
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-              end
-              object Label10: TLabel
-                Left = 1
-                Top = 1
-                Width = 73
-                Height = 10
-                Align = alTop
-                Caption = 'Mem'#243'ria em Uso => '
-                Color = 13287844
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-              end
-              object Label11: TLabel
-                Left = 1
-                Top = 22
-                Width = 60
-                Height = 10
-                Align = alTop
-                Caption = 'F'#237'sica (RAM) =>'
-                Color = 13287844
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-              end
-              object Label13: TLabel
-                Left = 1
-                Top = 43
-                Width = 79
-                Height = 10
-                Align = alTop
-                Caption = 'Pagina'#231#227'o (SWAP) =>'
-                Color = 13287844
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-              end
-            end
-            object Panel27: TPanel
-              Left = 87
-              Top = 2
-              Width = 136
-              Height = 86
-              Align = alClient
-              TabOrder = 1
-              object Label2: TLabel
-                Left = 1
-                Top = 43
-                Width = 134
-                Height = 21
-                Hint = 'Arquivo de pagina'#231#227'o (SWAP): (total) livre / em uso'
-                Align = alTop
-                AutoSize = False
-                Color = 15519438
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-                ParentShowHint = False
-                ShowHint = True
-                Transparent = False
-                ExplicitLeft = 3
-                ExplicitTop = 47
-              end
-              object Label1: TLabel
-                Left = 1
-                Top = 22
-                Width = 134
-                Height = 21
-                Hint = 'Mem'#243'ria f'#237'sica (RAM): (total) livre / em uso'
-                Align = alTop
-                AutoSize = False
-                Color = 15519438
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-                ParentShowHint = False
-                ShowHint = True
-                Transparent = False
-                ExplicitLeft = 3
-                ExplicitTop = 26
-              end
-              object Label3: TLabel
-                Left = 1
-                Top = 1
-                Width = 134
-                Height = 21
-                Hint = 'Mem'#243'ria em Uso'
-                Align = alTop
-                AutoSize = False
-                Color = 15519438
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-                ParentShowHint = False
-                ShowHint = True
-                Transparent = False
-                ExplicitWidth = 98
-              end
-              object Label4: TLabel
-                Left = 1
-                Top = 64
-                Width = 134
-                Height = 21
-                Hint = 'Mem'#243'ria confirmada (RAM + SWAP): (total) livre / em uso'
-                Align = alTop
-                AutoSize = False
-                Color = 15519438
-                Font.Charset = ANSI_CHARSET
-                Font.Color = clBlack
-                Font.Height = -8
-                Font.Name = 'Small Fonts'
-                Font.Style = []
-                ParentColor = False
-                ParentFont = False
-                ParentShowHint = False
-                ShowHint = True
-                Transparent = False
-                ExplicitWidth = 98
-              end
-            end
+            ExplicitTop = 156
           end
           object Panel6: TPanel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 26
             Align = alTop
-            BevelInner = bvLowered
-            Color = 15787737
-            TabOrder = 1
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 0
             object Image2: TImage
-              Left = 2
-              Top = 2
+              Left = 0
+              Top = 0
               Width = 26
-              Height = 22
+              Height = 26
               Align = alLeft
               AutoSize = True
               Center = True
@@ -868,6 +615,7 @@ object MainForm: TMainForm
                 0000}
               ExplicitLeft = 3
               ExplicitTop = 1
+              ExplicitHeight = 22
             end
             object LabelX4: TLabel
               Left = 29
@@ -885,10 +633,11 @@ object MainForm: TMainForm
               ParentColor = False
               ParentFont = False
               Transparent = False
+              Layout = tlCenter
             end
             object SpeedButton10: TSpeedButton
-              Left = 128
-              Top = 3
+              Left = 127
+              Top = 4
               Width = 17
               Height = 11
               Hint = 'Alocada/Dispon'#237'vel'
@@ -906,69 +655,35 @@ object MainForm: TMainForm
               OnClick = SpeedButton10Click
             end
             object Label7: TLabel
-              Left = 149
-              Top = 4
-              Width = 40
-              Height = 10
+              Left = 150
+              Top = 0
+              Width = 79
+              Height = 26
+              Align = alRight
               AutoSize = False
-              Color = 15787737
+              Color = 15397609
               Font.Charset = ANSI_CHARSET
               Font.Color = clBlack
-              Font.Height = -8
-              Font.Name = 'Small Fonts'
+              Font.Height = -9
+              Font.Name = 'Calibri'
               Font.Style = []
               ParentColor = False
               ParentFont = False
+              ExplicitTop = 6
             end
           end
-          object Panel28: TPanel
+          object Panel25: TPanel
             Left = 0
-            Top = 116
-            Width = 225
-            Height = 32
+            Top = 121
+            Width = 229
+            Height = 28
             Align = alTop
-            BevelInner = bvLowered
-            Color = 15787737
-            TabOrder = 2
-            object LabelX7: TLabel
-              Left = 32
-              Top = 3
-              Width = 55
-              Height = 14
-              AutoSize = False
-              Caption = ' CPU'
-              Color = clSkyBlue
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clNavy
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentColor = False
-              ParentFont = False
-              Transparent = False
-            end
-            object SpeedButton2: TSpeedButton
-              Left = 67
-              Top = 3
-              Width = 17
-              Height = 11
-              Hint = 'Ativar/Desativar CPU Status'
-              Flat = True
-              Glyph.Data = {
-                BE000000424DBE00000000000000760000002800000009000000090000000100
-                0400000000004800000000000000000000001000000000000000000000000000
-                8000008000000080800080000000800080008080000080808000C0C0C0000000
-                FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00FF84448FF000
-                0000F4444444F00000008C44444480000000CCCC444440000000CCCCCC444000
-                0000CCECCCC4400000008CEECCC480000000FCCCCCC4F0000000FF8CCC8FF000
-                0000}
-              ParentShowHint = False
-              ShowHint = True
-              OnClick = SpeedButton2Click
-            end
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 1
             object Image3: TImage
-              Left = 2
-              Top = 2
+              Left = 0
+              Top = 0
               Width = 28
               Height = 28
               Align = alLeft
@@ -996,58 +711,793 @@ object MainForm: TMainForm
               ExplicitLeft = -1
               ExplicitTop = 3
             end
-            object Label5: TLabel
-              Left = 33
-              Top = 17
-              Width = 3
-              Height = 11
-              Color = 15787737
-              ParentColor = False
-              Transparent = False
-            end
-            object Label8: TLabel
-              Left = 93
-              Top = 6
-              Width = 93
-              Height = 10
-              AutoSize = False
-              Color = clSkyBlue
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clBlack
-              Font.Height = -8
-              Font.Name = 'Small Fonts'
-              Font.Style = []
-              ParentColor = False
-              ParentFont = False
-            end
             object Gauge2: TGauge
-              Left = 192
-              Top = 2
+              Left = 198
+              Top = 0
               Width = 31
               Height = 28
               Hint = 'CPU'
               Align = alRight
               BorderStyle = bsNone
-              Color = 15787737
               ForeColor = clNavy
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
               Kind = gkPie
-              ParentColor = False
+              ParentFont = False
               Progress = 0
               ShowText = False
+              ExplicitLeft = 192
               ExplicitTop = 3
+            end
+            object Panel29: TPanel
+              Left = 28
+              Top = 0
+              Width = 164
+              Height = 28
+              Align = alLeft
+              BevelOuter = bvNone
+              Color = 15397609
+              TabOrder = 0
+              object Label5: TLabel
+                Left = 0
+                Top = 15
+                Width = 164
+                Height = 13
+                Align = alBottom
+                Color = 15397609
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+                Transparent = False
+                ExplicitWidth = 2
+              end
+              object Panel36: TPanel
+                Left = 0
+                Top = 0
+                Width = 164
+                Height = 13
+                Align = alTop
+                BevelOuter = bvNone
+                Color = 15397609
+                TabOrder = 0
+                object LabelX7: TLabel
+                  Left = 0
+                  Top = 0
+                  Width = 65
+                  Height = 13
+                  Align = alLeft
+                  AutoSize = False
+                  Caption = ' CPU'
+                  Color = clSkyBlue
+                  Font.Charset = ANSI_CHARSET
+                  Font.Color = clNavy
+                  Font.Height = -11
+                  Font.Name = 'Tahoma'
+                  Font.Style = []
+                  ParentColor = False
+                  ParentFont = False
+                  Transparent = False
+                  Layout = tlCenter
+                  ExplicitTop = -5
+                  ExplicitHeight = 17
+                end
+                object SpeedButton2: TSpeedButton
+                  Left = 43
+                  Top = 0
+                  Width = 17
+                  Height = 11
+                  Hint = 'Ativar/Desativar CPU Status'
+                  Flat = True
+                  Glyph.Data = {
+                    BE000000424DBE00000000000000760000002800000009000000090000000100
+                    0400000000004800000000000000000000001000000000000000000000000000
+                    8000008000000080800080000000800080008080000080808000C0C0C0000000
+                    FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00FF84448FF000
+                    0000F4444444F00000008C44444480000000CCCC444440000000CCCCCC444000
+                    0000CCECCCC4400000008CEECCC480000000FCCCCCC4F0000000FF8CCC8FF000
+                    0000}
+                  ParentShowHint = False
+                  ShowHint = True
+                  OnClick = SpeedButton2Click
+                end
+                object Label8: TLabel
+                  Left = 71
+                  Top = 0
+                  Width = 93
+                  Height = 13
+                  Align = alRight
+                  AutoSize = False
+                  Color = 14150903
+                  Font.Charset = ANSI_CHARSET
+                  Font.Color = clBlack
+                  Font.Height = -9
+                  Font.Name = 'Calibri'
+                  Font.Style = []
+                  ParentColor = False
+                  ParentFont = False
+                  ExplicitTop = -1
+                end
+              end
+            end
+          end
+          object Panel30: TPanel
+            Left = 0
+            Top = 74
+            Width = 229
+            Height = 23
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 2
+            object SwapGauge: TGauge
+              Left = 0
+              Top = 11
+              Width = 229
+              Height = 12
+              Hint = 'Arquivo de pagina'#231#227'o (SWAP) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+              ExplicitTop = 17
+            end
+            object Panel31: TPanel
+              Left = 0
+              Top = 0
+              Width = 229
+              Height = 11
+              Align = alTop
+              BevelOuter = bvNone
+              Color = 16383480
+              ParentBackground = False
+              TabOrder = 0
+              object Label12: TLabel
+                Left = 0
+                Top = 0
+                Width = 77
+                Height = 11
+                Align = alLeft
+                Caption = 'Pagina'#231#227'o (SWAP) =>'
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+              end
+              object Label2: TLabel
+                Left = 79
+                Top = 0
+                Width = 150
+                Height = 11
+                Hint = 'Arquivo de pagina'#231#227'o (SWAP): Total - (Em uso / Livre)'
+                Align = alRight
+                AutoSize = False
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                Transparent = False
+                ExplicitLeft = 105
+              end
+            end
+          end
+          object Panel32: TPanel
+            Left = 0
+            Top = 26
+            Width = 229
+            Height = 24
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 3
+            object UseMemGauge: TGauge
+              Left = 0
+              Top = 13
+              Width = 229
+              Height = 11
+              Hint = 'Mem'#243'ria em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+              ExplicitLeft = 1
+              ExplicitTop = 29
+            end
+            object Panel33: TPanel
+              Left = 0
+              Top = 0
+              Width = 229
+              Height = 11
+              Align = alTop
+              BevelOuter = bvNone
+              Color = 16383480
+              ParentBackground = False
+              TabOrder = 0
+              object Label10: TLabel
+                Left = 0
+                Top = 0
+                Width = 75
+                Height = 11
+                Align = alLeft
+                Caption = 'Mem'#243'ria em Uso => '
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+              end
+              object Label3: TLabel
+                Left = 79
+                Top = 0
+                Width = 150
+                Height = 11
+                Hint = 'Mem'#243'ria em Uso'
+                Align = alRight
+                AutoSize = False
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                Transparent = False
+                ExplicitLeft = 81
+              end
+            end
+          end
+          object Panel34: TPanel
+            Left = 0
+            Top = 50
+            Width = 229
+            Height = 24
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 4
+            object RamGauge: TGauge
+              Left = 0
+              Top = 13
+              Width = 229
+              Height = 11
+              Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+              ExplicitLeft = -1
+              ExplicitTop = 36
+              ExplicitWidth = 81
+            end
+            object Panel35: TPanel
+              Left = 0
+              Top = 0
+              Width = 229
+              Height = 11
+              Align = alTop
+              BevelOuter = bvNone
+              Color = 16383480
+              ParentBackground = False
+              TabOrder = 0
+              object Label11: TLabel
+                Left = 0
+                Top = 0
+                Width = 56
+                Height = 11
+                Align = alLeft
+                Caption = 'F'#237'sica (RAM) =>'
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+              end
+              object Label1: TLabel
+                Left = 79
+                Top = 0
+                Width = 150
+                Height = 11
+                Hint = 'Mem'#243'ria f'#237'sica (RAM): Total - (Em uso / Livre)'
+                Align = alRight
+                AutoSize = False
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                Transparent = False
+                ExplicitLeft = 82
+                ExplicitTop = -4
+              end
+            end
+          end
+          object Panel28: TPanel
+            Left = 0
+            Top = 97
+            Width = 229
+            Height = 24
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 5
+            object VirtualGauge: TGauge
+              Left = 0
+              Top = 13
+              Width = 229
+              Height = 11
+              Hint = 'Mem'#243'ria confirmada (RAM + SWAP) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+              ExplicitTop = 11
+            end
+            object Panel27: TPanel
+              Left = 0
+              Top = 0
+              Width = 229
+              Height = 11
+              Align = alTop
+              BevelOuter = bvNone
+              Color = 16383480
+              ParentBackground = False
+              TabOrder = 0
+              object Label13: TLabel
+                Left = 0
+                Top = 0
+                Width = 58
+                Height = 11
+                Align = alLeft
+                Caption = 'RAM + SWAP =>'
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+              end
+              object Label4: TLabel
+                Left = 79
+                Top = 0
+                Width = 150
+                Height = 11
+                Hint = 'Mem'#243'ria confirmada (RAM + SWAP): Total - (Em uso / Livre)'
+                Align = alRight
+                AutoSize = False
+                Color = 16383480
+                Font.Charset = ANSI_CHARSET
+                Font.Color = clBlack
+                Font.Height = -9
+                Font.Name = 'Calibri'
+                Font.Style = []
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                Transparent = False
+                ExplicitLeft = 81
+              end
             end
           end
         end
-        object TabSheet5: TTabSheet
+        object TabSheet4: TTabSheet
+          ImageIndex = 10
+          object Panel21: TPanel
+            Left = 0
+            Top = 15
+            Width = 229
+            Height = 27
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 16383480
+            ParentBackground = False
+            TabOrder = 0
+            object Label15: TLabel
+              Left = 169
+              Top = 0
+              Width = 60
+              Height = 14
+              Align = alRight
+              Caption = 'xxxxxxxxxxxxxxx'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+            object Gauge4: TGauge
+              Left = 0
+              Top = 14
+              Width = 229
+              Height = 13
+              Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+              ExplicitTop = 20
+            end
+            object Label14: TLabel
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 14
+              Align = alLeft
+              Caption = 'Drive C:'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+          end
+          object Panel22: TPanel
+            Left = 0
+            Top = 42
+            Width = 229
+            Height = 27
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 16383480
+            ParentBackground = False
+            TabOrder = 1
+            object Label17: TLabel
+              Left = 169
+              Top = 0
+              Width = 60
+              Height = 14
+              Align = alRight
+              Caption = 'xxxxxxxxxxxxxxx'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+            object Gauge5: TGauge
+              Left = 0
+              Top = 14
+              Width = 229
+              Height = 13
+              Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+            end
+            object Label16: TLabel
+              Left = 0
+              Top = 0
+              Width = 29
+              Height = 14
+              Align = alLeft
+              Caption = 'Drive D:'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+          end
+          object Panel23: TPanel
+            Left = 0
+            Top = 69
+            Width = 229
+            Height = 27
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 16383480
+            ParentBackground = False
+            TabOrder = 2
+            object Label19: TLabel
+              Left = 169
+              Top = 0
+              Width = 60
+              Height = 14
+              Align = alRight
+              Caption = 'xxxxxxxxxxxxxxx'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+            object Gauge6: TGauge
+              Left = 0
+              Top = 14
+              Width = 229
+              Height = 13
+              Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+            end
+            object Label18: TLabel
+              Left = 0
+              Top = 0
+              Width = 27
+              Height = 14
+              Align = alLeft
+              Caption = 'Drive E:'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+          end
+          object Panel24: TPanel
+            Left = 0
+            Top = 96
+            Width = 229
+            Height = 27
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 16383480
+            ParentBackground = False
+            TabOrder = 3
+            object Label21: TLabel
+              Left = 169
+              Top = 0
+              Width = 60
+              Height = 14
+              Align = alRight
+              Caption = 'xxxxxxxxxxxxxxx'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+            object Gauge7: TGauge
+              Left = 0
+              Top = 14
+              Width = 229
+              Height = 13
+              Hint = 'Mem'#243'ria f'#237'sica (RAM) em uso ou livre (%)'
+              Align = alBottom
+              BackColor = clWindow
+              ForeColor = 14150903
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentFont = False
+              ParentShowHint = False
+              Progress = 0
+              ShowHint = True
+            end
+            object Label20: TLabel
+              Left = 0
+              Top = 0
+              Width = 27
+              Height = 14
+              Align = alLeft
+              Caption = 'Drive F:'
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -9
+              Font.Name = 'Calibri'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              ExplicitHeight = 11
+            end
+          end
+          object Panel26: TPanel
+            Left = 0
+            Top = 0
+            Width = 229
+            Height = 15
+            Align = alTop
+            BevelOuter = bvNone
+            Color = 15397609
+            TabOrder = 4
+            object Label9: TLabel
+              Left = 34
+              Top = 0
+              Width = 195
+              Height = 15
+              Align = alRight
+              AutoSize = False
+              Caption = 'Status dos Discos:'
+              Color = clSkyBlue
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentColor = False
+              ParentFont = False
+              Transparent = False
+            end
+            object Image7: TImage
+              Left = 0
+              Top = 0
+              Width = 32
+              Height = 15
+              Align = alLeft
+              AutoSize = True
+              Picture.Data = {
+                0954506E67496D61676589504E470D0A1A0A0000000D49484452000000200000
+                000E08060000004EDC1EB2000000017352474200AECE1CE90000000467414D41
+                0000B18F0BFC6105000000097048597300000EC300000EC301C76FA864000000
+                7C4944415478DAED95C10DC02008457132190D36C3C96C6DD550DB341E845EFA
+                0E841893FFC44403DCC9E043E845878B887972C920A2235F0BB885174681BC63
+                1ECECCBD7F144829B99CFE55C0E21A10715E20C6B85CA04DF69FC09400C6D316
+                9840AAF92AE604D4A64F042C191FA15E8A405D3447875F1A70FE841A1B9F817D
+                0F232EBBA00000000049454E44AE426082}
+              ExplicitHeight = 14
+            end
+            object SpeedButton14: TSpeedButton
+              Left = 126
+              Top = 1
+              Width = 17
+              Height = 11
+              Hint = 'Ocupado / Livre'
+              Flat = True
+              Glyph.Data = {
+                BE000000424DBE00000000000000760000002800000009000000090000000100
+                0400000000004800000000000000000000001000000000000000000000000000
+                8000008000000080800080000000800080008080000080808000C0C0C0000000
+                FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00FF84448FF000
+                0000F4444444F00000008C44444480000000CCCC444440000000CCCCCC444000
+                0000CCECCCC4400000008CEECCC480000000FCCCCCC4F0000000FF8CCC8FF000
+                0000}
+              ParentShowHint = False
+              ShowHint = True
+              OnClick = SpeedButton14Click
+            end
+            object SpeedButton15: TSpeedButton
+              Left = 144
+              Top = -3
+              Width = 15
+              Height = 18
+              Hint = 'Atualizar'
+              Flat = True
+              Glyph.Data = {
+                BE000000424DBE00000000000000760000002800000009000000090000000100
+                0400000000004800000000000000000000001000000000000000000000000000
+                8000008000000080800080000000800080008080000080808000C0C0C0000000
+                FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00FF81118FF000
+                0000F1111111F000000089111111800000009999111110000000999999111000
+                000099B999911000000089BB999180000000F9999991F0000000FF89998FF000
+                0000}
+              ParentShowHint = False
+              ShowHint = True
+              OnClick = SpeedButton15Click
+            end
+          end
+        end
+        object TabSheet6: TTabSheet
           ImageIndex = 6
           object LabelX5: TLabel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 14
             Align = alTop
             AutoSize = False
-            Caption = 'Informa'#231#245'es do Sistema'
+            Caption = 'Informa'#231#245'es do Sistema:'
             Color = clSkyBlue
             Font.Charset = ANSI_CHARSET
             Font.Color = clNavy
@@ -1060,7 +1510,7 @@ object MainForm: TMainForm
             ExplicitWidth = 189
           end
           object SpeedButton3: TSpeedButton
-            Left = 121
+            Left = 129
             Top = 2
             Width = 17
             Height = 11
@@ -1079,7 +1529,7 @@ object MainForm: TMainForm
             OnClick = SpeedButton3Click
           end
           object SpeedButton12: TSpeedButton
-            Left = 138
+            Left = 146
             Top = 2
             Width = 15
             Height = 11
@@ -1100,28 +1550,34 @@ object MainForm: TMainForm
           object Memo2: TMemo
             Left = 0
             Top = 14
-            Width = 225
-            Height = 163
+            Width = 229
+            Height = 165
             Align = alClient
-            Color = 13287844
+            Color = 16383480
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Consolas'
+            Font.Style = []
             Lines.Strings = (
               '')
+            ParentFont = False
             ReadOnly = True
             ScrollBars = ssVertical
             TabOrder = 0
             WordWrap = False
           end
         end
-        object TabSheet4: TTabSheet
+        object TabSheet5: TTabSheet
           ImageIndex = 9
           object LabelX11: TLabel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 14
             Align = alTop
             AutoSize = False
-            Caption = 'Limpeza de Arquivos Tempor'#225'rios'
+            Caption = 'Limpeza de Arquivos Tempor'#225'rios:'
             Color = clSkyBlue
             Font.Charset = ANSI_CHARSET
             Font.Color = clNavy
@@ -1132,9 +1588,10 @@ object MainForm: TMainForm
             ParentFont = False
             Transparent = False
             ExplicitTop = 8
+            ExplicitWidth = 225
           end
           object SpeedButton11: TSpeedButton
-            Left = 165
+            Left = 177
             Top = 2
             Width = 17
             Height = 11
@@ -1155,8 +1612,8 @@ object MainForm: TMainForm
           object Gauge3: TGauge
             Left = 0
             Top = 145
-            Width = 225
-            Height = 32
+            Width = 229
+            Height = 34
             Hint = 'Progresso da limpeza'
             Align = alClient
             BackColor = clWindow
@@ -1164,7 +1621,7 @@ object MainForm: TMainForm
             Font.Charset = ANSI_CHARSET
             Font.Color = clBlack
             Font.Height = -8
-            Font.Name = 'Small Fonts'
+            Font.Name = 'Segoe UI'
             Font.Style = []
             ParentFont = False
             ParentShowHint = False
@@ -1172,10 +1629,11 @@ object MainForm: TMainForm
             ShowHint = True
             ExplicitLeft = 2
             ExplicitTop = 54
+            ExplicitWidth = 225
             ExplicitHeight = 163
           end
           object SpeedButton13: TSpeedButton
-            Left = 183
+            Left = 195
             Top = 2
             Width = 15
             Height = 11
@@ -1196,40 +1654,46 @@ object MainForm: TMainForm
           object Panel9: TPanel
             Left = 0
             Top = 14
-            Width = 225
+            Width = 229
             Height = 131
             Align = alTop
-            BevelInner = bvLowered
-            Color = 15787737
+            BevelOuter = bvNone
+            Color = 15397609
             TabOrder = 0
             object Memo3: TMemo
-              Left = 2
-              Top = 25
-              Width = 221
-              Height = 104
+              Left = 0
+              Top = 23
+              Width = 229
+              Height = 108
               Align = alClient
-              Color = 13287844
+              Color = 16383480
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Consolas'
+              Font.Style = []
               Lines.Strings = (
                 '')
+              ParentFont = False
               ReadOnly = True
               ScrollBars = ssVertical
               TabOrder = 0
               WordWrap = False
             end
             object Panel13: TPanel
-              Left = 2
-              Top = 2
-              Width = 221
+              Left = 0
+              Top = 0
+              Width = 229
               Height = 23
               Align = alTop
-              BevelInner = bvLowered
-              Color = 15787737
+              BevelOuter = bvNone
+              Color = 15397609
               TabOrder = 1
               object Image8: TImage
-                Left = 2
-                Top = 2
+                Left = 0
+                Top = 0
                 Width = 16
-                Height = 19
+                Height = 23
                 Align = alLeft
                 AutoSize = True
                 Picture.Data = {
@@ -1247,8 +1711,8 @@ object MainForm: TMainForm
                 ExplicitHeight = 127
               end
               object ComboBox1: TComboBox
-                Left = 128
-                Top = 2
+                Left = 138
+                Top = 0
                 Width = 91
                 Height = 20
                 Align = alRight
@@ -1272,13 +1736,13 @@ object MainForm: TMainForm
             end
           end
         end
-        object TabSheet6: TTabSheet
+        object TabSheet7: TTabSheet
           ImageIndex = 7
           object Panel15: TPanel
             Left = 0
             Top = 20
-            Width = 193
-            Height = 157
+            Width = 197
+            Height = 159
             Align = alClient
             BevelOuter = bvLowered
             BorderWidth = 1
@@ -1286,8 +1750,8 @@ object MainForm: TMainForm
             object Image5: TImage
               Left = 2
               Top = 2
-              Width = 150
-              Height = 86
+              Width = 193
+              Height = 155
               Align = alClient
               AutoSize = True
               Picture.Data = {
@@ -1515,10 +1979,10 @@ object MainForm: TMainForm
             end
           end
           object Panel16: TPanel
-            Left = 193
+            Left = 197
             Top = 20
             Width = 32
-            Height = 157
+            Height = 159
             Align = alRight
             BevelOuter = bvLowered
             TabOrder = 1
@@ -1621,7 +2085,7 @@ object MainForm: TMainForm
           object Panel17: TPanel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 20
             Align = alTop
             TabOrder = 2
@@ -1642,11 +2106,12 @@ object MainForm: TMainForm
               ParentColor = False
               ParentFont = False
               Transparent = False
+              Layout = tlCenter
             end
             object PageScroller2: TPageScroller
               Left = 67
               Top = 1
-              Width = 157
+              Width = 161
               Height = 18
               Align = alClient
               AutoScroll = True
@@ -1655,7 +2120,7 @@ object MainForm: TMainForm
               object ToolBar2: TToolBar
                 Left = 0
                 Top = 0
-                Width = 145
+                Width = 161
                 Height = 18
                 Align = alClient
                 AutoSize = True
@@ -1665,7 +2130,6 @@ object MainForm: TMainForm
                 Images = ImageList2
                 ParentColor = False
                 TabOrder = 0
-                ExplicitWidth = 157
                 object ToolButton9: TToolButton
                   Left = 0
                   Top = 0
@@ -1715,13 +2179,13 @@ object MainForm: TMainForm
             end
           end
         end
-        object TabSheet7: TTabSheet
+        object TabSheet8: TTabSheet
           ImageIndex = 8
           object Clock1: TPaintBox
             Left = 0
             Top = 0
-            Width = 225
-            Height = 177
+            Width = 229
+            Height = 179
             Align = alClient
             Color = clSkyBlue
             Font.Charset = DEFAULT_CHARSET
@@ -1736,12 +2200,12 @@ object MainForm: TMainForm
             ExplicitHeight = 154
           end
         end
-        object TabSheet8: TTabSheet
+        object TabSheet9: TTabSheet
           ImageIndex = 9
           object LabelX2: TLabel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 14
             Align = alTop
             AutoSize = False
@@ -2517,7 +2981,7 @@ object MainForm: TMainForm
             TabOrder = 0
           end
         end
-        object TabSheet9: TTabSheet
+        object TabSheet10: TTabSheet
           ImageIndex = 10
           object Image4: TImage
             Left = 190
@@ -2588,14 +3052,14 @@ object MainForm: TMainForm
           object LabelX8: TLabel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 12
             Align = alTop
             AutoSize = False
             Color = clSkyBlue
             Font.Charset = ANSI_CHARSET
             Font.Color = clNavy
-            Font.Height = -9
+            Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentColor = False
@@ -2603,11 +3067,12 @@ object MainForm: TMainForm
             Transparent = False
             ExplicitLeft = 2
             ExplicitTop = 3
+            ExplicitWidth = 225
           end
           object Panel14: TPanel
             Left = 0
             Top = 12
-            Width = 225
+            Width = 229
             Height = 64
             Align = alTop
             BorderWidth = 2
@@ -2616,13 +3081,14 @@ object MainForm: TMainForm
             object Shape2: TShape
               Left = 3
               Top = 3
-              Width = 219
+              Width = 223
               Height = 58
               Align = alClient
               Brush.Style = bsClear
               Pen.Color = 14588445
               Shape = stRoundRect
               ExplicitTop = 40
+              ExplicitWidth = 219
             end
             object Label22: TLabel
               Left = 22
@@ -2648,8 +3114,8 @@ object MainForm: TMainForm
           end
           object Panel7: TPanel
             Left = 0
-            Top = 151
-            Width = 225
+            Top = 153
+            Width = 229
             Height = 26
             Align = alBottom
             BevelInner = bvLowered
@@ -2663,7 +3129,7 @@ object MainForm: TMainForm
             object PaintBox1: TPaintBox
               Left = 2
               Top = 2
-              Width = 221
+              Width = 225
               Height = 22
               Align = alClient
               Color = clNavy
@@ -2678,19 +3144,19 @@ object MainForm: TMainForm
             end
           end
         end
-        object TabSheet10: TTabSheet
+        object TabSheet11: TTabSheet
           ImageIndex = 9
           object Panel19: TPanel
             Left = 0
             Top = 37
-            Width = 225
+            Width = 229
             Height = 118
             Align = alTop
             TabOrder = 0
             object StringGrid1: TStringGrid
               Left = 1
               Top = 1
-              Width = 208
+              Width = 212
               Height = 116
               Align = alClient
               Color = 16774378
@@ -2717,7 +3183,7 @@ object MainForm: TMainForm
                 66)
             end
             object ScrollBar1: TScrollBar
-              Left = 209
+              Left = 213
               Top = 1
               Width = 15
               Height = 116
@@ -2731,14 +3197,14 @@ object MainForm: TMainForm
           object Panel18: TPanel
             Left = 0
             Top = 0
-            Width = 225
+            Width = 229
             Height = 37
             Align = alTop
             TabOrder = 1
             object LabelX9: TLabel
               Left = 1
               Top = 1
-              Width = 134
+              Width = 138
               Height = 14
               Align = alClient
               AutoSize = False
@@ -2746,16 +3212,17 @@ object MainForm: TMainForm
               Color = clSkyBlue
               Font.Charset = ANSI_CHARSET
               Font.Color = clNavy
-              Font.Height = -9
+              Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
               ParentColor = False
               ParentFont = False
               Transparent = False
+              Layout = tlCenter
               ExplicitWidth = 98
             end
             object LabelX10: TLabel
-              Left = 135
+              Left = 139
               Top = 1
               Width = 89
               Height = 14
@@ -2771,19 +3238,20 @@ object MainForm: TMainForm
               ParentColor = False
               ParentFont = False
               Transparent = False
-              ExplicitLeft = 99
+              ExplicitLeft = 135
+              ExplicitTop = -4
             end
             object Panel20: TPanel
               Left = 1
               Top = 15
-              Width = 223
+              Width = 227
               Height = 21
               Align = alBottom
               TabOrder = 0
               object PageScroller3: TPageScroller
                 Left = 1
                 Top = 1
-                Width = 221
+                Width = 225
                 Height = 19
                 Align = alClient
                 AutoScroll = True
@@ -2954,9 +3422,9 @@ object MainForm: TMainForm
       end
     end
     object Panel4: TPanel
-      Left = 5
+      Left = 3
       Top = 324
-      Width = 237
+      Width = 241
       Height = 13
       Align = alBottom
       BevelInner = bvLowered

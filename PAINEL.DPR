@@ -8,6 +8,7 @@ uses
   UAnim in 'UAnim.pas',
   UStartup in 'UStartup.pas',
   UFerramentas in 'UFerramentas.pas',
+  UDatas in 'UDatas.pas',
   UMain in 'UMain.pas' {MainForm},
   UWarn in 'UWarn.pas' {WrnForm},
   USelDate in 'USELDATE.PAS' {BrDateForm},

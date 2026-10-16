@@ -2317,7 +2317,6 @@ object ConfigForm: TConfigForm
       ButtonWidth = 30
       Images = MainForm.ImageList1
       TabOrder = 0
-      ExplicitTop = 6
       object ToolButton1: TToolButton
         Left = 0
         Top = 0

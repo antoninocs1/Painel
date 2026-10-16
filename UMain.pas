@@ -8,11 +8,11 @@ uses
   Menus, ImgList, Buttons, Grids, Calendar, ShellAPI, Gauges,
   FileCtrl, ExtDlgs, ToolWin, WinSock,
   Registry, Printers, Mask, {WinInet,}
-  jpeg, System.ImageList, UAnim;
+  jpeg, System.ImageList, UAnim, Vcl.Imaging.pngimage;
 
 const Vrs='1.83o';
       Prg= 'Painel';
-  Month: array [1..12] of string[3]=
+  Month: array [1..12] of string=
     ('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez');
   wm_IconMessage = wm_User;
   {---CPU-Usage---------------------------------------------}
@@ -20,7 +20,7 @@ const Vrs='1.83o';
   SystemPerformanceInformation = 2;
   SystemTimeInformation = 3;
 
-const HolyDay1: array[1..13] of string[40]=
+const HolyDay1: array[1..13] of string=
   (('Confraternização Universal'),
   ('Carnaval'),
   ('Sexta-feira Santa'),
@@ -43,7 +43,6 @@ type str3= string[3];
      function GetWinDir: string;
      function GetWinSysDir: string;
      function GetRunDir: string;
-     function GetCurrentDir: string;
      function DiaSemana(Dts: TDateTime): str3;
      procedure EnquadrarBitmap (Largura, Altura: LongInt; Fundo: TColor);
      function GetVlrTm(STmr: string): LongInt;
@@ -119,32 +118,20 @@ type
     LabelX3: TLabel;
     SpeedButton1: TSpeedButton;
     TabSheet3: TTabSheet;
-    TabSheet5: TTabSheet;
+    TabSheet6: TTabSheet;
     LabelX5: TLabel;
     SpeedButton3: TSpeedButton;
     Memo2: TMemo;
-    TabSheet6: TTabSheet;
     TabSheet7: TTabSheet;
-    Clock1: TPaintBox;
     TabSheet8: TTabSheet;
+    Clock1: TPaintBox;
+    TabSheet9: TTabSheet;
     LabelX2: TLabel;
     BmpAnimator3: TImage;
     SpeedButton4: TSpeedButton;
     SpeedButton5: TSpeedButton;
     Panel10: TPanel;
-    TabSheet9: TTabSheet;
-    Panel25: TPanel;
-    Splitter2: TSplitter;
-    Panel26: TPanel;
-    UseMemGauge: TGauge;
-    RamGauge: TGauge;
-    SwapGauge: TGauge;
-    VirtualGauge: TGauge;
-    Label14: TLabel;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label13: TLabel;
-    Panel27: TPanel;
+    TabSheet10: TTabSheet;
     Image4: TImage;
     Panel14: TPanel;
     Shape2: TShape;
@@ -173,7 +160,7 @@ type
     Memo5: TMemo;
     Memo1: TMemo;
     Image5: TImage;
-    TabSheet10: TTabSheet;
+    TabSheet11: TTabSheet;
     Panel17: TPanel;
     LabelX1: TLabel;
     PageScroller2: TPageScroller;
@@ -210,25 +197,17 @@ type
     ToolButton45: TToolButton;
     Panel6: TPanel;
     Image2: TImage;
-    Panel28: TPanel;
-    LabelX7: TLabel;
-    SpeedButton2: TSpeedButton;
+    Panel25: TPanel;
     Image3: TImage;
-    Label5: TLabel;
     Gauge1: TGauge;
-    Label2: TLabel;
-    Label1: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
     LabelX4: TLabel;
     SpeedButton10: TSpeedButton;
     Label7: TLabel;
-    Label8: TLabel;
     Gauge2: TGauge;
     ImageList4: TImageList;
     ImageList5: TImageList;
     Image6: TImage;
-    TabSheet4: TTabSheet;
+    TabSheet5: TTabSheet;
     LabelX11: TLabel;
     SpeedButton11: TSpeedButton;
     Panel9: TPanel;
@@ -238,23 +217,68 @@ type
     Panel13: TPanel;
     Image8: TImage;
     ComboBox1: TComboBox;
-    procedure ProcDelMemo(StringLine: string; Nbr: byte);
+    TabSheet4: TTabSheet;
+    Panel21: TPanel;
+    Label15: TLabel;
+    Gauge4: TGauge;
+    Label14: TLabel;
+    Panel22: TPanel;
+    Label17: TLabel;
+    Gauge5: TGauge;
+    Label16: TLabel;
+    Panel23: TPanel;
+    Label19: TLabel;
+    Gauge6: TGauge;
+    Label18: TLabel;
+    Panel24: TPanel;
+    Label21: TLabel;
+    Gauge7: TGauge;
+    Label20: TLabel;
+    Panel26: TPanel;
+    Image7: TImage;
+    SpeedButton14: TSpeedButton;
+    SpeedButton15: TSpeedButton;
+    Label9: TLabel;
+    Panel30: TPanel;
+    Panel31: TPanel;
+    Panel32: TPanel;
+    UseMemGauge: TGauge;
+    Panel33: TPanel;
+    Label10: TLabel;
+    Label3: TLabel;
+    Panel34: TPanel;
+    RamGauge: TGauge;
+    Panel35: TPanel;
+    Label11: TLabel;
+    Label1: TLabel;
+    SwapGauge: TGauge;
+    Label12: TLabel;
+    Label2: TLabel;
+    Panel28: TPanel;
+    Panel27: TPanel;
+    Label13: TLabel;
+    VirtualGauge: TGauge;
+    Label4: TLabel;
+    Panel29: TPanel;
+    Label5: TLabel;
+    Panel36: TPanel;
+    LabelX7: TLabel;
+    SpeedButton2: TSpeedButton;
+    Label8: TLabel;
     function ViewPRGStartWindows: boolean;
     procedure SavePRGStartWindows;
     procedure ErasePRGStartWindows;
-    procedure JumpTo(const aAdress: string);
     function EditTextFile(Arquivo: string): boolean;
     function EditExcelFile(Arquivo: string): boolean;
-    function DownRound(Value: Double): LongInt;
-    function UpRound(Value: Double): LongInt;
     procedure ShowPicture(PictureFileName1: string);
     procedure SempreVisivel(StOpt: boolean);
     procedure Posicionar(Opt: byte);
     procedure RefreshInfo;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure Alerta(Lbl: TLabel; MGg: TGauge);
     procedure Timer1Timer(Sender: TObject);
+    procedure SpeedButton14Click(Sender: TObject);
+    procedure SpeedButton15Click(Sender: TObject);
     procedure ShowHint(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure Timer2Timer(Sender: TObject);
@@ -361,6 +385,7 @@ type
     FTrayWnd: HWND;             {janela da barra de tarefas (Shell_TrayWnd) atual}
     FTrayRetry: Integer;        {segundos restantes para recolocar o ícone após reinício do Explorer}
     FCpuUso: Double;            {Última leitura de uso da CPU (%)}
+    FDiscoOcupado: Boolean;     {aba de discos: mostra espaço ocupado (True) ou livre (False)}
     FLimpando: Boolean;         {limpeza de temporários em andamento}
     FOpcoes: TOpcoesLimpeza;    {opções da limpeza (Painel.ini)}
     FAutoFeita: Boolean;        {limpeza automática "ao iniciar" já executada}
@@ -368,6 +393,18 @@ type
     FDiscoAlertado: string;     {unidades já avisadas de pouco espaço livre}
     FUltLiberado: Int64;        {resultado da última limpeza: bytes liberados}
     FUltApagados: Integer;      {resultado da última limpeza: arquivos apagados}
+    FCpuAltaSeg, FMemAltaSeg: Integer; {segundos seguidos com CPU/memória acima do limite 2}
+    FCpuAvisada, FMemAvisada: Boolean; {aviso de uso alto já mostrado neste episódio}
+    FTempAltaSeg: Integer;      {segundos seguidos com a CPU acima de TempAlta}
+    FTempAvisada: Boolean;      {aviso de temperatura alta já mostrado neste episódio}
+    FUrlAviso: string;          {endereço aberto ao clicar no balão (nova versão)}
+    FConsultandoVersao: Boolean; {consulta ao GitHub em andamento}
+    FAtalhoAtivo: Boolean;      {atalho global (mostrar/ocultar) registrado}
+    FAtalhoTexto: string;       {atalho em texto, ex.: 'Win+Alt+P'}
+    FAtalhoErro: string;        {motivo de o atalho não ter sido registrado}
+    FDiaAvisado: TDateTime;     {dia cujas datas (feriados, aniversários) já foram avisadas}
+    FClipboard: TStringList;    {histórico da área de transferência (mais recente primeiro)}
+    FMenuClip: array[0..1] of TMenuItem; {submenus do histórico (bandeja e janela)}
     { Mover Formulário sem Título }
     procedure WMNCHitTest(var M: TWMNCHitTest);
     message wm_NCHitTest;
@@ -392,6 +429,26 @@ type
     procedure LimpaNavegador(const Navegador: string);
     procedure ReiniciaComoAdmin;
     procedure AtualizaMemoria;
+    procedure AtualizaDiscos;
+    procedure VerificaUsoAlto(CpuPct, MemPct: Integer);
+    procedure VerificaTemperatura;
+    procedure VerificaAtualizacao(Manual: Boolean);
+    procedure AtualizacaoClick(Sender: TObject);
+    procedure RegistraAtalho;
+    procedure AlternaJanela;
+    procedure AvisaDatasDoDia;
+    procedure ClipboardMudou;
+    procedure AtualizaMenuClipboard;
+    procedure ClipItemClick(Sender: TObject);
+    procedure ClipLimparClick(Sender: TObject);
+    procedure PowerShellClick(Sender: TObject);
+    procedure DefineTransparente(Valor: Boolean);
+    procedure DefineTravado(Valor: Boolean);
+    procedure CriaMenusFerramentas;
+    procedure ProcessosClick(Sender: TObject);
+    procedure HistoricoClick(Sender: TObject);
+    procedure BloquearClick(Sender: TObject);
+    procedure DesligarMonitorClick(Sender: TObject);
     procedure MonthCalendar1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
     procedure InfoCopiarClick(Sender: TObject);
@@ -402,6 +459,8 @@ type
     procedure WMExitSizeMove(var Msg: TMessage); message WM_EXITSIZEMOVE;
   protected
     procedure WndProc(var Message: TMessage); override;
+    procedure CreateWnd; override;
+    procedure DestroyWnd; override;
 
   public
     { Public declarations }
@@ -412,34 +471,32 @@ type
 var
   MainForm: TMainForm;
   BmpImg, MyBmpImage : TBitmap;
-  MyJpeg: TJpegImage;
-  Img: TImage;
   FCount, LCount, SCount, TCount: Integer;
   CrnCount, WrnTimeCount: LongInt;
   EditorChanged, Start, StartSlideShow, StartCPU, StChange,
   GetUsageCPU, StProcess, StSch1, StOk, StEx, StBegin,
   StErr, StMem1: boolean;
-  {---OS----------------------------------------------------}
-  OSVerInfo: TOSVersionInfo;
   {---Memory------------------------------------------------}
   MemInfo : TMemoryStatusEx; {Ex: valores corretos acima de 4 GB também em 32 bits}
   {---Info--------------------------------------------------}
-  Drives, StrDrv, NomeVol, SisArq, NSerial,
-  Version1, Plattform1, PlattID1, OSBuilder1,
-  OSService1, SerialVolHD: string;
+  Version1, Plattform1, PlattID1, OSBuilder1, OSService1: string;
   PlatIDN1: DWord;
-  FreeAvailable, TotalSpace, TotalFree: Int64;
   {---CPU-Usage---------------------------------------------}
   CpuOldIdle, CpuOldTotal: UInt64;
 
 implementation
 
 uses USelDate, UConfig, USenha, ULembrete, UWarn, UAlarm, UAddr, UStartup,
-  CommCtrl, TlHelp32, IniFiles, UFerramentas;
+  CommCtrl, TlHelp32, IniFiles, Clipbrd, UFerramentas, UDatas;
 
 type
   { Dá acesso ao OnMouseMove, que é protegido no TMonthCalendar }
   TMonthCalendarAcesso = class(TMonthCalendar);
+
+const
+  IdAtalho = 1;           { RegisterHotKey: mostrar/ocultar o Painel }
+  MaxClipboard = 20;      { textos guardados no histórico }
+  MaxTextoClip = 100000;  { textos maiores não entram no histórico }
 
 {$R *.DFM}
 {$R RYG.RES}
@@ -492,7 +549,7 @@ function GetDefaultPrinterName: string;
 // Retorna o nome da impressora padrão do Windows
 begin
   try
-    if(Printer.PrinterIndex > 0)then
+    if Printer.PrinterIndex >= 0 then
     begin
       Result:= Printer.Printers[Printer.PrinterIndex];
     end else
@@ -532,22 +589,6 @@ begin
     Result:= string(lpBuffer);
     StrDispose(lpBuffer);
   except
-  end;
-end;
-{----------------------------------------------------------------------------}
-{---------------------------Function---GetComputer1--------------------------}
-function GetComputer1: string;
-var Computer : PChar;
-   CSize : DWORD;
-begin
-  Computer := #0;
-  CSize := MAX_COMPUTERNAME_LENGTH + 1;
-  try
-    GetMem( Computer, CSize*SizeOf(Char) );
-    if Windows.GetComputerName(Computer, CSize ) then
-      GetComputer1 := Computer;
-  finally
-    FreeMem(Computer);
   end;
 end;
 {----------------------------------------------------------------------------}
@@ -802,21 +843,6 @@ begin
   GetRunDir := ExtractFilePath(ParamStr(0));
 end;
 {----------------------------------------------------------------------------}
-{-------------------------Function---GetCurrentDir---------------------------}
-function GetCurrentDir: string;
-var BufLen: DWORD;
-    Buffer: PChar;
-begin
-  try
-    BufLen := MAX_PATH + 1;
-    GetMem( Buffer, BufLen*SizeOf(Char) );
-    if Windows.GetCurrentDirectory( BufLen, Buffer ) > 0 then
-      Result :=Buffer;
-  finally
-    FreeMem( Buffer );
-  end; // try
-end; {- GetCurrentDir }
-{----------------------------------------------------------------------------}
 {-------------------------Function---ExecAndWait-----------------------------}
 function ExecAndWait(const FileName, Params: string;
   const WindowState: Word): boolean;
@@ -847,6 +873,31 @@ begin
     CloseHandle(ProcInfo.hThread);
   end;
 end; //- Exemplo de uso: ExecAndWait('c:\windows\notepad.exe', '', SW_SHOW);
+{----------------------------------------------------------------------------}
+{-------------------------Function---ExecutaComando--------------------------}
+{ Executa uma linha de comando (programa e parâmetros), sem aguardar. Se não
+  for um programa (documento, pasta, endereço da internet ou nome registrado
+  em App Paths, ex.: "winword"), abre com o programa associado.            }
+function ExecutaComando(const Comando: string): Boolean;
+var SI: TStartupInfo;
+  PI: TProcessInformation;
+  Cmd: string;
+begin
+  Result:= False;
+  Cmd:= Trim(Comando);
+  if Cmd='' then Exit;
+  FillChar(SI, SizeOf(SI), 0);
+  SI.cb:= SizeOf(SI);
+  UniqueString(Cmd); { CreateProcessW pode alterar o texto da linha de comando }
+  if CreateProcess(nil, PChar(Cmd), nil, nil, False, NORMAL_PRIORITY_CLASS,
+      nil, nil, SI, PI) then
+  begin
+    CloseHandle(PI.hProcess);
+    CloseHandle(PI.hThread);
+    Exit(True);
+  end;
+  Result:= AbrirArquivo(Cmd);
+end;
 {----------------------------------------------------------------------------}
 {-------------------------function---nFileToStr------------------------------}
 function nFileToStr(const nArq: TFileName): string;
@@ -1043,27 +1094,26 @@ var reg: TRegistry;
   i: integer;
 begin
   s := '';
-  reg := TRegistry.Create;
-  reg.RootKey := HKEY_CLASSES_ROOT;
-  if reg.OpenKey('.' + ext + '\shell\open\command',false) <> false then
-  begin
-    s:= reg.ReadString('');
-    reg.CloseKey;
-  end else
-  begin
-    if reg.OpenKey('.' + ext, false) <> false then
+  reg := TRegistry.Create(KEY_READ);
+  try
+    reg.RootKey := HKEY_CLASSES_ROOT;
+    if reg.OpenKeyReadOnly('.' + ext + '\shell\open\command') then
     begin
       s:= reg.ReadString('');
       reg.CloseKey;
-      if s <> '' then
+    end else
+    if reg.OpenKeyReadOnly('.' + ext) then
+    begin
+      s:= reg.ReadString('');
+      reg.CloseKey;
+      if (s <> '') and reg.OpenKeyReadOnly(s + '\shell\open\command') then
       begin
-        if reg.OpenKey(s + '\shell\open\command',false) <> false then
-        begin
-          s:= reg.ReadString('');
-        end;
+        s:= reg.ReadString('');
         reg.CloseKey;
       end;
     end;
+  finally
+    reg.Free;
   end;
   if ((length(s) > 0) and (s[1] = '"')) then
   Delete(s, 1, 1);
@@ -1115,23 +1165,6 @@ end;
 // Example to reboot Windows: MyExitWindows(EWX_REBOOT or EWX_FORCE);
 // Parameters for MyExitWindows()
 {----------------------------------------------------------------------------}
-{------------------------Procedure---ProcDelMemo-----------------------------}
-procedure TMainForm.ProcDelMemo(StringLine: string; Nbr: byte);
-var count: LongInt;
-    Nbx: byte;
-begin
-  Count:=0; StEdtPrc:= True;
-  while (Count<Memo2.Lines.Count) and (StEdtPrc=True) do
-  begin
-    if Pos(StringLine, Memo2.Lines[Count])>0 then
-    begin
-      for Nbx:=1 to Nbr do Memo2.Lines.Delete(Count);
-    end else Inc(Count);
-    Application.ProcessMessages;
-  end;
-  StEdtPrc:= False;
-end;
-{----------------------------------------------------------------------------}
 {-------------------------Function---ViewPRGStartWindows---------------------}
 { Iniciar com o Windows: usa um atalho na pasta "Inicializar" do usuário
   (ver UStartup.pas). Não grava no registro e não exige administrador. }
@@ -1156,112 +1189,30 @@ begin
       StartupShortcutFile, mtWarning, [mbOk], 0);
 end;
 {----------------------------------------------------------------------------}
-{-------------------------Procedure---JumpTo---------------------------------}
-procedure TMainForm.JumpTo(const aAdress: string);
-var buffer: string;
-begin
-  buffer := 'http://' + aAdress;
-  ShellExecute(Application.Handle, nil, PChar(buffer), nil, nil, SW_SHOWNORMAL);
-end;
-{----------------------------------------------------------------------------}
 {-------------------------Function---EditTextFile----------------------------}
+{ Abre o arquivo no Bloco de Notas }
 function TMainForm.EditTextFile(Arquivo: string): boolean;
-var  Hwnd: THandle;
-     notes: string;
 begin
-  result:= False;
-  if Arquivo<>'' then
-  begin
-    if FileExists(Arquivo)=False then
-    begin
-      ShowMessage('Arquivo "'+Arquivo+'" não Encontrado!!!');
-    end else
-    begin
-      notes:= ExpandFileName(FileSearch('NOTEPAD.EXE',
-        GetRunDir+';'+GetWinDir+';'+GetWinSysDir+';'+
-        ExtractFilePath(GetExe('txt'))));
-      if FileExists(notes)=True then
-      begin
-        Hwnd := FindWindow (nil,'Not');
-        if Hwnd = 0  then
-        begin
-          WinExec(PAnsiChar(AnsiString(notes+#32+Arquivo)), SW_SHOWNORMAL);
-          result:= True;
-        end;
-      end;
-    end;
-  end;
+  Result:= False;
+  if Arquivo='' then Exit;
+  if not FileExists(Arquivo) then
+    ShowMessage('Arquivo "'+Arquivo+'" não encontrado!')
+  else
+    Result:= AbrirArquivo('notepad.exe', '"'+Arquivo+'"', Handle);
 end;
 {----------------------------------------------------------------------------}
 {-------------------------Function---EditExcelFile---------------------------}
+{ Abre o arquivo (ex.: .csv) no programa associado (Excel, LibreOffice...) }
 function TMainForm.EditExcelFile(Arquivo: string): boolean;
-var  Hwnd: THandle;
-     excel1: string;
 begin
-  result:= False;
-  if Arquivo<>'' then
-  begin
-    if FileExists(Arquivo)=False then
-    begin
-      ShowMessage('Arquivo "'+Arquivo+'" não Encontrado');
-    end else
-    begin
-      excel1:= ExpandFileName(FileSearch('EXCEL.EXE',
-      'C:\Arquivos de Programas\Microsoft Office\Office\;'+
-      'C:\Programs Files\Microsoft Office\Office\;'+
-        GetRunDir+';'+GetWinDir+';'+GetWinSysDir));
-      excel1:= GetExe('CSV');
-      if FileExists(excel1)=True then
-      begin
-        Hwnd := FindWindow (nil,'Not');
-        if Hwnd = 0  then
-        begin
-          WinExec(PAnsiChar(AnsiString(excel1+#32+Arquivo)), SW_SHOWNORMAL);
-          result:= True;
-        end;
-      end;
-    end;
-  end;
+  Result:= False;
+  if Arquivo='' then Exit;
+  if not FileExists(Arquivo) then
+    ShowMessage('Arquivo "'+Arquivo+'" não encontrado!')
+  else
+    Result:= AbrirArquivo(Arquivo, '', Handle);
 end;
-{----------------------------------------------------------------------------}
-function TMainForm.DownRound(Value: Double): LongInt;
-begin
-  Result := Trunc(Value);
-end;
-{----------------------------------------------------------------------------}
-function TMainForm.UpRound(Value: Double): LongInt;
-begin
-  Result := Trunc(Value);
-  if Frac(Value)<> 0 then Result:= Trunc(Value + 1);
-end;
-{-----------------------------------------------------------------------------}
-function FmtValue (Opt: byte; N: Int64): string;
-begin
-  if Opt=0 then
-  begin
-    if N > 1000000000000 then
-      FmtValue:= FormatFloat('0.00',N/1000000000000)+'Tb' else
-    if N > 1000000000 then
-      FmtValue:= FormatFloat('0.00',N/1000000000)+'Gb' else
-    if N > 1000000 then
-      FmtValue:= FormatFloat('0.00',N/1000000)+'Mb' else
-    if N > 1000 then
-      FmtValue:= FormatFloat('0.00',N/1000)+'Kb' else
-      FmtValue:= FormatFloat('0.00',N)+'b';
-  end;
-  if Opt=1 then
-  begin
-    if N > exp(ln(1024)*4) then
-      FmtValue:= FormatFloat('0.00',N/(exp(ln(1024)*4)))+'Tb' else
-    if N > 1024*1024*1024 then
-      FmtValue:= FormatFloat('0.00',N/(1024*1024*1024))+'Gb' else
-    if N > 1024*1024 then
-      FmtValue:= FormatFloat('0.00',N/(1024*1024))+'Mb' else
-    if N > 1024 then
-      FmtValue:= FormatFloat('0.00',N/1024)+'Kb' else
-      FmtValue:= FormatFloat('0.00',N)+'b';
-    end;
-  end;
+{ FmtValue e FmtPct ficam em UFerramentas }
 {-----------------------------------------------------------------------------}
 procedure TMainForm.ShowPicture(PictureFileName1: string);
 begin
@@ -1349,27 +1300,8 @@ end;
 
 {----------------------------------------------------------------------------}
 {-------------------Informações adicionais do sistema------------------------}
-type
-  { PERFORMANCE_INFORMATION (psapi.h) }
-  TPerfInfo = record
-    cb: DWORD;
-    CommitTotal, CommitLimit, CommitPeak, PhysicalTotal, PhysicalAvailable,
-    SystemCache, KernelTotal, KernelPaged, KernelNonpaged, PageSize: NativeUInt;
-    HandleCount, ProcessCount, ThreadCount: DWORD;
-  end;
-  { PROCESS_MEMORY_COUNTERS (psapi.h) }
-  TProcMemCounters = record
-    cb, PageFaultCount: DWORD;
-    PeakWorkingSetSize, WorkingSetSize, QuotaPeakPagedPoolUsage,
-    QuotaPagedPoolUsage, QuotaPeakNonPagedPoolUsage, QuotaNonPagedPoolUsage,
-    PagefileUsage, PeakPagefileUsage: NativeUInt;
-  end;
-
-function PsGetPerformanceInfo(var Info: TPerfInfo; cb: DWORD): BOOL; stdcall;
-  external 'psapi.dll' name 'GetPerformanceInfo';
-function PsGetProcessMemoryInfo(Process: THandle; var Counters: TProcMemCounters;
-  cb: DWORD): BOOL; stdcall; external 'psapi.dll' name 'GetProcessMemoryInfo';
-function ShIsUserAnAdmin: BOOL; stdcall; external 'shell32.dll' name 'IsUserAnAdmin';
+{ TPerfInfo, TProcMemCounters, PsGetPerformanceInfo, PsGetProcessMemoryInfo
+  e ShIsUserAnAdmin ficam em UFerramentas.                                  }
 
 {-------------------Arquivo de paginação (SWAP)------------------------------}
 { GlobalMemoryStatusEx não informa o arquivo de paginação: ullTotalPageFile é
@@ -1461,13 +1393,6 @@ begin
     [Seg div 86400, (Seg mod 86400) div 3600, (Seg mod 3600) div 60, Seg mod 60]);
 end;
 
-{-------------------Function---FmtPct----------------------------------------}
-function FmtPct(Parte, Total: UInt64): string;
-begin
-  if Total = 0 then Result:= '-' else
-    Result:= Format('%.1f%%', [100.0 * Parte / Total]);
-end;
-
 {-------------------Function---NomeArquitetura-------------------------------}
 function NomeArquitetura: string;
 begin
@@ -1547,6 +1472,43 @@ begin
     if PS.BatteryLifeTime <> $FFFFFFFF then { tempo desconhecido }
       L.Add('Autonomia estimada: ' + FmtDuracao(PS.BatteryLifeTime));
   end;
+end;
+
+{-------------------Function---ResumoDiscoSistema---------------------------}
+function ResumoDiscoSistema: string;
+var Drive: string;
+  Livre, Total: Int64;
+begin
+  Result:= '';
+  Drive:= ExtractFileDrive(GetWinDir);
+  if (Drive='') or not EspacoDisco(Drive, Livre, Total) then Exit;
+  Result:= Format('%s livre em %s (%s)', [FmtValue(1, Livre), Drive,
+    FmtPct(Livre, Total)]);
+end;
+
+{-------------------Procedure---ListaSessao---------------------------------}
+procedure ListaSessao(L: TStrings);
+var Sessao: DWORD;
+  S: string;
+begin
+  Sessao:= 0;
+  ProcessIdToSessionId(GetCurrentProcessId, Sessao);
+  L.Add(Format('Sessão: %d', [Sessao]));
+  if GetSystemMetrics(SM_REMOTESESSION)<>0 then
+    L.Add('Tipo de sessão: remota')
+  else
+    L.Add('Tipo de sessão: local');
+  S:= SysUtils.GetEnvironmentVariable('SESSIONNAME');
+  if S<>'' then L.Add('Nome da sessão: '+S);
+end;
+
+{-------------------Function---IdiomaUsuario--------------------------------}
+function IdiomaUsuario: string;
+var Buf: array[0..127] of Char;
+begin
+  Result:= '';
+  if GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SLANGUAGE, Buf, Length(Buf))>0 then
+    Result:= Buf;
 end;
 
 {-------------------Function---FusoHorario-----------------------------------}
@@ -1684,16 +1646,19 @@ const line1='_______________________________________';
       KeyWinNT = 'SOFTWARE\Microsoft\Windows NT\CurrentVersion';
       KeyBIOS  = 'HARDWARE\DESCRIPTION\System\BIOS';
       KeyCPU   = 'HARDWARE\DESCRIPTION\System\CentralProcessor\0';
-var StrList: TStringList;
+var StrList, Fixos: TStringList;
   SearchRec: TSearchRec;
   Count: LongInt;
   Ok: boolean;
-  S, S2: string;
+  S, S2, DiscoSistema, Unid, NomeVol, NSerial, SisArq: string;
   Uptime: Int64;
   PagTotal, PagUsado: UInt64;
   Perf: TPerfInfo;
   PMC: TProcMemCounters;
-  Livre, TotDisco: Int64;
+  Livre, TotDisco, Disponivel: Int64;
+  Mascara: DWORD;
+  Letra: Char;
+  Mhz, TempCpu: Double;
 
   procedure AddSe(const Rotulo, Valor: string);
   begin
@@ -1727,6 +1692,7 @@ begin
   S:= Trim(GetUsr);
   if ShIsUserAnAdmin then S:= S + ' (administrador)';
   Memo2.Lines.Add(S);
+  ListaSessao(Memo2.Lines);
   Memo2.Lines.Add(line1);
   Memo2.Lines.Add(' .:: HostName ::.');
   { Nome obtido do próprio Windows. A antiga consulta de DNS reverso por IP
@@ -1765,6 +1731,7 @@ begin
   Memo2.Lines.Add(Format('Kernel: %d.%d', [TOSVersion.Major, TOSVersion.Minor]));
   Memo2.Lines.Add('Arquitetura: '+NomeArquitetura);
   if OSService1<>'-' then Memo2.Lines.Add('Service Pack: '+OSService1);
+  AddSe('Idioma do usuário: ', IdiomaUsuario);
   S:= RegLerStr(HKEY_LOCAL_MACHINE, KeyWinNT, 'InstallDate');
   if StrToInt64Def(S, 0) > 0 then
     Memo2.Lines.Add('Instalado em: '+DateToStr(EncodeDate(1970,1,1) + StrToInt64(S)/86400));
@@ -1787,6 +1754,8 @@ begin
   Memo2.Lines.Add(line1);
   Memo2.Lines.Add(' .:: Diretório Temporário ::.');
   Memo2.Lines.Add(GetTempDir);
+  DiscoSistema:= ResumoDiscoSistema;
+  if DiscoSistema<>'' then Memo2.Lines.Add('Disco do sistema: '+DiscoSistema);
   Memo2.Lines.Add(line1);
   Memo2.Lines.Add(' .:: Computador / BIOS ::.');
   S:= Trim(RegLerStr(HKEY_LOCAL_MACHINE, KeyBIOS, 'SystemManufacturer')+' '+
@@ -1806,16 +1775,27 @@ begin
   AddSe('Fabricante: ', RegLerStr(HKEY_LOCAL_MACHINE, KeyCPU, 'VendorIdentifier'));
   AddSe('Identificação: ', RegLerStr(HKEY_LOCAL_MACHINE, KeyCPU, 'Identifier'));
   Memo2.Lines.Add(Format('Processadores lógicos: %d', [CPUCount]));
-  Memo2.Lines.Add(Format('Velocidade nominal: %.0f MHz', [GetCPUSpeed]));
-  Label8.Caption:= '=> '+Format('%.0f MHz', [GetCPUSpeed]) + ' - CPU(s): '+Format('%d',[CPUCount]);
+  Mhz:= GetCPUSpeed;
+  Memo2.Lines.Add(Format('Velocidade nominal: %.0f MHz', [Mhz]));
+  Label8.Caption:= Format('=> %.0f MHz - CPU(s): %d', [Mhz, CPUCount]);
+  if TemperaturaCPU(TempCpu, S2) then
+    Memo2.Lines.Add(Format('Temperatura: %.0f °C (%s)', [TempCpu, S2]))
+  else
+    Memo2.Lines.Add('Temperatura: '+S2);
   Memo2.Lines.Add(line1);
   Memo2.Lines.Add(' .:: Memória ::.');
   MemInfo.dwLength:= SizeOf(MemInfo);
   GlobalMemoryStatusEx(MemInfo);
   Memo2.Lines.Add(Format('Física(RAM): %s', [FmtValue(1,MemInfo.ullTotalPhys)]));
   Memo2.Lines.Add(Format('RAM em uso: %s (%d%%)', [FmtValue(1,MemInfo.ullTotalPhys-MemInfo.ullAvailPhys), MemInfo.dwMemoryLoad]));
+  Memo2.Lines.Add(Format('RAM livre: %s (%s)', [FmtValue(1,MemInfo.ullAvailPhys),
+    FmtPct(MemInfo.ullAvailPhys, MemInfo.ullTotalPhys)]));
   if LePaginacao(PagTotal, PagUsado) then
-    Memo2.Lines.Add(Format('Paginação(SWAP): %s', [FmtValue(1,PagTotal)]))
+  begin
+    Memo2.Lines.Add(Format('Paginação(SWAP): %s', [FmtValue(1,PagTotal)]));
+    Memo2.Lines.Add(Format('SWAP em uso: %s (%s)', [FmtValue(1,PagUsado),
+      FmtPct(PagUsado, PagTotal)]));
+  end
   else
     Memo2.Lines.Add('Paginação(SWAP): sem arquivo de paginação');
   Memo2.Lines.Add(Format('RAM + SWAP (limite): %s', [FmtValue(1,MemInfo.ullTotalPageFile)]));
@@ -1835,42 +1815,43 @@ begin
   end;
   Memo2.Lines.Add(line1);
   Memo2.Lines.Add(' .:: Drives ::.');
-  Drives:= GetDriveNames;
-  Memo2.Lines.Add(Drives);
-  StrList.Clear;
-  repeat
-    Count:= Pos(':',Drives);
-    StrDrv:= Copy(Drives, Count-1,2);
-    Memo2.Lines.Add(StrDrv+' ' + GetDiskType(StrDrv[1]));
-    S:= CaminhoRede(StrDrv); { unidade mapeada: mostra o servidor }
-    if S<>'' then Memo2.Lines.Add('   '+S);
-    StrList.Add(StrDrv+' ' + GetDiskType(StrDrv[1]));
-    Delete(Drives, Count-1, 3);
-  until Drives = '';
-  if StrList.Count>0 then
-    for Count:=0 to StrList.Count-1 do
-      if Pos('HARD DISK', UpperCase(StrList.Strings[Count]))>0 then
-  begin
-    StrDrv:= StrList.Strings[Count];
-    Memo2.Lines.Add(line1);
-    Memo2.Lines.Add('.:: "'+Cstr(StrDrv,1,2)+'" Disk Info ::.');
-    GetVolInfo(StrDrv[1], NomeVol, NSerial, SisArq);
-    Memo2.Lines.Add('Nome do Volume: "'+ NomeVol+'"');
-    Memo2.Lines.Add('N° Serial (Vol): ' + NSerial);
-    Memo2.Lines.Add('Sistema de Arquivos: ' + SisArq);
-    if EspacoDisco(Cstr(StrDrv,1,2), Livre, TotDisco) then
-      Memo2.Lines.Add(Format('Espaço livre: %s de %s (%s)',
-        [FmtValue(1,Livre), FmtValue(1,TotDisco), FmtPct(Livre,TotDisco)]));
-    {--------------------------------------------------------}
-    SerialVolHD:='';
-    {--------------------------------------------------------}
-    GetDiskFreeSpaceEx(Pchar(StrDrv[1]+':\'),FreeAvailable,TotalSpace,@TotalFree);
-    {--------------------------------------------------------}
-    Memo2.Lines.Add('Espaço livre: '+FmtValue(1,TotalFree));
-    Memo2.Lines.Add('Espaço disponível: '+FmtValue(1,FreeAvailable));
-    Memo2.Lines.Add('Espaço utilizado: '+FmtValue(1,TotalSpace-TotalFree)+' ('+FmtPct(TotalSpace-TotalFree, TotalSpace)+')');
-    Memo2.Lines.Add('Espaço total do disco: '+FmtValue(1,TotalSpace));
-    {--------------------------------------------------------}
+  Memo2.Lines.Add(GetDriveNames);
+  { uma linha por unidade; os detalhes vêm depois, só dos discos fixos }
+  Fixos:= TStringList.Create;
+  try
+    Mascara:= GetLogicalDrives;
+    for Letra:= 'A' to 'Z' do
+      if Mascara and (1 shl (Ord(Letra)-Ord('A')))<>0 then
+      begin
+        Unid:= Letra+':';
+        Memo2.Lines.Add(Unid+' '+GetDiskType(Letra));
+        S:= CaminhoRede(Unid); { unidade mapeada: mostra o servidor }
+        if S<>'' then Memo2.Lines.Add('   '+S);
+        if GetDriveType(PChar(Unid+'\'))=DRIVE_FIXED then Fixos.Add(Unid);
+      end;
+    for Unid in Fixos do
+    begin
+      Memo2.Lines.Add(line1);
+      Memo2.Lines.Add('.:: "'+Unid+'" Disk Info ::.');
+      GetVolInfo(Unid[1], NomeVol, NSerial, SisArq);
+      Memo2.Lines.Add('Nome do Volume: "'+ NomeVol+'"');
+      Memo2.Lines.Add('N° Serial (Vol): ' + NSerial);
+      Memo2.Lines.Add('Sistema de Arquivos: ' + SisArq);
+      if EspacoDisco(Unid, Livre, TotDisco) then
+      begin
+        { "disponível" pode ser menor que o livre quando há cota de disco }
+        if not GetDiskFreeSpaceEx(PChar(Unid+'\'), Disponivel, TotDisco, nil) then
+          Disponivel:= Livre;
+        Memo2.Lines.Add(Format('Espaço utilizado: %s (%s)', [FmtValue(1,TotDisco-Livre),
+          FmtPct(TotDisco-Livre, TotDisco)]));
+        Memo2.Lines.Add(Format('Espaço livre: %s (%s)', [FmtValue(1,Livre), FmtPct(Livre,TotDisco)]));
+        if Disponivel<>Livre then
+          Memo2.Lines.Add('Espaço disponível: '+FmtValue(1,Disponivel));
+        Memo2.Lines.Add('Espaço total do disco: '+FmtValue(1,TotDisco));
+      end;
+    end;
+  finally
+    Fixos.Free;
   end;
   Mapeamentos(StrList);
   if StrList.Count>0 then
@@ -1943,6 +1924,51 @@ begin
   Memo2.SelLength:= 0;
 end;
 
+{----------------------------------------------------------------------------}
+{-------------------Limites-de-alerta-(CPU,-memória-e-discos)----------------}
+{ Limites 1 (amarelo) e 2 (vermelho) da configuração, em % de uso. Antes de o
+  ConfigForm carregar o .CNF (FormCreate do MainForm) valem 75% e 90%.     }
+procedure LimitesUso(out T1, T2: Integer);
+begin
+  T1:= CnfData.Sys.Threshold1;
+  T2:= CnfData.Sys.Threshold2;
+  if (T1<=0) or (T2<=0) then
+  begin
+    T1:= 75;
+    T2:= 90;
+  end;
+end;
+
+{ 0 = normal, 1 = acima do limite 1, 2 = acima do limite 2 }
+function NivelUso(Pct: Integer): Integer;
+var T1, T2: Integer;
+begin
+  LimitesUso(T1, T2);
+  if Pct < T1 then Result:= 0 else
+  if Pct < T2 then Result:= 1 else
+    Result:= 2;
+end;
+
+{ Cor do medidor para a % de uso (sempre a % usada, mesmo quando o medidor
+  mostra a % livre) }
+function CorUso(Pct: Integer): TColor;
+begin
+  if CnfData.Sys.Threshold1<=0 then { configuração ainda não carregada }
+    case NivelUso(Pct) of
+      0: Result:= $00D3EDC2;
+      1: Result:= $00CAFFFF;
+    else
+      Result:= $00E9D2FF;
+    end
+  else
+    case NivelUso(Pct) of
+      0: Result:= CnfData.Sys.NormalColor;
+      1: Result:= CnfData.Sys.Threshold1Color;
+    else
+      Result:= CnfData.Sys.Threshold2Color;
+    end;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   {---Animações-(substituem-o-TBmpAnimator)---------------}
@@ -1986,8 +2012,6 @@ begin
   Start:= False;
   BmpImg := TBitmap.Create;
   MyBmpImage := TBitmap.Create;
-  MyJpeg:= TJpegImage.Create;
-  Img:= TImage.Create(Img);
   Application.HintColor := clAqua;
   Application.OnHint := ShowHint;
   FormatSettings.ShortDateFormat:= 'dd/mm/yyyy';
@@ -1995,13 +2019,13 @@ begin
   { Hint com o nome do feriado ao passar o mouse sobre o dia }
   MonthCalendar1.ShowHint:= True;
   TMonthCalendarAcesso(MonthCalendar1).OnMouseMove:= MonthCalendar1MouseMove;
-  PageControl1.ActivePageIndex:= 0;
+  PageControl1.ActivePage:= TabSheet3; { abre direto no status de CPU/memória }
   ComboBox1.ItemIndex:= 0; { 'Todos' os navegadores }
   CarregaOpcoesLimpeza;
   { Reiniciado como administrador (ReiniciaComoAdmin): abre na aba de limpeza }
   if FindCmdLineSwitch('elevado') then
   begin
-    PageControl1.ActivePage:= TabSheet4;
+    PageControl1.ActivePage:= TabSheet5;
     MostraTemporarios;
   end;
   FCount:= 0;
@@ -2018,6 +2042,11 @@ begin
   StBegin:= False;
   StErr:= False;
   StMem1:= True;
+  CriaMenusFerramentas;
+  IniciaTemperatura; { leitura em segundo plano, a cada 5 s }
+  FDiscoOcupado:= True;
+  SpeedButton14.Hint:= 'Mostrando espaço ocupado (clique para ver o livre)';
+  AtualizaDiscos;
   LabelX4.Caption:= ' Memória em uso';
   SpeedButton10.Hint:= 'Mostrando memória em uso (clique para ver a livre)';
   Posicionar(1);
@@ -2097,21 +2126,14 @@ end;
   GN (verde), YW (amarelo) e RD (vermelho). Aqui: esquerda = CPU e
   direita = memória, conforme Threshold1/Threshold2 da configuração.     }
 procedure TMainForm.AtualizaTrayIcon(CpuPct, MemPct: Integer);
-var Nome, Tip: string;
+var Nome, Tip, Disco, Fonte: string;
   NovoIcone, IconeAnterior: HICON;
+  Temp: Double;
 
   function Nivel(Pct: Integer): string;
-  var T1, T2: Integer;
+  const Siglas: array[0..2] of string = ('GN', 'YW', 'RD');
   begin
-    T1:= CnfData.Sys.Threshold1;
-    T2:= CnfData.Sys.Threshold2;
-    if (T1<=0) or (T2<=0) then { configuração ainda não carregada }
-    begin
-      T1:= 75; T2:= 90;
-    end;
-    if Pct < T1 then Result:= 'GN' else
-    if Pct < T2 then Result:= 'YW' else
-      Result:= 'RD';
+    Result:= Siglas[NivelUso(Pct)];
   end;
 
 begin
@@ -2133,7 +2155,11 @@ begin
   end;
   if not FTrayAdded then AdicionaTrayIcon;
   { Dica (tooltip) do ícone }
-  Tip:= Format('%s %s'#13#10'CPU: %d%%'#13#10'Memória: %d%%', [Prg, Vrs, CpuPct, MemPct]);
+  Disco:= ResumoDiscoSistema;
+  Tip:= Format('%s %s'#13#10'CPU: %d%%', [Prg, Vrs, CpuPct]);
+  if TemperaturaCPU(Temp, Fonte) then Tip:= Tip+Format(' (%.0f °C)', [Temp]);
+  Tip:= Tip+Format(#13#10'Memória: %d%%', [MemPct]);
+  if Disco<>'' then Tip:= Tip+#13#10'Disco: '+Disco;
   StrPLCopy(TrayIconData.szTip, Tip, Length(TrayIconData.szTip)-1);
   TrayIconData.uFlags:= nif_Tip;
   if FTrayAdded and not Shell_NotifyIcon(NIM_MODIFY, @TrayIconData) then
@@ -2144,6 +2170,18 @@ end;
 {-------------------------Procedure---WndProc--------------------------------}
 procedure TMainForm.WndProc(var Message: TMessage);
 begin
+  if (Message.Msg=WM_HOTKEY) and (Message.WParam=IdAtalho) then
+  begin
+    AlternaJanela;
+    Message.Result:= 0;
+    Exit;
+  end;
+  if Message.Msg=WM_CLIPBOARDUPDATE then
+  begin
+    ClipboardMudou;
+    Message.Result:= 0;
+    Exit;
+  end;
   if (FTaskbarCreated<>0) and (Message.Msg=FTaskbarCreated) then
   begin
     { O Explorer foi (re)iniciado: o ícone da bandeja precisa ser recriado }
@@ -2273,25 +2311,6 @@ begin
   end;
 end;
 
-procedure TMainForm.Alerta(Lbl: TLabel; MGg: TGauge);
-begin
-  if ((StMem1= True) and (MGg.PercentDone<CnfData.Sys.Threshold1)) or
-  ((StMem1= False) and (100 - MGg.PercentDone<CnfData.Sys.Threshold1)) then {75}
-  begin
-    MGg.ForeColor:= CnfData.Sys.NormalColor;
-    Lbl.Color:= CnfData.Sys.NormalColor;
-  end else
-  if ((StMem1= True) and (MGg.PercentDone<CnfData.Sys.Threshold2)) or
-  ((StMem1= False) and (100 - MGg.PercentDone<CnfData.Sys.Threshold2)) then {90}
-  begin
-    MGg.ForeColor:= CnfData.Sys.Threshold1Color;
-    Lbl.Color:= CnfData.Sys.Threshold1Color;
-  end else
-  begin
-    MGg.ForeColor:= CnfData.Sys.Threshold2Color;
-    Lbl.Color:= CnfData.Sys.Threshold2Color;
-  end;
-end;
 
 {----------------------------------------------------------------------------}
 {-------------------------Procedure---AtualizaMemória------------------------}
@@ -2307,55 +2326,127 @@ var PagTotal, PagUsado: UInt64;
     if Total = 0 then Result:= 0 else Result:= Round(100.0 * Parte / Total);
   end;
 
+  { UsoPct = % em uso; o medidor mostra o uso ou o livre conforme StMem1 }
+  procedure Medidor(G: TGauge; UsoPct: Integer);
+  begin
+    if StMem1 then G.Progress:= UsoPct else G.Progress:= 100-UsoPct;
+    G.ForeColor:= CorUso(UsoPct);
+  end;
+
 begin
   MemInfo.dwLength:= SizeOf(MemInfo);
   if not GlobalMemoryStatusEx(MemInfo) then Exit;
   LePaginacao(PagTotal, PagUsado);
   with MemInfo do
   begin
-    if StMem1= False then
-    begin
-      UseMemGauge.Progress:= 100-Integer(dwMemoryLoad);
-      RamGauge.Progress:= Pct(ullAvailPhys, ullTotalPhys);
-      SwapGauge.Progress:= Pct(PagTotal - PagUsado, PagTotal);
-      VirtualGauge.Progress:= Pct(ullAvailPageFile, ullTotalPageFile);
-    end else
-    begin
-      UseMemGauge.Progress:= dwMemoryLoad;
-      RamGauge.Progress:= Pct(ullTotalPhys - ullAvailPhys, ullTotalPhys);
-      SwapGauge.Progress:= Pct(PagUsado, PagTotal);
-      VirtualGauge.Progress:= Pct(ullTotalPageFile - ullAvailPageFile, ullTotalPageFile);
-    end;
+    Medidor(UseMemGauge, dwMemoryLoad);
+    Medidor(RamGauge, Pct(ullTotalPhys - ullAvailPhys, ullTotalPhys));
+    Medidor(SwapGauge, Pct(PagUsado, PagTotal));
+    Medidor(VirtualGauge, Pct(ullTotalPageFile - ullAvailPageFile, ullTotalPageFile));
   end;
   {--------------------------------------------------------------------------}
-  Alerta(Label1,RamGauge);
-  Alerta(Label2,SwapGauge);
-  Alerta(Label3,UseMemGauge);
-  Alerta(Label4,VirtualGauge);
-  {--------------------------------------------------------------------------}
-  Label1.Caption:= Format(' (%s)'#13' %s / %s', [FmtValue(1,MemInfo.ullTotalPhys), FmtValue(1,MemInfo.ullAvailPhys), FmtValue(1,MemInfo.ullTotalPhys - MemInfo.ullAvailPhys)]);
+  Label1.Caption:= Format(' %s - (%s / %s)', [FmtValue(1,MemInfo.ullTotalPhys), FmtValue(1,MemInfo.ullTotalPhys - MemInfo.ullAvailPhys), FmtValue(1,MemInfo.ullAvailPhys)]);
+  RamGauge.Hint:= Label1.Caption;
   if PagTotal>0 then
-    Label2.Caption:= Format(' (%s)'#13' %s / %s', [FmtValue(1,PagTotal), FmtValue(1,PagTotal - PagUsado), FmtValue(1,PagUsado)])
+    Label2.Caption:= Format(' %s - (%s / %s)', [FmtValue(1,PagTotal), FmtValue(1,PagUsado), FmtValue(1,PagTotal - PagUsado)])
   else
-    Label2.Caption:= ' (sem arquivo'#13' de paginação)';
+    Label2.Caption:= ' (sem arquivo de paginação)';
+  SwapGauge.Hint:= Label2.Caption;
   Label3.Caption:= Format(' %d%%', [MemInfo.dwMemoryLoad]);
-  Label4.Caption:= Format(' (%s)'#13' %s / %s', [FmtValue(1,MemInfo.ullTotalPageFile), FmtValue(1,MemInfo.ullAvailPageFile), FmtValue(1,MemInfo.ullTotalPageFile - MemInfo.ullAvailPageFile)]);
+  UseMemGauge.Hint:= Label3.Caption;
+  Label4.Caption:= Format(' %s - (%s / %s)', [FmtValue(1,MemInfo.ullTotalPageFile), FmtValue(1,MemInfo.ullTotalPageFile - MemInfo.ullAvailPageFile), FmtValue(1,MemInfo.ullAvailPageFile)]);
+  VirtualGauge.Hint:= Label4.Caption;
   Label7.Caption:= '=>'+Format(' %s', [FmtValue(1,MemInfo.ullTotalPhys)]);
 end;
 
+{----------------------------------------------------------------------------}
+{-------------------------Procedure---AtualizaDiscos-------------------------}
+{ Aba de Status dos Discos: um painel por disco fixo (até 4), na ordem das
+  letras. Painéis sem disco ficam ocultos. O Gauge mostra a % ocupada ou
+  livre (FDiscoOcupado / SpeedButton14); a cor segue Threshold1/Threshold2
+  sobre a % ocupada, como na memória e na CPU.                              }
+procedure TMainForm.AtualizaDiscos;
+var Paineis: array[0..3] of TPanel;
+  Nomes, Valores: array[0..3] of TLabel;
+  Gauges: array[0..3] of TGauge;
+  Mascara: DWORD;
+  Letra: Char;
+  Unid: string;
+  Livre, Total: Int64;
+  I, N, UsoPct: Integer;
+  Cor: TColor;
+begin
+  Paineis[0]:= Panel21; Nomes[0]:= Label14; Valores[0]:= Label15; Gauges[0]:= Gauge4;
+  Paineis[1]:= Panel22; Nomes[1]:= Label16; Valores[1]:= Label17; Gauges[1]:= Gauge5;
+  Paineis[2]:= Panel23; Nomes[2]:= Label18; Valores[2]:= Label19; Gauges[2]:= Gauge6;
+  Paineis[3]:= Panel24; Nomes[3]:= Label20; Valores[3]:= Label21; Gauges[3]:= Gauge7;
+  N:= 0;
+  Mascara:= GetLogicalDrives;
+  for Letra:= 'A' to 'Z' do
+  begin
+    if N>High(Paineis) then Break;
+    if Mascara and (1 shl (Ord(Letra)-Ord('A')))=0 then Continue;
+    Unid:= Letra+':';
+    if GetDriveType(PChar(Unid+'\'))<>DRIVE_FIXED then Continue;
+    if not EspacoDisco(Unid, Livre, Total) then Continue;
+    UsoPct:= Round(100.0*(Total-Livre)/Total);
+    Cor:= CorUso(UsoPct);
+    Nomes[N].Caption:= 'Drive '+Unid;
+    Valores[N].Caption:= Format('%s - (%s / %s) ', [FmtValue(1,Total), FmtValue(1,Total-Livre), FmtValue(1,Livre)]);
+    Valores[N].Color:= Cor;
+    Gauges[N].ForeColor:= Cor;
+    if FDiscoOcupado then
+      Gauges[N].Progress:= UsoPct
+    else
+      Gauges[N].Progress:= 100-UsoPct;
+    Gauges[N].Hint:= Format('Disco %s - Total: %s '#13'Ocupado: %s (%s) '#13'Livre: %s (%s)',
+      [Unid, FmtValue(1,Total), FmtValue(1,Total-Livre), FmtPct(Total-Livre, Total),
+       FmtValue(1,Livre), FmtPct(Livre, Total)]);
+    if not Paineis[N].Visible then
+    begin
+      { alTop: posiciona abaixo dos já visíveis para manter a ordem }
+      Paineis[N].Top:= TabSheet4.Height+N;
+      Paineis[N].Visible:= True;
+    end;
+    Inc(N);
+  end;
+  for I:= N to High(Paineis) do Paineis[I].Visible:= False;
+end;
+
+procedure TMainForm.SpeedButton14Click(Sender: TObject);
+begin
+  { Alterna os medidores dos discos entre espaço ocupado e espaço livre }
+  FDiscoOcupado:= not FDiscoOcupado;
+  if FDiscoOcupado then
+    SpeedButton14.Hint:= 'Mostrando espaço ocupado (clique para ver o livre)'
+  else
+    SpeedButton14.Hint:= 'Mostrando espaço livre (clique para ver o ocupado)';
+  AtualizaDiscos;
+end;
+
+procedure TMainForm.SpeedButton15Click(Sender: TObject);
+begin
+  AtualizaDiscos;
+end;
+
 procedure TMainForm.Timer1Timer(Sender: TObject);
-var CpuUso: Double;
+var CpuUso, Temp: Double;
+  Agora: TDateTime;
+  S, Fonte: string;
 begin
   {--------------------------------------------------------------------------}
+  Agora:= Now;
   Clock1.Invalidate;
-  if LabelEffect1.Caption<>FormatDateTime('hh:nn:ss',Now) then
-    LabelEffect1.Caption:= FormatDateTime('hh:nn:ss',Now);
+  S:= FormatDateTime('hh:nn:ss', Agora);
+  if LabelEffect1.Caption<>S then LabelEffect1.Caption:= S;
   {--------------------------------------------------------------------------}
-  if (FormatDateTime('hh:nn:ss',Now)= '00:00:00')
-    and (LabelEffect2.Caption<>DiaSemana(Now)+FormatDateTime(' - dd/mm/yyyy',Now)) then
+  { Virada do dia. Compara a data (e não só o instante 00:00:00), para não
+    perder a troca se o timer pular esse segundo ou o PC estiver suspenso. }
+  S:= DiaSemana(Agora)+FormatDateTime(' - dd/mm/yyyy', Agora);
+  if Start and (LabelEffect2.Caption<>S) then
   begin
-    LabelEffect2.Caption:=DiaSemana(Now)+FormatDateTime(' - dd/mm/yyyy',Now);
-    MonthCalendar1.Date:= Now;
+    LabelEffect2.Caption:= S;
+    MonthCalendar1.Date:= Agora;
   end;
   if (Start=True) and (ConfigForm.CheckBox2.Checked= True) and (StSch1=False)
   and ((ConfigForm.CheckBox3.Checked= True) or ((ConfigForm.CheckBox3.Checked= False)
@@ -2439,29 +2530,25 @@ begin
   end;
   {----Memória----------------------------------------------------------------}
   AtualizaMemoria;
+  {----Discos (somente com a aba visível)-------------------------------------}
+  if PageControl1.ActivePage= TabSheet4 then AtualizaDiscos;
   {----CPU-------------------------------------------------------------------}
   { A CPU eh medida sempre (o Icone da bandeja depende dela); o SpeedButton2
     liga/desliga apenas a exibicao na aba de Status. }
   if GetCPUUsage(CpuUso) then FCpuUso:= CpuUso;
   if GetUsageCPU= True then
   begin
-    if (Round(FCpuUso)<CnfData.Sys.Threshold1) then
+    S:= FormatFloat('CPU Usage: 0.00 %',FCpuUso);
+    if TemperaturaCPU(Temp, Fonte) then
     begin
-      Label5.Color:= CnfData.Sys.NormalColor;
-      Gauge1.ForeColor:= CnfData.Sys.NormalColor;
-    end else
-    if (Round(FCpuUso)<CnfData.Sys.Threshold2) then
-    begin
-      Label5.Color:= CnfData.Sys.Threshold1Color;
-      Gauge1.ForeColor:= CnfData.Sys.Threshold1Color;
-    end else
-    begin
-      Label5.Color:= CnfData.Sys.Threshold2Color;
-      Gauge1.ForeColor:= CnfData.Sys.Threshold2Color;
+      S:= S+Format(' (%.0f °C)', [Temp]);
+      Label5.Hint:= 'Temperatura da CPU ('+Fonte+')';
     end;
-    Label5.Caption := FormatFloat('CPU Usage: 0.00 %',FCpuUso);
+    Label5.Caption := S;
     Gauge1.Progress:= Round(FCpuUso);
     Gauge2.Progress:= Round(FCpuUso);
+    Gauge1.ForeColor:= CorUso(Round(FCpuUso));
+    Gauge2.ForeColor:= Gauge1.ForeColor;
   end;
   {--------------------------------------------------------------------------}
   Caption := Format('Painel - Versão %s - '+#13+'CPU: = %d%% - '+#13+'Memory: = %d%%',
@@ -2469,6 +2556,10 @@ begin
   {--Icone da bandeja: esquerda = CPU, direita = memória (RAM em uso)--------}
   VerificaTrayIcon;
   AtualizaTrayIcon(Round(FCpuUso), MemInfo.dwMemoryLoad);
+  {--Histórico (gráfico) e aviso de uso alto prolongado----------------------}
+  RegistraUso(Round(FCpuUso), MemInfo.dwMemoryLoad);
+  VerificaUsoAlto(Round(FCpuUso), MemInfo.dwMemoryLoad);
+  VerificaTemperatura;
   {--Alerta de disco e limpeza automática (a cada 10 minutos)---------------}
   VerificaTarefas;
   {--------------------------------------------------------------------------}
@@ -2519,17 +2610,12 @@ const smsg= ' Programa Painel - Versão '+Vrs+' - Salvador-Ba -';
       wdh= 16;
 var smg: string;
 begin
-  {----------------------------------------------------------}
-  if StOk=true then
-  begin
-  end;
-  {----------------------------------------------------------}
   if Trim(ConfigForm.Edit9.Text)='' then smg:=smsg else
   smg:= ConfigForm.Edit9.Text+#32#32#32#32#32#32#32#32#32#32;
   if (TCount=40) then
   begin
     TCount:=0;
-    if (PageControl1.ActivePageIndex=8) then
+    if (PageControl1.ActivePage= TabSheet10) then
     begin
       if (SCount<Length(smg)) and (SCount>=1) then
         Inc(SCount) else SCount:=1;
@@ -2573,7 +2659,11 @@ begin
   FTrayIcon:= 0;
   if PdhQuery<>0 then PdhCloseQuery(PdhQuery);
   PdhQuery:= 0;
+  FinalizaTemperatura;
+  FreeAndNil(FClipboard);
   if EditorChanged then Memo1.Lines.SaveToFile(GetRunDir+Prg+'.TXT');
+  FreeAndNil(BmpImg);
+  FreeAndNil(MyBmpImage);
   CnfData.Frm.PosY:= MainForm.Top;
   CnfData.Frm.PosX:= MainForm.Left;
   { Grava o .CNF diretamente: o ConfigForm (criado depois do MainForm) já foi
@@ -2610,6 +2700,12 @@ begin
   end;
   if Msg.lParam = wm_lbuttondblclk then
     Details1Click (self);
+  { clique no balão de notificação }
+  if (Msg.lParam = NIN_BALLOONUSERCLICK) and (FUrlAviso<>'') then
+  begin
+    AbrirArquivo(FUrlAviso);
+    FUrlAviso:= '';
+  end;
 end;
 
 procedure TMainForm.BitBtn4Click(Sender: TObject);
@@ -2657,28 +2753,53 @@ begin
     Caption := '';
 end;
 
+{ Grava a imagem no formato da extensão escolhida (.jpg/.jpeg ou .bmp); as
+  demais extensões ficam no formato original da imagem. }
+procedure SalvaImagem(G: TGraphic; const Arquivo: string);
+var Ext: string;
+  Bmp: TBitmap;
+  Jpg: TJPEGImage;
+  EhJpg: Boolean;
+begin
+  Ext:= LowerCase(ExtractFileExt(Arquivo));
+  EhJpg:= (Ext='.jpg') or (Ext='.jpeg');
+  if (EhJpg and not (G is TJPEGImage)) or ((Ext='.bmp') and not (G is TBitmap)) then
+  begin
+    Bmp:= TBitmap.Create;
+    try
+      Bmp.SetSize(G.Width, G.Height);
+      Bmp.Canvas.Draw(0, 0, G);
+      if EhJpg then
+      begin
+        Jpg:= TJPEGImage.Create;
+        try
+          Jpg.Assign(Bmp);
+          Jpg.SaveToFile(Arquivo);
+        finally
+          Jpg.Free;
+        end;
+      end else
+        Bmp.SaveToFile(Arquivo);
+    finally
+      Bmp.Free;
+    end;
+  end else
+    G.SaveToFile(Arquivo);
+end;
+
 procedure TMainForm.SalvarFigura1Click(Sender: TObject);
 begin
+  if (Image1.Picture.Graphic=nil) or Image1.Picture.Graphic.Empty then Exit;
   SavePictureDialog1.FileName:= Image1.Hint;
   StartSlideShow:= False;
-  if SavePictureDialog1.Execute then
-  begin
-    if FileExists(SavePictureDialog1.FileName)= False then
-      Image1.Picture.SaveToFile(SavePictureDialog1.FileName) else
-    begin
-      if MessageDlg('Arquivo já Existente!!! Sobrepõe?',
-        mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-      begin
-        if SavePictureDialog1.FilterIndex= 1 then
-        begin
-          MyJpeg.Assign(Image1.Picture.Bitmap);
-          MyJpeg.SaveToFile(SavePictureDialog1.FileName);
-        end else
-        begin
-          Image1.Picture.SaveToFile(SavePictureDialog1.FileName);
-        end;
-      end else Close;
-    end;
+  try
+    if not SavePictureDialog1.Execute then Exit;
+    if FileExists(SavePictureDialog1.FileName) and
+       (MessageDlg('Arquivo já existe. Substituir?', mtConfirmation, [mbYes, mbNo], 0)<>mrYes) then
+      Exit;
+    SalvaImagem(Image1.Picture.Graphic, SavePictureDialog1.FileName);
+  finally
+    StartSlideShow:= True;
   end;
 end;
 
@@ -2738,8 +2859,8 @@ begin
     Panel4.Visible:= True;
     Panel5.Visible:= True;
     MainForm.AutoSize:= False;
-    MainForm.Height:= 320;
-    Panel1.Height:= 300;
+    MainForm.Height:= 326;
+    Panel1.Height:= 302;
     MainForm.AutoSize:= True;
     {-------------------------------------------------------}
     Panel4.Align:= alNone;
@@ -2760,32 +2881,23 @@ begin
     MainForm.AutoSize:= True;
   end;
   CnfData.Frm.StExView:= StEx;
-  if ConfigForm.SaveCnfFile= True then
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
+  ConfigForm.SaveCnfFile;
 end;
 
 procedure TMainForm.Executar1Click(Sender: TObject);
 var Comando: string;
 begin
-  if InputQuery('Digite o nome do programa para executar','Abrir:',Comando) then
-  begin;
-    if (Trim(Comando)<>'') then
-    begin
-      try
-        WinExec(PAnsiChar(AnsiString(Comando)), SW_SHOWNORMAL);
-      except
-         Messagedlg('Erro!!!',mterror,[mbok],0);
-      end;
-    end;
-  end;
+  if InputQuery('Digite o nome do programa para executar','Abrir:',Comando) and
+     (Trim(Comando)<>'') and not ExecutaComando(Comando) then
+    MessageDlg('Não foi possível executar "'+Trim(Comando)+'".', mtError, [mbOk], 0);
 end;
 
 procedure TMainForm.ImprimirImagem1Click(Sender: TObject);
 var AspectRatio: Single;
   OutputWidth, OutputHeight: Single;
 begin
+  { sem imagem a proporção seria uma divisão por zero }
+  if (Image1.Picture.Graphic=nil) or Image1.Picture.Graphic.Empty then Exit;
   if not PrintDialog1.Execute then
   Exit;
   Printer.BeginDoc;
@@ -2830,29 +2942,13 @@ begin
 end;
 
 procedure TMainForm.Notas1Click(Sender: TObject);
-var Hwnd: THandle;
-    nota: string;
 begin
-  nota:= ExpandFileName(FileSearch('NOTEPAD.EXE',
-    GetRunDir+';'+GetWinDir+';'+GetWinSysDir));
-  if (nota<>'') and (FileExists(nota)=True) then
-  begin
-    Hwnd := FindWindow (nil,'Not');
-    if Hwnd = 0  then WinExec(PAnsiChar(AnsiString(nota)), SW_SHOWNORMAL);
-  end;
+  AbrirArquivo('notepad.exe', '', Handle);
 end;
 
 procedure TMainForm.Calculadora1Click(Sender: TObject);
-var Hwnd: THandle;
-    calculadora: string;
 begin
-  calculadora:= ExpandFileName(FileSearch('CALC.EXE',
-    GetRunDir+';'+GetWinDir+';'+GetWinSysDir));
-  if (calculadora<>'') and (FileExists(calculadora)=True) then
-  begin
-    Hwnd := FindWindow (nil,'Calc');
-    if Hwnd = 0  then WinExec(PAnsiChar(AnsiString(calculadora)), SW_SHOWNORMAL);
-  end;
+  AbrirArquivo('calc.exe', '', Handle);
 end;
 
 procedure TMainForm.SpeedButton6Click(Sender: TObject);
@@ -2893,15 +2989,11 @@ begin
   while (Count<Memo1.Lines.Count) and (StProcess=True) do
   begin
     if (Trim(Memo1.Lines[count])<>'')
-      and (ExecAndWait(Trim(Memo1.Lines[count]), '', SW_SHOW)=True) then
-    begin
-      Memo5.Lines.Add('OK');
-      Inc(count);
-    end else
-    begin
+      and ExecAndWait(Trim(Memo1.Lines[count]), '', SW_SHOW) then
+      Memo5.Lines.Add('OK')
+    else
       Memo5.Lines.Add('NG');
-      Inc(count);
-    end;
+    Inc(count);
     Memo1.Update;
     Application.ProcessMessages;
   end;
@@ -2950,13 +3042,13 @@ end;
 
 procedure TMainForm.PageControl1Change(Sender: TObject);
 begin
-  if PageControl1.ActivePageIndex= 7 then
+  if PageControl1.ActivePage= TabSheet9 then
     BmpAnimator3.Enabled:= StOk else
       BmpAnimator3.Enabled:= False;
-  if PageControl1.ActivePageIndex= 8 then
+  if PageControl1.ActivePage= TabSheet10 then
     Timer2.Enabled:= True else
       Timer2.Enabled:= False;
-  if PageControl1.ActivePageIndex= 10 then
+  if PageControl1.ActivePage= TabSheet11 then
   begin
     AddrForm.SetGridVars;
     AddrForm.RefreshGridInfo;
@@ -2965,12 +3057,11 @@ begin
         else ToolBar3.SetFocus;
   end;
   { Aba de limpeza: mostra quanto há para limpar nas pastas temporárias }
-  if (PageControl1.ActivePage= TabSheet4) and not FLimpando then
+  if (PageControl1.ActivePage= TabSheet5) and not FLimpando then
     MostraTemporarios;
-  if ConfigForm.SaveCnfFile= True then
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
+  { Aba de discos: atualiza ao entrar }
+  if PageControl1.ActivePage= TabSheet4 then AtualizaDiscos;
+  ConfigForm.SaveCnfFile; { grava a aba atual }
 end;
 
 procedure TMainForm.Alarm1Click(Sender: TObject);
@@ -2987,24 +3078,36 @@ begin
   FormClosedView;
 end;
 
+{ Transparência: menus da bandeja (Transparent1) e da janela (Transparent2)
+  e a opção 6 do CheckListBox2 da configuração ficam sempre iguais }
+procedure TMainForm.DefineTransparente(Valor: Boolean);
+begin
+  Transparent1.Checked:= Valor;
+  Transparent2.Checked:= Valor;
+  CnfData.Frm.StAlphaBlend:= Valor;
+  ConfigForm.CheckListBox2.Checked[6]:= Valor;
+  if ConfigForm.SaveCnfFile then ConfigForm.ApplyCnfData;
+end;
+
+{ Movimento da janela: Lock1 (bandeja), Lock2 (janela) e a opção 1 do
+  CheckListBox2 da configuração }
+procedure TMainForm.DefineTravado(Valor: Boolean);
+begin
+  Lock1.Checked:= Valor;
+  Lock2.Checked:= Valor;
+  CnfData.Frm.StLockForm:= Valor;
+  ConfigForm.CheckListBox2.Checked[1]:= Valor;
+  if ConfigForm.SaveCnfFile then ConfigForm.ApplyCnfData;
+end;
+
 procedure TMainForm.Transparent1Click(Sender: TObject);
 begin
-  Transparent1.Checked:= not(Transparent1.Checked);
-  Transparent2.Checked:= Transparent1.Checked;
-  CnfData.Frm.StAlphaBlend:= Transparent1.Checked;
-  ConfigForm.CheckListBox2.Checked[6]:= Transparent1.Checked;
-  if ConfigForm.SaveCnfFile= True then
-  begin
-    ConfigForm.ApplyCnfData;
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  end else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
+  DefineTransparente(not Transparent1.Checked);
 end;
 
 procedure TMainForm.CheckListBox2Click(Sender: TObject);
 begin
   Transparent1.Checked:= ConfigForm.CheckListBox2.Checked[6];
-  Transparent2.Checked:= ConfigForm.CheckListBox2.Checked[6];
   Transparent2.Checked:= ConfigForm.CheckListBox2.Checked[6];
   CnfData.Frm.StAlphaBlend:= ConfigForm.CheckListBox2.Checked[6];
   ConfigForm.ApplyCnfData;
@@ -3012,44 +3115,31 @@ end;
 
 procedure TMainForm.Transparent2Click(Sender: TObject);
 begin
-  Transparent2.Checked:= not(Transparent2.Checked);
-  Transparent1.Checked:= Transparent2.Checked;
-  CnfData.Frm.StAlphaBlend:= Transparent2.Checked;
-  ConfigForm.CheckListBox2.Checked[6]:= Transparent2.Checked;
-  if ConfigForm.SaveCnfFile= True then
-  begin
-    ConfigForm.ApplyCnfData;
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  end else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
+  DefineTransparente(not Transparent2.Checked);
 end;
 
 procedure TMainForm.Lock1Click(Sender: TObject);
 begin
-  Lock1.Checked:= not(Lock1.Checked);
-  Lock2.Checked:= Lock1.Checked;
-  CnfData.Frm.StLockForm:= Lock1.Checked;
-  ConfigForm.CheckListBox2.Checked[1]:= Lock1.Checked;
-  if ConfigForm.SaveCnfFile= True then
-  begin
-    ConfigForm.ApplyCnfData;
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  end else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
+  DefineTravado(not Lock1.Checked);
 end;
 
 procedure TMainForm.Lock2Click(Sender: TObject);
 begin
-  Lock2.Checked:= not(Lock2.Checked);
-  Lock1.Checked:= Lock2.Checked;
-  CnfData.Frm.StLockForm:= Lock2.Checked;
-  ConfigForm.CheckListBox2.Checked[1]:= Lock2.Checked;
-  if ConfigForm.SaveCnfFile= True then
-  begin
-    ConfigForm.ApplyCnfData;
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  end else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
+  DefineTravado(not Lock2.Checked);
+end;
+
+{ Feriado nacional + datas do Datas.txt + aniversários (UDatas).
+  ComClasse: acrescenta a classificação e a localidade,
+  ex.: 'Natal (nacional - Brasil)', 'São João (municipal - Salvador)'. }
+function DescricaoDia(D: TDateTime; const Separador: string;
+  ComAniversarios: Boolean = True; ComClasse: Boolean = False): string;
+var Extras: string;
+begin
+  Result:= NomeFeriado(D);
+  if ComClasse and (Result<>'') then Result:= Result+' (nacional - Brasil)';
+  Extras:= DatasExtras(D, Separador, ComAniversarios, ComClasse);
+  if (Result<>'') and (Extras<>'') then Result:= Result+Separador;
+  Result:= Result+Extras;
 end;
 
 procedure TMainForm.SpeedButton1Click(Sender: TObject);
@@ -3059,12 +3149,15 @@ var A, M, Dd: Word;
 begin
   { Percorre o ano do calendário em ordem cronológica }
   DecodeDate(MonthCalendar1.Date, A, M, Dd);
-  S:= 'Feriados Nacionais (Brasil):'+#13;
+  S:= Format('Feriados e datas de %d:', [A])+#13;
   for Dia:= Trunc(EncodeDate(A, 1, 1)) to Trunc(EncodeDate(A, 12, 31)) do
   begin
-    N:= NomeFeriado(Dia);
+    N:= DescricaoDia(Dia, ' / ', False, True);
     if N<>'' then S:= S+#13+FormatDateTime('dd/mm/yyyy - ddd', Dia)+' - '+N;
   end;
+  N:= ProximosAniversarios(Date, 30);
+  if N='' then N:= #13'(nenhum)';
+  S:= S+#13#13+'Aniversários nos próximos 30 dias:'+#13+N;
   ShowMessage(S);
 end;
 
@@ -3079,14 +3172,14 @@ begin
   MonthBoldInfo:= 0;
   if (Month<1) or (Month>12) or (Year<1) or (Year>9999) then Exit;
   for Dia:= 1 to MonthDays[IsLeapYear(Year)][Month] do
-    if NomeFeriado(EncodeDate(Year, Month, Dia))<>'' then
+    if DescricaoDia(EncodeDate(Year, Month, Dia), ' / ')<>'' then
       MonthBoldInfo:= MonthBoldInfo or (LongWord(1) shl (Dia-1));
 end;
 
 procedure TMainForm.MonthCalendar1Click(Sender: TObject);
 begin
   LabelX6.Caption:= FormatDateTime('dd/mm/yyyy',MonthCalendar1.Date);
-  Panel4.Caption:= NomeFeriado(MonthCalendar1.Date);
+  Panel4.Caption:= DescricaoDia(MonthCalendar1.Date, ' / ');
 end;
 
 {----------------------------------------------------------------------------}
@@ -3109,7 +3202,7 @@ begin
   if (HT.uHit and not (MCHT_PREV or MCHT_NEXT)) = MCHT_CALENDARDATE then
   try
     D:= EncodeDate(HT.st.wYear, HT.st.wMonth, HT.st.wDay);
-    S:= NomeFeriado(D);
+    S:= DescricaoDia(D, #13);
     if S<>'' then S:= FormatDateTime('dd/mm/yyyy', D)+' - '+S;
   except
     S:= '';
@@ -3122,38 +3215,19 @@ begin
   end;
 end;
 
+{ Página anterior/seguinte. O SelectNextPage dispara o PageControl1Change,
+  que faz o mesmo que a troca de aba com o mouse (animação, letreiro,
+  contatos, limpeza, discos e gravação da configuração). }
 procedure TMainForm.ToolButton1Click(Sender: TObject);
 begin
-  {seleciona página anterior}
-  PageControl1.SelectNextPage (False);
+  PageControl1.SelectNextPage(False);
   PlaySound('click',hInstance,snd_resource or snd_async);
-  if PageControl1.ActivePageIndex= 7 then
-    BmpAnimator3.Enabled:= StOk else
-      BmpAnimator3.Enabled:= False;
-  if PageControl1.ActivePageIndex= 8 then
-    Timer2.Enabled:= True else
-      Timer2.Enabled:= False;
-  if ConfigForm.SaveCnfFile= True then
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
 end;
 
 procedure TMainForm.ToolButton8Click(Sender: TObject);
 begin
-  PageControl1.ActivePage:=
-    PageControl1.FindNextPage(PageControl1.ActivePage, True, False);
+  PageControl1.SelectNextPage(True);
   PlaySound('click',hInstance,snd_resource or snd_async);
-  if PageControl1.ActivePageIndex= 7 then
-    BmpAnimator3.Enabled:= StOk else
-      BmpAnimator3.Enabled:= False;
-  if PageControl1.ActivePageIndex= 8 then
-    Timer2.Enabled:= True else
-      Timer2.Enabled:= False;
-  if ConfigForm.SaveCnfFile= True then
-    // MessageDlg('Dados de Configuração foram salvos no arquivo '+PRG+'.CNF', mtError, [mbOk], 0);
-  else
-    // MessageDlg('Arquivo '+Prg+'.CNF erro!!!', mtError, [mbOk], 0);
 end;
 
 procedure TMainForm.ToolButton2Click(Sender: TObject);
@@ -3311,7 +3385,7 @@ procedure TMainForm.StringGrid1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   case key of
-  38: begin {up}
+  VK_UP: begin
         if (StringGrid1.Row=1) and (ipg>0) then
         begin
           Dec(ipg); Dec(pof);
@@ -3321,7 +3395,7 @@ begin
           AddrForm.NextPrior(4);
         end;
       end;
-  40: begin {down}
+  VK_DOWN: begin
         if (StringGrid1.Row=szg) and (ipg+szg<szf) then
         begin
           Inc(ipg); Inc(pof);
@@ -4090,8 +4164,14 @@ procedure TMainForm.VerificaTarefas;
 var Pendente: Boolean;
 begin
   Inc(FTarefasSeg);
+  if (FTarefasSeg=10) and (FAtalhoErro<>'') then
+    MostraAviso('Atalho de teclado', FAtalhoErro+
+      ' Altere [Atalho] MostrarOcultar no Painel.ini.', True);
+  { feriados, datas pessoais e aniversários do dia: ao iniciar e na virada do dia }
+  if (FTarefasSeg>=30) and (FDiaAvisado<>Date) then AvisaDatasDoDia;
   if (FTarefasSeg<60) or ((FTarefasSeg-60) mod 600<>0) then Exit;
   VerificaEspacoDisco;
+  VerificaAtualizacao(False);
   case FOpcoes.Auto of
     1: Pendente:= not FAutoFeita;
     2: Pendente:= Now-FOpcoes.Ultima>=1;
@@ -4148,6 +4228,7 @@ end;
 { Balão de notificação no ícone da bandeja }
 procedure TMainForm.MostraAviso(const Titulo, Texto: string; Alerta: Boolean);
 begin
+  FUrlAviso:= ''; { só o aviso de nova versão abre um endereço ao ser clicado }
   if not FTrayAdded then Exit;
   TrayIconData.uFlags:= NIF_INFO;
   StrPLCopy(TrayIconData.szInfoTitle, Titulo, Length(TrayIconData.szInfoTitle)-1);
@@ -4418,6 +4499,391 @@ begin
           '. Verifique se ele está instalado.', mtWarning, [mbOk], 0);
       Exit;
     end;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Ferramentas-nos-menus------------------------------------}
+{ Itens criados por código (não estão no .dfm) no menu da bandeja
+  (PopupMenu1, antes de "Fechar") e no menu da janela (PopupMenu2, depois
+  de "Executar...").                                                       }
+procedure TMainForm.CriaMenusFerramentas;
+
+  procedure Insere(Alvo: TMenu; Indice: Integer);
+
+    function Item(const Texto: string; Evento: TNotifyEvent): TMenuItem;
+    begin
+      Result:= TMenuItem.Create(Self);
+      Result.Caption:= Texto;
+      Result.OnClick:= Evento;
+      Alvo.Items.Insert(Indice, Result);
+      Inc(Indice);
+    end;
+
+  begin
+    if Indice<0 then Indice:= Alvo.Items.Count; { item de referência não encontrado }
+    Item('-', nil);
+    Item('&Processos...', ProcessosClick);
+    Item('&Histórico de CPU e memória...', HistoricoClick);
+    Item('&Bloquear o computador', BloquearClick);
+    Item('&Desligar o monitor', DesligarMonitorClick);
+    { no menu da janela o PowerShell fica junto do Prompt MS-DOS }
+    if Alvo=PopupMenu1 then Item('Power&Shell', PowerShellClick);
+    Item('-', nil);
+    FMenuClip[Ord(Alvo=PopupMenu2)]:= Item('Área de &transferência', nil);
+    Item('-', nil);
+    Item('Verificar &atualização...', AtualizacaoClick);
+  end;
+
+var M: TMenuItem;
+  I: Integer;
+begin
+  Insere(PopupMenu1, PopupMenu1.Items.IndexOf(Close1));
+  Insere(PopupMenu2, PopupMenu2.Items.IndexOf(Executar1)+1);
+  M:= TMenuItem.Create(Self);
+  M.Caption:= 'Power&Shell';
+  M.OnClick:= PowerShellClick;
+  I:= PopupMenu2.Items.IndexOf(Dos1);
+  if I<0 then PopupMenu2.Items.Add(M) else PopupMenu2.Items.Insert(I+1, M);
+  AtualizaMenuClipboard;
+end;
+
+procedure TMainForm.ProcessosClick(Sender: TObject);
+begin
+  GerenciadorProcessos;
+end;
+
+procedure TMainForm.HistoricoClick(Sender: TObject);
+var T1, T2: Integer;
+begin
+  LimitesUso(T1, T2);
+  MostraHistorico(T1, T2);
+end;
+
+procedure TMainForm.BloquearClick(Sender: TObject);
+begin
+  if (MessageDlg('Confirma?',
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    BloquearComputador;
+end;
+
+procedure TMainForm.DesligarMonitorClick(Sender: TObject);
+begin
+  if (MessageDlg('Confirma?',
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    DesligarMonitor;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Aviso-de-uso-alto-prolongado-----------------------------}
+{ Chamada a cada segundo pelo Timer1. Avisa (balão da bandeja) quando a CPU
+  ou a memória ficam acima do limite 2 da configuração por 1 minuto
+  seguido. O aviso se repete só depois de o uso voltar abaixo do limite 1. }
+procedure TMainForm.VerificaUsoAlto(CpuPct, MemPct: Integer);
+const Tempo = 60; { segundos }
+var T1, T2: Integer;
+  Nome: string;
+  Bytes: Int64;
+begin
+  LimitesUso(T1, T2);
+  { CPU }
+  if CpuPct>=T2 then Inc(FCpuAltaSeg) else FCpuAltaSeg:= 0;
+  if CpuPct<T1 then FCpuAvisada:= False;
+  if (FCpuAltaSeg>=Tempo) and not FCpuAvisada then
+  begin
+    FCpuAvisada:= True;
+    MostraAviso('Uso alto da CPU', Format('CPU acima de %d%% há mais de 1 minuto.'+
+      ' Veja "Processos..." no menu do ícone.', [T2]), True);
+  end;
+  { Memória }
+  if MemPct>=T2 then Inc(FMemAltaSeg) else FMemAltaSeg:= 0;
+  if MemPct<T1 then FMemAvisada:= False;
+  if (FMemAltaSeg>=Tempo) and not FMemAvisada then
+  begin
+    FMemAvisada:= True;
+    if ProcessoMaiorMemoria(Nome, Bytes) then
+      Nome:= Format(' Maior consumo: %s (%s).', [Nome, FmtValue(1, Bytes)])
+    else
+      Nome:= '';
+    MostraAviso('Memória quase esgotada', Format('Memória em uso: %d%%.%s',
+      [MemPct, Nome]), True);
+  end;
+end;
+
+
+{----------------------------------------------------------------------------}
+{-------------------Aviso-de-temperatura-alta--------------------------------}
+{ Chamada a cada segundo pelo Timer1. Avisa (balão da bandeja) quando a CPU
+  fica a 90 °C ou mais por 1 minuto seguido; repete só depois de esfriar
+  abaixo de 80 °C. }
+procedure TMainForm.VerificaTemperatura;
+const TempAlta = 90; TempNormal = 80; Tempo = 60;
+var Temp: Double;
+  Fonte: string;
+begin
+  if not TemperaturaCPU(Temp, Fonte) then
+  begin
+    FTempAltaSeg:= 0;
+    Exit;
+  end;
+  if Temp>=TempAlta then Inc(FTempAltaSeg) else FTempAltaSeg:= 0;
+  if Temp<TempNormal then FTempAvisada:= False;
+  if (FTempAltaSeg>=Tempo) and not FTempAvisada then
+  begin
+    FTempAvisada:= True;
+    MostraAviso('Temperatura alta da CPU', Format('CPU a %.0f °C há mais de 1 minuto.'+
+      ' Verifique a ventilação e os processos em execução.', [Temp]), True);
+  end;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Verificação-de-nova-versão-------------------------------}
+{ Manual (menu): mostra o resultado em uma mensagem.
+  Automática (VerificaTarefas): uma vez por dia, só se [Atualizacao]
+  Automatica=1 no Painel.ini (padrão); cada versão nova é avisada uma única
+  vez por um balão na bandeja, que abre a página de download ao ser clicado. }
+procedure TMainForm.VerificaAtualizacao(Manual: Boolean);
+var Ini: TIniFile;
+  Ultima: TDateTime;
+  Avisada: string;
+begin
+  if FConsultandoVersao then
+  begin
+    if Manual then
+      MessageDlg('A verificação já está em andamento.', mtInformation, [mbOk], 0);
+    Exit;
+  end;
+  Avisada:= '';
+  if not Manual then
+  try
+    Ini:= TIniFile.Create(GetRunDir+Prg+'.ini');
+    try
+      if not Ini.ReadBool('Atualizacao', 'Automatica', True) then Exit;
+      Ultima:= StrToFloatDef(Ini.ReadString('Atualizacao', 'Ultima', '0'), 0,
+        TFormatSettings.Invariant);
+      if Now-Ultima<1 then Exit;
+      Avisada:= Ini.ReadString('Atualizacao', 'Avisada', '');
+    finally
+      Ini.Free;
+    end;
+  except
+    Exit;
+  end;
+  FConsultandoVersao:= True;
+  if Manual then Screen.Cursor:= crAppStart;
+  ConsultaUltimaVersao(
+    procedure(const Versao, Url, Erro: string)
+    var Ini: TIniFile;
+      Nova: Boolean;
+    begin
+      FConsultandoVersao:= False;
+      if Manual then Screen.Cursor:= crDefault;
+      if Erro<>'' then
+      begin
+        { automática: sem internet, tenta de novo daqui a 10 minutos }
+        if Manual then MessageDlg(Erro, mtWarning, [mbOk], 0);
+        Exit;
+      end;
+      Nova:= VersaoMaisNova(Versao, Vrs);
+      if not Manual then
+      try
+        Ini:= TIniFile.Create(GetRunDir+Prg+'.ini');
+        try
+          Ini.WriteString('Atualizacao', 'Ultima',
+            FloatToStr(Now, TFormatSettings.Invariant));
+          if Nova then Ini.WriteString('Atualizacao', 'Avisada', Versao);
+        finally
+          Ini.Free;
+        end;
+      except
+        { pasta do Painel sem permissão de gravação }
+      end;
+      if Manual then
+      begin
+        if not Nova then
+          MessageDlg(Format('Você já está usando a versão mais recente (%s).', [Vrs]),
+            mtInformation, [mbOk], 0)
+        else
+        if MessageDlg(Format('Nova versão disponível: %s'#13'Versão em uso: %s'#13#13+
+          'Abrir a página de download?', [Versao, Vrs]),
+          mtInformation, [mbYes, mbNo], 0) = mrYes then
+          AbrirArquivo(Url);
+      end else
+      if Nova and not SameText(Versao, Avisada) then
+      begin
+        MostraAviso('Nova versão do Painel', Format('Versão %s disponível (em uso: %s).'+
+          ' Clique aqui para abrir a página de download.', [Versao, Vrs]), False);
+        FUrlAviso:= Url;
+      end;
+    end);
+end;
+
+procedure TMainForm.AtualizacaoClick(Sender: TObject);
+begin
+  VerificaAtualizacao(True);
+end;
+
+
+{----------------------------------------------------------------------------}
+{-------------------Janela:-atalho-global-e-área-de-transferência------------}
+{ O atalho e o aviso de mudança na área de transferência pertencem à janela:
+  são refeitos sempre que a VCL recria o Handle. }
+procedure TMainForm.CreateWnd;
+begin
+  inherited;
+  RegistraAtalho;
+  AddClipboardFormatListener(Handle);
+end;
+
+procedure TMainForm.DestroyWnd;
+begin
+  if FAtalhoAtivo then UnregisterHotKey(Handle, IdAtalho);
+  FAtalhoAtivo:= False;
+  RemoveClipboardFormatListener(Handle);
+  inherited;
+end;
+
+{ Atalho de [Atalho] MostrarOcultar no Painel.ini (padrão Win+Alt+P;
+  vazio = desativado) }
+procedure TMainForm.RegistraAtalho;
+var Ini: TIniFile;
+  Modificadores, Tecla: Cardinal;
+begin
+  FAtalhoAtivo:= False;
+  FAtalhoErro:= '';
+  FAtalhoTexto:= AtalhoPadrao;
+  try
+    Ini:= TIniFile.Create(GetRunDir+Prg+'.ini');
+    try
+      FAtalhoTexto:= Trim(Ini.ReadString('Atalho', 'MostrarOcultar', AtalhoPadrao));
+    finally
+      Ini.Free;
+    end;
+  except
+  end;
+  if FAtalhoTexto='' then Exit;
+  if not TextoParaAtalho(FAtalhoTexto, Modificadores, Tecla) then
+  begin
+    FAtalhoErro:= 'Atalho inválido: "'+FAtalhoTexto+'".';
+    Exit;
+  end;
+  FAtalhoAtivo:= RegisterHotKey(Handle, IdAtalho, Modificadores or MOD_NOREPEAT, Tecla);
+  if not FAtalhoAtivo then
+    FAtalhoErro:= 'O atalho '+FAtalhoTexto+' já está em uso por outro programa.';
+end;
+
+{ Atalho global: esconde o Painel se ele estiver em primeiro plano; senão
+  mostra e traz para a frente }
+procedure TMainForm.AlternaJanela;
+begin
+  if IsWindowVisible(Handle) and (GetForegroundWindow=Handle) then
+    MinimizarParaBandeja
+  else
+    Details1Click(Self);
+end;
+
+{ Texto de uma linha para o menu: sem quebras, no máximo 60 caracteres,
+  '&' dobrado (senão vira tecla de atalho do menu) }
+function ResumoClip(const Texto: string): string;
+var I: Integer;
+begin
+  Result:= Texto;
+  for I:= 1 to Length(Result) do
+    if CharInSet(Result[I], [#9, #10, #13]) then Result[I]:= ' ';
+  Result:= Trim(Result);
+  while Pos('  ', Result)>0 do Result:= StringReplace(Result, '  ', ' ', [rfReplaceAll]);
+  if Length(Result)>60 then Result:= Copy(Result, 1, 57)+'...';
+  Result:= StringReplace(Result, '&', '&&', [rfReplaceAll]);
+end;
+
+{ WM_CLIPBOARDUPDATE: guarda o texto copiado (só na memória; o histórico
+  some ao fechar o Painel) }
+procedure TMainForm.ClipboardMudou;
+var S: string;
+  I: Integer;
+begin
+  if not LeTextoClipboard(Handle, S) then Exit;
+  if Length(S)>MaxTextoClip then Exit;
+  if FClipboard=nil then
+  begin
+    FClipboard:= TStringList.Create;
+    FClipboard.CaseSensitive:= True;
+  end;
+  I:= FClipboard.IndexOf(S);
+  if I=0 then Exit;
+  if I>0 then FClipboard.Delete(I); { copiado de novo: volta para o topo }
+  FClipboard.Insert(0, S);
+  while FClipboard.Count>MaxClipboard do FClipboard.Delete(FClipboard.Count-1);
+  AtualizaMenuClipboard;
+end;
+
+procedure TMainForm.AtualizaMenuClipboard;
+var Pai, M: TMenuItem;
+  I: Integer;
+begin
+  for Pai in FMenuClip do
+  begin
+    if Pai=nil then Continue;
+    Pai.Clear;
+    if (FClipboard=nil) or (FClipboard.Count=0) then
+    begin
+      M:= TMenuItem.Create(Self);
+      M.Caption:= '(nada copiado ainda)';
+      M.Enabled:= False;
+      Pai.Add(M);
+      Continue;
+    end;
+    for I:= 0 to FClipboard.Count-1 do
+    begin
+      M:= TMenuItem.Create(Self);
+      M.AutoHotkeys:= maManual; { não acrescenta '&' ao texto }
+      M.Caption:= ResumoClip(FClipboard[I]);
+      M.Tag:= I;
+      M.OnClick:= ClipItemClick;
+      Pai.Add(M);
+    end;
+    M:= TMenuItem.Create(Self);
+    M.Caption:= '-';
+    Pai.Add(M);
+    M:= TMenuItem.Create(Self);
+    M.Caption:= '&Limpar histórico';
+    M.OnClick:= ClipLimparClick;
+    Pai.Add(M);
+  end;
+end;
+
+{ Copia de novo o texto escolhido (ele volta para o topo do histórico) }
+procedure TMainForm.ClipItemClick(Sender: TObject);
+var I: Integer;
+begin
+  I:= TMenuItem(Sender).Tag;
+  if (FClipboard<>nil) and (I>=0) and (I<FClipboard.Count) then
+    Clipboard.AsText:= FClipboard[I];
+end;
+
+procedure TMainForm.ClipLimparClick(Sender: TObject);
+begin
+  if FClipboard<>nil then FClipboard.Clear;
+  AtualizaMenuClipboard;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Datas-do-calendário--------------------------------------}
+{ Balão com os feriados, datas pessoais e aniversários de hoje }
+procedure TMainForm.AvisaDatasDoDia;
+var S: string;
+begin
+  FDiaAvisado:= Date;
+  S:= DescricaoDia(Date, #13#10);
+  if S<>'' then
+    MostraAviso('Hoje - '+FormatDateTime('dd/mm/yyyy', Date), S, False);
+end;
+
+{ Abre o Windows PowerShell na pasta do usuário }
+procedure TMainForm.PowerShellClick(Sender: TObject);
+begin
+  if ShellExecute(Handle, 'open', 'powershell.exe', nil,
+      PChar(GetEnvironmentVariable('USERPROFILE')), SW_SHOWNORMAL) <= 32 then
+    MessageDlg('Não foi possível abrir o PowerShell.', mtWarning, [mbOk], 0);
 end;
 
 end.

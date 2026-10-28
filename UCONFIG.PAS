@@ -252,12 +252,8 @@ type Cnf = Record
              Idioma: Integer;
              UserCount: Int64;
              Frm: Record
-                    HintColor, BorderPainelColor,
-                    TimePainelColor, TimeFontColor,
-                    TimeShadowFontColor, DatePainelColor,
-                    DateFontColor, DateShadowFontColor,
-                    PageControlColor, ClockColor, ArrowClockColor,
-                    MonthCalendarColor: TColor;
+                    HintColor, TimeFontColor,
+                    DateFontColor, ClockColor, ArrowClockColor: TColor;
                     StAlwaysVisible, StLockForm,
                     StToolsBar, StStatusBar,
                     StBeginShowForm, StPlayWav,
@@ -303,6 +299,9 @@ type Cnf = Record
                     NormalColor, Threshold1Color, Threshold2Color: TColor;
                   end;
            end;
+const
+  { cores padrão dos medidores: normal, acima do Limiar1 e acima do Limiar2 }
+  CorPadraoNivel: array[0..2] of TColor = ($0EA113, $00A3E8, $3834D1);
 var
   ConfigForm: TConfigForm;
   CnfData: Cnf;
@@ -335,21 +334,15 @@ begin
     CnfData.Img.PictureDuration:= 10;
     CnfData.Img.FilterFileType:= 0;
     CnfData.Frm.HintColor:= clAqua;
-    CnfData.Frm.BorderPainelColor:= clSkyBlue;
-    CnfData.Frm.TimePainelColor:= $00E9EAC6;
-    CnfData.Frm.TimeFontColor:= clTeal;
-    CnfData.Frm.TimeShadowFontColor:= clAqua;
-    CnfData.Frm.DatePainelColor:= $00D3ECED;
-    CnfData.Frm.DateFontColor:= clOlive;
-    CnfData.Frm.DateShadowFontColor:= clYellow;
-    CnfData.Frm.PageControlColor:= $00CAC1A4;
-    CnfData.Frm.ClockColor:= clSkyBlue;
-    CnfData.Frm.ArrowClockColor:= clNavy;
-    CnfData.Frm.MonthCalendarColor:= $00FEF0D8;
-    CnfData.Frm.TimeFontName:= 'Comic Sans MS';
-    CnfData.Frm.DateFontName:= 'Comic Sans MS';
-    CnfData.Frm.TimeFontSize:= 24;
-    CnfData.Frm.DateFontSize:= 12;
+    CnfData.Frm.TimeFontColor:= MainForm.LbHora.Font.Color;
+    CnfData.Frm.DateFontColor:= MainForm.LbData.Font.Color;
+    CnfData.Frm.ClockColor:= clWhite;
+    CnfData.Frm.ArrowClockColor:= $001B1B1B;
+    { fontes atuais do formulário principal }
+    CnfData.Frm.TimeFontName:= ShortString(MainForm.LbHora.Font.Name);
+    CnfData.Frm.DateFontName:= ShortString(MainForm.LbData.Font.Name);
+    CnfData.Frm.TimeFontSize:= MainForm.LbHora.Font.Size;
+    CnfData.Frm.DateFontSize:= MainForm.LbData.Font.Size;
     CnfData.Frm.StAlwaysVisible:= True;
     CnfData.Frm.StLockForm:= False;
     CnfData.Frm.StToolsBar:= True;
@@ -390,9 +383,9 @@ begin
     CnfData.Crn.CrnTime:= '00:60:00';
     CnfData.Sys.Threshold1:= 75;
     CnfData.Sys.Threshold2:= 90;
-    CnfData.Sys.NormalColor:= $00D3EDC2; { $00FDDD8A; }
-    CnfData.Sys.Threshold1Color:= $00CAFFFF;
-    CnfData.Sys.Threshold2Color:= $00E9D2FF;
+    CnfData.Sys.NormalColor:= CorPadraoNivel[0];
+    CnfData.Sys.Threshold1Color:= CorPadraoNivel[1];
+    CnfData.Sys.Threshold2Color:= CorPadraoNivel[2];
 
   end;
 end;
@@ -414,19 +407,12 @@ begin
          CheckBox1.Checked:= CnfData.SetPsw;
          CheckBox4.Checked:= CnfData.Img.StSlideShow;
          Application.HintColor:= CnfData.Frm.HintColor;
-         MainForm.Panel1.Color:= CnfData.Frm.BorderPainelColor;
-         MainForm.LabelEffect1.Color:= CnfData.Frm.TimePainelColor;
-         MainForm.LabelEffect1.Font.Color:= CnfData.Frm.TimeFontColor;
-         MainForm.LabelEffect2.Color:= CnfData.Frm.DatePainelColor;
-         MainForm.LabelEffect2.Font.Color:= CnfData.Frm.DateFontColor;
-         MainForm.Panel5.Color:= CnfData.Frm.PageControlColor;
          MainForm.Clock1.Color:= CnfData.Frm.ClockColor;
          MainForm.Clock1.Font.Color:= CnfData.Frm.ArrowClockColor;
-         MainForm.MonthCalendar1.CalColors.MonthBackColor:= CnfData.Frm.MonthCalendarColor;
-         MainForm.LabelEffect1.Font.Name:= CnfData.Frm.TimeFontName;
-         MainForm.LabelEffect2.Font.Name:= CnfData.Frm.DateFontName;
-         MainForm.LabelEffect1.Font.Size:= CnfData.Frm.TimeFontSize;
-         MainForm.LabelEffect2.Font.Size:= CnfData.Frm.DateFontSize;
+         MainForm.DefineFonteRelogio(string(CnfData.Frm.TimeFontName));
+         MainForm.DefineFonteData(string(CnfData.Frm.DateFontName));
+         MainForm.LbHora.Font.Color:= CnfData.Frm.TimeFontColor;
+         MainForm.LbData.Font.Color:= CnfData.Frm.DateFontColor;
          Edit9.Text:= CnfData.Frm.Mensagem;
          Edit10.Text:= CnfData.Frm.WAVFile;
          MainForm.PageControl1.ActivePageIndex:= CnfData.Frm.IdxPage;
@@ -506,19 +492,12 @@ begin
          CnfData.Sch.SchWAVFile:= Edit17.Text;
          CnfData.Sch.SchMsg:= Edit18.Text;
          CnfData.Frm.HintColor:= Application.HintColor;
-         CnfData.Frm.BorderPainelColor:= MainForm.Panel1.Color;
-         CnfData.Frm.TimePainelColor:= MainForm.LabelEffect1.Color;
-         CnfData.Frm.TimeFontColor:= MainForm.LabelEffect1.Font.Color;
-         CnfData.Frm.DatePainelColor:= MainForm.LabelEffect2.Color;
-         CnfData.Frm.DateFontColor:= MainForm.LabelEffect2.Font.Color;
-         CnfData.Frm.PageControlColor:= MainForm.Panel5.Color;
          CnfData.Frm.ClockColor:= MainForm.Clock1.Color;
          CnfData.Frm.ArrowClockColor:= MainForm.Clock1.Font.Color;
-         CnfData.Frm.MonthCalendarColor:= MainForm.MonthCalendar1.CalColors.MonthBackColor;
-         CnfData.Frm.TimeFontName:= MainForm.LabelEffect1.Font.Name;
-         CnfData.Frm.DateFontName:= MainForm.LabelEffect2.Font.Name;
-         CnfData.Frm.TimeFontSize:= MainForm.LabelEffect1.Font.Size;
-         CnfData.Frm.DateFontSize:= MainForm.LabelEffect2.Font.Size;
+         CnfData.Frm.TimeFontName:= ShortString(MainForm.LbHora.Font.Name);
+         CnfData.Frm.DateFontName:= ShortString(MainForm.LbData.Font.Name);
+         CnfData.Frm.TimeFontColor:= MainForm.LbHora.Font.Color;
+         CnfData.Frm.DateFontColor:= MainForm.LbData.Font.Color;
          CnfData.Frm.StAlwaysVisible:= CheckListBox2.Checked[0];
          CnfData.Frm.StLockForm:= CheckListBox2.Checked[1];
          CnfData.Frm.StToolsBar:= CheckListBox2.Checked[2];
@@ -621,6 +600,14 @@ begin
         if IOResult=0 then
         begin
           CnfData.UserCount:= CnfData.UserCount + 1;
+          { .CNF antigo: troca as cores pastel do padrão anterior pelas atuais }
+          if (CnfData.Sys.NormalColor=$00D3EDC2) and (CnfData.Sys.Threshold1Color=$00CAFFFF)
+            and (CnfData.Sys.Threshold2Color=$00E9D2FF) then
+          begin
+            CnfData.Sys.NormalColor:= CorPadraoNivel[0];
+            CnfData.Sys.Threshold1Color:= CorPadraoNivel[1];
+            CnfData.Sys.Threshold2Color:= CorPadraoNivel[2];
+          end;
           Seek(CnfFile,0); Write(CnfFile,CnfData);
         end else
         begin
@@ -654,7 +641,6 @@ begin
       FileListBox1.Directory:= GetRunDir;
   {--------------------------------------------------------}
   MainForm.SempreVisivel(CnfData.Frm.StAlwaysVisible);
-  MainForm.Panel8.Visible:= CnfData.Frm.StToolsBar;
   MainForm.Panel7.Visible:= CnfData.Frm.StStatusBar;
   MainForm.Image1.Center:= CnfData.Img.StImgCenter;
   MainForm.Image1.Stretch:= CnfData.Img.StImgStretch;
@@ -746,9 +732,7 @@ begin
     CnfData.Frm.PosX:= MainForm.Left;
   end;
   ComboBox3.ItemIndex:=0;
-  MainForm.Panel1.Color:= SetNewColor1(0,MainForm.Panel1.Color);
   Combobox4.ItemIndex:=0;
-  FontDialog1.Font:= Mainform.LabelEffect1.Font;
   ConfigForm.WrnPanel.Caption:= GetTm(0,WrnTimeCount);
 end;
 
@@ -887,12 +871,12 @@ begin
   if MessageDlg('Deseja setar as cores padrão do Status de CPU e Memória?',
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    Shape2.Brush.Color:= $00D3EDC2;
-    Shape3.Brush.Color:= $00CAFFFF;
-    Shape4.Brush.Color:=  $00E9D2FF;
-    CnfData.Sys.NormalColor:= $00D3EDC2;
-    CnfData.Sys.Threshold1Color:= $00CAFFFF;
-    CnfData.Sys.Threshold2Color:= $00E9D2FF;
+    Shape2.Brush.Color:= CorPadraoNivel[0];
+    Shape3.Brush.Color:= CorPadraoNivel[1];
+    Shape4.Brush.Color:= CorPadraoNivel[2];
+    CnfData.Sys.NormalColor:= CorPadraoNivel[0];
+    CnfData.Sys.Threshold1Color:= CorPadraoNivel[1];
+    CnfData.Sys.Threshold2Color:= CorPadraoNivel[2];
     Seek(CnfFile,0);
     Write(CnfFile,CnfData);
   end;
@@ -1046,8 +1030,8 @@ end;
 
 procedure TConfigForm.CheckBox2Click(Sender: TObject);
 begin
-  if CheckBox2.Checked then MainForm.LEDPaint1.Brush.Color:= clRed else MainForm.LEDPaint1.Brush.Color:= clMaroon;
   MainForm.Alarm1.Checked:= CheckBox2.Checked;
+  MainForm.AtualizaAvisos; { etiqueta do alarme sob a data }
   Seek(CnfFile,0);
   Write(CnfFile,CnfData);
 end;
@@ -1301,72 +1285,44 @@ end;
 procedure TConfigForm.SpeedButton15Click(Sender: TObject);
 begin
   case ComboBox3.ItemIndex of
-    0: MainForm.Panel1.Color:= SetNewColor1(1,MainForm.Panel1.Color);
-    1: begin
-         MainForm.LabelEffect1.Color:= SetNewColor1(1,MainForm.LabelEffect1.Color);
-       end;
-    2: begin
-         MainForm.LabelEffect1.Font.Color:= SetNewColor1(1,MainForm.LabelEffect1.Font.Color);
-       end;
-    3: CnfData.Frm.TimeShadowFontColor:= SetNewColor1(1,CnfData.Frm.TimeShadowFontColor);
-    4: MainForm.LabelEffect2.Color:= SetNewColor1(1,MainForm.LabelEffect2.Color);
-    5: begin
-         MainForm.LabelEffect2.Font.Color:= SetNewColor1(1,MainForm.LabelEffect2.Font.Color);
-       end;
-    6: CnfData.Frm.DateShadowFontColor:= SetNewColor1(1,CnfData.Frm.DateShadowFontColor);
-    7: MainForm.Panel5.Color:= SetNewColor1(1,MainForm.Panel5.Color);
-    8: MainForm.Clock1.Color:= SetNewColor1(1,MainForm.Clock1.Color);
-    9: MainForm.Clock1.Font.Color:= SetNewColor1(1,MainForm.Clock1.Font.Color);
-   10: MainForm.MonthCalendar1.CalColors.MonthBackColor:= SetNewColor1(1,MainForm.MonthCalendar1.CalColors.MonthBackColor);
+    0: MainForm.LbHora.Font.Color:= SetNewColor1(1,MainForm.LbHora.Font.Color);
+    1: MainForm.LbData.Font.Color:= SetNewColor1(1,MainForm.LbData.Font.Color);
+    2: MainForm.Clock1.Color:= SetNewColor1(1,MainForm.Clock1.Color);
+    3: MainForm.Clock1.Font.Color:= SetNewColor1(1,MainForm.Clock1.Font.Color);
   end;
 end;
 
 procedure TConfigForm.ComboBox3Change(Sender: TObject);
 begin
   case ComboBox3.ItemIndex of
-    0: MainForm.Panel1.Color:= SetNewColor1(0,MainForm.Panel1.Color);
-    1: begin
-         MainForm.LabelEffect1.Color:= SetNewColor1(0,MainForm.LabelEffect1.Color);
-       end;
-    2: begin
-         MainForm.LabelEffect1.Font.Color:= SetNewColor1(0,MainForm.LabelEffect1.Font.Color);
-       end;
-    3: CnfData.Frm.TimeShadowFontColor:= SetNewColor1(0,CnfData.Frm.TimeShadowFontColor);
-    4: MainForm.LabelEffect2.Color:= SetNewColor1(0,MainForm.LabelEffect2.Color);
-    5: begin
-         MainForm.LabelEffect2.Font.Color:= SetNewColor1(0,MainForm.LabelEffect2.Font.Color);
-       end;
-    6: CnfData.Frm.DateShadowFontColor:= SetNewColor1(0,CnfData.Frm.DateShadowFontColor);
-    7: MainForm.Panel5.Color:= SetNewColor1(0,MainForm.Panel5.Color);
-    8: MainForm.Clock1.Color:= SetNewColor1(0,MainForm.Clock1.Color);
-    9: MainForm.Clock1.Font.Color:= SetNewColor1(0,MainForm.Clock1.Font.Color);
-   10: MainForm.MonthCalendar1.CalColors.MonthBackColor:= SetNewColor1(0,MainForm.MonthCalendar1.CalColors.MonthBackColor);
+    0: MainForm.LbHora.Font.Color:= SetNewColor1(0,MainForm.LbHora.Font.Color);
+    1: MainForm.LbData.Font.Color:= SetNewColor1(0,MainForm.LbData.Font.Color);
+    2: MainForm.Clock1.Color:= SetNewColor1(0,MainForm.Clock1.Color);
+    3: MainForm.Clock1.Font.Color:= SetNewColor1(0,MainForm.Clock1.Font.Color);
   end;
 end;
 
+{ Fontes do relógio digital e da data: só o tipo (o tamanho, o estilo e a
+  cor são os do visual novo) }
 procedure TConfigForm.SpeedButton16Click(Sender: TObject);
 begin
   case ComboBox4.ItemIndex of
     0: begin
-         FontDialog1.Font:= Mainform.LabelEffect1.Font;
+         FontDialog1.Font:= MainForm.LbHora.Font;
          if FontDialog1.Execute then
          begin
-           Mainform.LabelEffect1.Font:= FontDialog1.Font;
-           if ComboBox3.ItemIndex=2 then
-             MainForm.LabelEffect1.Font.Color:= SetNewColor1(0,MainForm.LabelEffect1.Font.Color);
-           CnfData.Frm.TimeFontColor:= Mainform.LabelEffect1.Color;
-           ConfigForm.SaveCnfFile;
+           MainForm.DefineFonteRelogio(FontDialog1.Font.Name);
+           CnfData.Frm.TimeFontName:= ShortString(MainForm.LbHora.Font.Name);
+           SaveCnfFile;
          end;
        end;
     1: begin
-         FontDialog1.Font:= Mainform.LabelEffect2.Font;
+         FontDialog1.Font:= MainForm.LbData.Font;
          if FontDialog1.Execute then
          begin
-           Mainform.LabelEffect2.Font:= FontDialog1.Font;
-           if ComboBox3.ItemIndex=5 then
-             MainForm.LabelEffect2.Font.Color:= SetNewColor1(0,MainForm.LabelEffect2.Font.Color);
-           CnfData.Frm.DateFontColor:= Mainform.LabelEffect2.Color;
-           ConfigForm.SaveCnfFile;
+           MainForm.DefineFonteData(FontDialog1.Font.Name);
+           CnfData.Frm.DateFontName:= ShortString(MainForm.LbData.Font.Name);
+           SaveCnfFile;
          end;
        end;
   end;

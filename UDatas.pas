@@ -13,6 +13,18 @@ interface
 uses
   SysUtils, Classes;
 
+type
+  { Tipo da data, na ordem de prioridade da cor no calendário }
+  TTipoData = (tdNacional, tdEstadual, tdMunicipal, tdAniversario, tdPessoal);
+  TDataDia = record
+    Tipo: TTipoData;
+    Texto: string;
+    Classe: string; { ex.: 'municipal - Salvador' }
+  end;
+
+{ Datas do Datas.txt e aniversários no dia D, com o tipo de cada uma (os
+  feriados nacionais calculados ficam em UMain.NomeFeriado) }
+function DatasDoDia(D: TDateTime): TArray<TDataDia>;
 function DatasExtras(D: TDateTime; const Separador: string = ' / ';
   ComAniversarios: Boolean = True; ComClasse: Boolean = False): string;
 function ProximosAniversarios(Desde: TDateTime; Dias: Integer): string;
@@ -223,6 +235,36 @@ begin
     for N in Aniversarios do
       if FazAniversario(N, A, M, Dd) then Junta(TextoAniversario(N, A));
   Result:= S;
+end;
+
+function DatasDoDia(D: TDateTime): TArray<TDataDia>;
+var A, M, Dd: Word;
+  X: TDataPessoal;
+  N: TAniversario;
+  Item: TDataDia;
+begin
+  Result:= nil;
+  Recarrega;
+  DecodeDate(D, A, M, Dd);
+  for X in Datas do
+    if (X.Dia=Dd) and (X.Mes=M) and ((X.Ano=0) or (X.Ano=A)) then
+    begin
+      Item.Texto:= X.Texto;
+      Item.Classe:= X.Classe;
+      if X.Classe.StartsWith('nacional') then Item.Tipo:= tdNacional
+      else if X.Classe.StartsWith('estadual') then Item.Tipo:= tdEstadual
+      else if X.Classe.StartsWith('municipal') then Item.Tipo:= tdMunicipal
+      else Item.Tipo:= tdPessoal;
+      Result:= Result+[Item];
+    end;
+  for N in Aniversarios do
+    if FazAniversario(N, A, M, Dd) then
+    begin
+      Item.Tipo:= tdAniversario;
+      Item.Texto:= TextoAniversario(N, A);
+      Item.Classe:= '';
+      Result:= Result+[Item];
+    end;
 end;
 
 { Lista dos aniversários de Desde até Desde+Dias-1, um por linha }

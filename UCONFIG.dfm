@@ -609,17 +609,10 @@ object ConfigForm: TConfigForm
               TabOrder = 5
               OnChange = ComboBox3Change
               Items.Strings = (
-                'Cor da Borda do Painel Principal'
-                'Cor do Painel de Hor'#225'rio'
                 'Cor da Fonte do Campo de Hor'#225'rio'
-                'Cor da Sombra da Fonte do Campo de Hor'#225'rio'
-                'Cor do Painel de Data'
                 'Cor da Fonte do Campo de Data'
-                'Cor da Sombra da Fonte da do Campo Data'
-                'Cor das P'#225'ginas de Op'#231#245'es'
-                'Cor do Rel'#243'gio'
-                'Cor dos Ponteiros do Rel'#243'gio'
-                'Cor do Calend'#225'rio')
+                'Cor de Fundo do Rel'#243'gio Anal'#243'gico'
+                'Cor dos Ponteiros do Rel'#243'gio')
             end
             object ComboBox4: TComboBox
               Left = 6

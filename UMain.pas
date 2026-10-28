@@ -3,12 +3,14 @@
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls,
+  { GDI+ antes das units da VCL: em nomes repetidos (TPixelFormat,
+    TFontStyle...) prevalecem os da VCL }
+  Windows, Messages, Winapi.GDIPAPI, Winapi.GDIPOBJ, SysUtils, Classes, Graphics, Controls,
   Forms, Dialogs, StdCtrls, ExtCtrls, ComCtrls, mmSystem,
   Menus, ImgList, Buttons, Grids, Calendar, ShellAPI, Gauges,
   FileCtrl, ExtDlgs, ToolWin, WinSock,
   Registry, Printers, Mask, {WinInet,}
-  jpeg, System.ImageList, UAnim, Vcl.Imaging.pngimage;
+  jpeg, System.ImageList, UAnim, Vcl.Imaging.pngimage, UDatas;
 
 const Vrs='1.83o';
       Prg= 'Painel';
@@ -57,6 +59,38 @@ type
     Ultima: TDateTime;  { última limpeza feita com estas opções }
   end;
 
+  { Painel com o estilo do visual novo, escolhido pelo Tag (101 a 109, ver
+    ecCartao etc. na implementação; outros valores: painel comum). Fundo e
+    fonte vêm do .dfm; os cantos arredondados e o realce sob o mouse são
+    desenhados aqui. Os TLabel dentro de um painel clicável repassam o
+    clique para ele. }
+  TPanel = class(Vcl.ExtCtrls.TPanel)
+  private
+    FQuente, FPressionado, FSelecionado: Boolean;
+    function Clicavel: Boolean;
+    procedure SetSelecionado(Value: Boolean);
+    procedure AtualizaQuente;
+    procedure FilhoClick(Sender: TObject);
+    procedure CMMouseEnter(var Message: TMessage); message CM_MOUSEENTER;
+    procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
+  protected
+    procedure Loaded; override;
+    procedure Paint; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X, Y: Integer); override;
+  public
+    { Seção ativa (ecSecao) ou opção escolhida (ecChip) }
+    property Selecionado: Boolean read FSelecionado write SetSelecionado;
+  end;
+
+  { Item da lista de datas da Agenda }
+  TItemData = record
+    Dia: TDateTime;
+    Data: TDataDia;
+  end;
+
   TMainForm = class(TForm)
     Timer1: TTimer;
     Timer2: TTimer;
@@ -82,6 +116,185 @@ type
     Calculadora1: TMenuItem;
     Fechar1: TMenuItem;
     Executar1: TMenuItem;
+    PnTopo: TPanel;
+    ShLogo: TShape;
+    ShLogo1: TShape;
+    ShLogo2: TShape;
+    ShLogo3: TShape;
+    ShLogo4: TShape;
+    LbTitulo: TLabel;
+    BtCompactar: TPanel;
+    BtMinimizar: TPanel;
+    BtFechar: TPanel;
+    LbHora: TLabel;
+    LbSegundos: TLabel;
+    ShAlarme: TShape;
+    LbData: TLabel;
+    PnAviso1: TPanel;
+    PnAviso2: TPanel;
+    PnNavegacao: TPanel;
+    PnSecMonitor: TPanel;
+    LbSecMonitorIco: TLabel;
+    LbSecMonitor: TLabel;
+    PnSecAgenda: TPanel;
+    LbSecAgendaIco: TLabel;
+    LbSecAgenda: TLabel;
+    PnSecDiscos: TPanel;
+    LbSecDiscosIco: TLabel;
+    LbSecDiscos: TLabel;
+    PnSecLimpeza: TPanel;
+    LbSecLimpezaIco: TLabel;
+    LbSecLimpeza: TLabel;
+    PnSecMais: TPanel;
+    LbSecMaisIco: TLabel;
+    LbSecMais: TLabel;
+    PnRodape: TPanel;
+    ShRodapeLinha: TShape;
+    ShRodapeLed: TShape;
+    LbRodape: TLabel;
+    LbAtalho: TLabel;
+    PnConteudo: TPanel;
+    PnMonitor: TPanel;
+    PnDesempenho: TPanel;
+    LbDesempenho: TLabel;
+    LbHistorico: TLabel;
+    ShLegCpu: TShape;
+    LbLegCpu: TLabel;
+    LbCpuValor: TLabel;
+    ShLegMem: TShape;
+    LbLegMem: TLabel;
+    LbMemValor: TLabel;
+    PbGrafico: TPaintBox;
+    LbAtras: TLabel;
+    LbAgora: TLabel;
+    ShSeparador: TShape;
+    PbTemperatura: TPaintBox;
+    LbTempTitulo: TLabel;
+    LbTempInfo: TLabel;
+    LbRam: TLabel;
+    LbRamPct: TLabel;
+    PbRam: TPaintBox;
+    LbRamInfo: TLabel;
+    LbSwap: TLabel;
+    LbSwapPct: TLabel;
+    PbSwap: TPaintBox;
+    LbSwapInfo: TLabel;
+    LbCommit: TLabel;
+    LbCommitPct: TLabel;
+    PbCommit: TPaintBox;
+    LbCommitInfo: TLabel;
+    ShNivel0: TShape;
+    LbNivel0: TLabel;
+    ShNivel1: TShape;
+    LbNivel1: TLabel;
+    ShNivel2: TShape;
+    LbNivel2: TLabel;
+    PnAtalhos: TPanel;
+    PnAtProcessos: TPanel;
+    LbAtProcessosIco: TLabel;
+    LbAtProcessos: TLabel;
+    PnAtBloquear: TPanel;
+    LbAtBloquearIco: TLabel;
+    LbAtBloquear: TLabel;
+    PnAtPowerShell: TPanel;
+    LbAtPowerShellIco: TLabel;
+    LbAtPowerShell: TLabel;
+    PnAtExecutar: TPanel;
+    LbAtExecutarIco: TLabel;
+    LbAtExecutar: TLabel;
+    PnAgenda: TPanel;
+    PnCalendario: TPanel;
+    LbMes: TLabel;
+    BtListaDatas: TPanel;
+    BtCuriosidades: TPanel;
+    BtMesAnterior: TPanel;
+    BtHoje: TPanel;
+    BtMesSeguinte: TPanel;
+    PbCalendario: TPaintBox;
+    ShTipoNacional: TShape;
+    LbTipoNacional: TLabel;
+    ShTipoEstadual: TShape;
+    LbTipoEstadual: TLabel;
+    ShTipoMunicipal: TShape;
+    LbTipoMunicipal: TLabel;
+    ShTipoAniversario: TShape;
+    LbTipoAniversario: TLabel;
+    ShTipoPessoal: TShape;
+    LbTipoPessoal: TLabel;
+    PnProximas: TPanel;
+    LbProximasTitulo: TLabel;
+    PbProximas: TPaintBox;
+    PnDiscos: TPanel;
+    PnUnidades: TPanel;
+    LbUnidades: TLabel;
+    BtAtualizarDiscos: TPanel;
+    LbSemDiscos: TLabel;
+    PnDisco1: TPanel;
+    ShDisco1: TShape;
+    LbDisco1Ico: TLabel;
+    LbDisco1Nome: TLabel;
+    LbDisco1Pct: TLabel;
+    PbDisco1: TPaintBox;
+    LbDisco1Info: TLabel;
+    LbDisco1Fs: TLabel;
+    PnDisco2: TPanel;
+    ShDisco2: TShape;
+    LbDisco2Ico: TLabel;
+    LbDisco2Nome: TLabel;
+    LbDisco2Pct: TLabel;
+    PbDisco2: TPaintBox;
+    LbDisco2Info: TLabel;
+    LbDisco2Fs: TLabel;
+    PnDisco3: TPanel;
+    ShDisco3: TShape;
+    LbDisco3Ico: TLabel;
+    LbDisco3Nome: TLabel;
+    LbDisco3Pct: TLabel;
+    PbDisco3: TPaintBox;
+    LbDisco3Info: TLabel;
+    LbDisco3Fs: TLabel;
+    PnDisco4: TPanel;
+    ShDisco4: TShape;
+    LbDisco4Ico: TLabel;
+    LbDisco4Nome: TLabel;
+    LbDisco4Pct: TLabel;
+    PbDisco4: TPaintBox;
+    LbDisco4Info: TLabel;
+    LbDisco4Fs: TLabel;
+    PnLixeira: TPanel;
+    ShLixeira: TShape;
+    LbLixeiraIco: TLabel;
+    LbLixeira: TLabel;
+    LbLixeiraInfo: TLabel;
+    BtIrLimpeza: TPanel;
+    PnLimpeza: TPanel;
+    PnLimpezaCartao: TPanel;
+    LbLimpezaTitulo: TLabel;
+    BtAtualizarLimpeza: TPanel;
+    LbLimpezaPerfil: TLabel;
+    PbLimpeza: TPaintBox;
+    PbProgresso: TPaintBox;
+    BtLimpar: TPanel;
+    LbLimpezaStatus: TLabel;
+    PnNavegadores: TPanel;
+    LbNavegadores: TLabel;
+    BtLimparCache: TPanel;
+    PnNav0: TPanel;
+    PnNav1: TPanel;
+    PnNav2: TPanel;
+    PnNav3: TPanel;
+    PnNav4: TPanel;
+    PnNav5: TPanel;
+    PopupMais: TPopupMenu;
+    MiAnotacoes: TMenuItem;
+    MiImagens: TMenuItem;
+    MiRelogio: TMenuItem;
+    MiInformacoes: TMenuItem;
+    MiCronometro: TMenuItem;
+    MiContatos: TMenuItem;
+    MiSobre: TMenuItem;
+    ImgMais: TImageList;
+    ImgBandeja: TImageList;
     ImageList1: TImageList;
     ImageList3: TImageList;
     ImprimirImagem1: TMenuItem;
@@ -92,17 +305,6 @@ type
     OpenDialog1: TOpenDialog;
     ImageList2: TImageList;
     Alarm1: TMenuItem;
-    Panel1: TPanel;
-    Panel2: TPanel;
-    SpeedButton6: TSpeedButton;
-    SpeedButton7: TSpeedButton;
-    LEDPaint1: TShape;
-    Panel3: TPanel;
-    Panel12: TPanel;
-    SpeedButton8: TSpeedButton;
-    Panel5: TPanel;
-    Panel8: TPanel;
-    Panel4: TPanel;
     Transparent1: TMenuItem;
     N5: TMenuItem;
     Transparent2: TMenuItem;
@@ -112,11 +314,6 @@ type
     TabSheet1: TTabSheet;
     Image1: TImage;
     TabSheet2: TTabSheet;
-    MonthCalendar1: TMonthCalendar;
-    Panel11: TPanel;
-    LabelX6: TLabel;
-    LabelX3: TLabel;
-    SpeedButton1: TSpeedButton;
     TabSheet3: TTabSheet;
     TabSheet6: TTabSheet;
     LabelX5: TLabel;
@@ -135,20 +332,7 @@ type
     Image4: TImage;
     Panel14: TPanel;
     Shape2: TShape;
-    PageScroller1: TPageScroller;
-    ToolBar1: TToolBar;
-    ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
-    ToolButton5: TToolButton;
-    ToolButton6: TToolButton;
-    ToolButton7: TToolButton;
-    ToolButton8: TToolButton;
     LabelX8: TLabel;
-    LabelEffect1: TLabel;
-    LabelEffect2: TLabel;
-    SpeedButton9: TSpeedButton;
     N6: TMenuItem;
     N7: TMenuItem;
     Panel7: TPanel;
@@ -160,6 +344,8 @@ type
     Memo5: TMemo;
     Memo1: TMemo;
     Image5: TImage;
+    ShMemo1: TShape;
+    ShMemo5: TShape;
     TabSheet11: TTabSheet;
     Panel17: TPanel;
     LabelX1: TLabel;
@@ -195,76 +381,10 @@ type
     ToolButton43: TToolButton;
     ToolButton44: TToolButton;
     ToolButton45: TToolButton;
-    Panel6: TPanel;
-    Image2: TImage;
-    Panel25: TPanel;
-    Image3: TImage;
-    Gauge1: TGauge;
-    LabelX4: TLabel;
-    SpeedButton10: TSpeedButton;
-    Label7: TLabel;
-    Gauge2: TGauge;
     ImageList4: TImageList;
     ImageList5: TImageList;
-    Image6: TImage;
     TabSheet5: TTabSheet;
-    LabelX11: TLabel;
-    SpeedButton11: TSpeedButton;
-    Panel9: TPanel;
-    Gauge3: TGauge;
-    Memo3: TMemo;
-    SpeedButton13: TSpeedButton;
-    Panel13: TPanel;
-    Image8: TImage;
-    ComboBox1: TComboBox;
     TabSheet4: TTabSheet;
-    Panel21: TPanel;
-    Label15: TLabel;
-    Gauge4: TGauge;
-    Label14: TLabel;
-    Panel22: TPanel;
-    Label17: TLabel;
-    Gauge5: TGauge;
-    Label16: TLabel;
-    Panel23: TPanel;
-    Label19: TLabel;
-    Gauge6: TGauge;
-    Label18: TLabel;
-    Panel24: TPanel;
-    Label21: TLabel;
-    Gauge7: TGauge;
-    Label20: TLabel;
-    Panel26: TPanel;
-    Image7: TImage;
-    SpeedButton14: TSpeedButton;
-    SpeedButton15: TSpeedButton;
-    Label9: TLabel;
-    Panel30: TPanel;
-    Panel31: TPanel;
-    Panel32: TPanel;
-    UseMemGauge: TGauge;
-    Panel33: TPanel;
-    Label10: TLabel;
-    Label3: TLabel;
-    Panel34: TPanel;
-    RamGauge: TGauge;
-    Panel35: TPanel;
-    Label11: TLabel;
-    Label1: TLabel;
-    SwapGauge: TGauge;
-    Label12: TLabel;
-    Label2: TLabel;
-    Panel28: TPanel;
-    Panel27: TPanel;
-    Label13: TLabel;
-    VirtualGauge: TGauge;
-    Label4: TLabel;
-    Panel29: TPanel;
-    Label5: TLabel;
-    Panel36: TPanel;
-    LabelX7: TLabel;
-    SpeedButton2: TSpeedButton;
-    Label8: TLabel;
     function ViewPRGStartWindows: boolean;
     procedure SavePRGStartWindows;
     procedure ErasePRGStartWindows;
@@ -277,8 +397,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure SpeedButton14Click(Sender: TObject);
-    procedure SpeedButton15Click(Sender: TObject);
     procedure ShowHint(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure Timer2Timer(Sender: TObject);
@@ -299,10 +417,6 @@ type
     procedure OpenPictureDialog1Close(Sender: TObject);
     procedure Dos1Click(Sender: TObject);
     procedure Fechar1Click(Sender: TObject);
-    procedure LabelEffect1MouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure LabelEffect2MouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
     procedure FormClosedView;
     procedure Executar1Click(Sender: TObject);
     procedure ExecuteList;
@@ -313,7 +427,6 @@ type
     procedure SpeedButton6Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
-    procedure SpeedButton2Click(Sender: TObject);
     procedure FindDialog1Find(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
     procedure SpeedButton5Click(Sender: TObject);
@@ -328,9 +441,6 @@ type
     procedure Lock1Click(Sender: TObject);
     procedure Lock2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
-    procedure MonthCalendar1GetMonthBoldInfo(Sender: TObject; Month,
-      Year: LongWord; var MonthBoldInfo: LongWord);
-    procedure MonthCalendar1Click(Sender: TObject);
     procedure ToolButton1Click(Sender: TObject);
     procedure ToolButton8Click(Sender: TObject);
     procedure ToolButton2Click(Sender: TObject);
@@ -366,12 +476,35 @@ type
     procedure StringGrid1KeyPress(Sender: TObject; var Key: Char);
     procedure ToolButton44Click(Sender: TObject);
     procedure ToolButton45Click(Sender: TObject);
-    procedure SpeedButton10Click(Sender: TObject);
     procedure Clock1Paint(Sender: TObject);
     procedure SpeedButton11Click(Sender: TObject);
     procedure SpeedButton12Click(Sender: TObject);
     procedure AbrirLimpezaNavegador(const Navegador: string);
     procedure SpeedButton13Click(Sender: TObject);
+    { visual novo }
+    procedure SecaoClick(Sender: TObject);
+    procedure MaisClick(Sender: TObject);
+    procedure PnConteudoResize(Sender: TObject);
+    procedure GraficoPaint(Sender: TObject);
+    procedure TemperaturaPaint(Sender: TObject);
+    procedure BarraPaint(Sender: TObject);
+    procedure CalendarioPaint(Sender: TObject);
+    procedure CalendarioMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure CalendarioMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure CalendarioMouseLeave(Sender: TObject);
+    procedure ProximasPaint(Sender: TObject);
+    procedure LimpezaPaint(Sender: TObject);
+    procedure AgendaNavClick(Sender: TObject);
+    procedure AtualizarDiscosClick(Sender: TObject);
+    procedure IrLimpezaClick(Sender: TObject);
+    procedure AtualizarLimpezaClick(Sender: TObject);
+    procedure NavegadorClick(Sender: TObject);
+    procedure PowerShellClick(Sender: TObject);
+    procedure ProcessosClick(Sender: TObject);
+    procedure HistoricoClick(Sender: TObject);
+    procedure BloquearClick(Sender: TObject);
   private
     { Private declarations }
     FAnim: TImageAnimator; {substitui o componente TBmpAnimator}
@@ -385,7 +518,6 @@ type
     FTrayWnd: HWND;             {janela da barra de tarefas (Shell_TrayWnd) atual}
     FTrayRetry: Integer;        {segundos restantes para recolocar o ícone após reinício do Explorer}
     FCpuUso: Double;            {Última leitura de uso da CPU (%)}
-    FDiscoOcupado: Boolean;     {aba de discos: mostra espaço ocupado (True) ou livre (False)}
     FLimpando: Boolean;         {limpeza de temporários em andamento}
     FOpcoes: TOpcoesLimpeza;    {opções da limpeza (Painel.ini)}
     FAutoFeita: Boolean;        {limpeza automática "ao iniciar" já executada}
@@ -405,6 +537,43 @@ type
     FDiaAvisado: TDateTime;     {dia cujas datas (feriados, aniversários) já foram avisadas}
     FClipboard: TStringList;    {histórico da área de transferência (mais recente primeiro)}
     FMenuClip: array[0..1] of TMenuItem; {submenus do histórico (bandeja e janela)}
+    {--visual novo--}
+    FFamTexto, FFamSemi: TGPFontFamily; {fontes do desenho com GDI+}
+    FAvisoDia: TDateTime;       {dia em que o aviso da próxima data foi calculado}
+    FAvisoData: string;         {próxima data (feriado, data pessoal, aniversário)}
+    FAlturaExpandida: Integer;  {ClientHeight com as seções (para expandir depois de recolher)}
+    FTempOk: Boolean;           {Monitor: há leitura de temperatura}
+    FTemp: Double;              {Monitor: temperatura da CPU (°C)}
+    FMes: TDateTime;            {Agenda: 1º dia do mês exibido}
+    FDiaSel: TDateTime;         {Agenda: dia escolhido; hoje = próximas datas}
+    FDiaQuente: Integer;        {Agenda: dia sob o mouse (0 = nenhum)}
+    { Agenda: datas do calendário e da lista, relidas ao mudar o mês ou o dia
+      escolhido, na virada do dia e a cada 30 s (Datas.txt e contatos) }
+    FCacheInicio, FCacheDia, FCacheHoje: TDateTime;
+    FCacheQuando: UInt64;
+    FCacheDias: array[0..41] of TArray<TDataDia>; {a partir de FCacheInicio}
+    FCacheLista: TArray<TItemData>;
+    FDiscosSeg: Integer;        {Discos: segundos desde a última leitura}
+    FLimpezaLinhas: TStringList; {Limpeza: cabeçalho, itens, total e mensagens}
+    FLimpezaProgresso: Integer; {Limpeza: progresso (0 a 100)}
+    FNavegador: Integer;        {Limpeza: navegador escolhido (PnNav0..PnNav5)}
+    procedure CriaVisual;
+    procedure AtualizaMonitor;
+    procedure AtualizaSecoes;
+    procedure SelecionaAba(Aba: TTabSheet);
+    procedure GarantirNaTela;
+    function DatasDia(Dia: TDateTime): TArray<TDataDia>;
+    procedure AtualizaLimpeza;
+    function AtualizaCacheAgenda: Boolean;
+    procedure AtualizaAgenda;
+    function LinhasAgenda: Integer;
+    function DiaEm(X, Y: Integer): Integer;
+    function DicaDia(Dia: Integer): string;
+    function ChipNavegador(I: Integer): TPanel;
+    procedure AtualizaNavegadores;
+    function Escala: Single;
+    function Px(V: Single): Integer;
+    function NovoGrafico(Pb: TPaintBox): TGPGraphics;
     { Mover Formulário sem Título }
     procedure WMNCHitTest(var M: TWMNCHitTest);
     message wm_NCHitTest;
@@ -441,16 +610,11 @@ type
     procedure AtualizaMenuClipboard;
     procedure ClipItemClick(Sender: TObject);
     procedure ClipLimparClick(Sender: TObject);
-    procedure PowerShellClick(Sender: TObject);
     procedure DefineTransparente(Valor: Boolean);
     procedure DefineTravado(Valor: Boolean);
+    procedure MenusPopup(Sender: TObject);
     procedure CriaMenusFerramentas;
-    procedure ProcessosClick(Sender: TObject);
-    procedure HistoricoClick(Sender: TObject);
-    procedure BloquearClick(Sender: TObject);
     procedure DesligarMonitorClick(Sender: TObject);
-    procedure MonthCalendar1MouseMove(Sender: TObject; Shift: TShiftState;
-      X, Y: Integer);
     procedure InfoCopiarClick(Sender: TObject);
     procedure InfoSalvarClick(Sender: TObject);
     procedure InfoRedeClick(Sender: TObject);
@@ -466,6 +630,12 @@ type
     { Public declarations }
     procedure IconTray (var Msg: TMessage);
     message wm_IconMessage;
+    { Avisos sob a data (próxima data, alarme) e atalho no rodapé }
+    procedure AtualizaAvisos;
+    { Fontes do relógio digital e da data (configuração) }
+    procedure DefineFonteRelogio(const Nome: string);
+    procedure DefineFonteData(const Nome: string);
+    procedure PosicionaSegundos;
   end;
 
 var
@@ -487,11 +657,11 @@ var
 implementation
 
 uses USelDate, UConfig, USenha, ULembrete, UWarn, UAlarm, UAddr, UStartup,
-  CommCtrl, TlHelp32, IniFiles, Clipbrd, UFerramentas, UDatas;
+  CommCtrl, TlHelp32, IniFiles, Clipbrd, UFerramentas, DateUtils, Winapi.Dwmapi;
 
 type
-  { Dá acesso ao OnMouseMove, que é protegido no TMonthCalendar }
-  TMonthCalendarAcesso = class(TMonthCalendar);
+  { Dá acesso à cor e à fonte, protegidas no TControl }
+  TControlAcesso = class(TControl);
 
 const
   IdAtalho = 1;           { RegisterHotKey: mostrar/ocultar o Painel }
@@ -1222,7 +1392,7 @@ begin
     on EInvalidGraphic do
       Image1.Picture.Graphic := nil;
   end;
-  Panel4.Caption:= PictureFileName1+Format(' (%d x %d)', [Image1.Picture.Width, Image1.Picture.Height]);
+  LbRodape.Caption:= ExtractFileName(PictureFileName1)+Format(' (%d x %d)', [Image1.Picture.Width, Image1.Picture.Height]);
   ConfigForm.SetJPEGOptions(self);
   ConfigForm.EditFileName.Enabled:= (Image1.Picture <> nil);
   ConfigForm.CheckListBox1.Enabled:= (Image1.Picture <> nil);
@@ -1777,7 +1947,6 @@ begin
   Memo2.Lines.Add(Format('Processadores lógicos: %d', [CPUCount]));
   Mhz:= GetCPUSpeed;
   Memo2.Lines.Add(Format('Velocidade nominal: %.0f MHz', [Mhz]));
-  Label8.Caption:= Format('=> %.0f MHz - CPU(s): %d', [Mhz, CPUCount]);
   if TemperaturaCPU(TempCpu, S2) then
     Memo2.Lines.Add(Format('Temperatura: %.0f °C (%s)', [TempCpu, S2]))
   else
@@ -1949,24 +2118,571 @@ begin
     Result:= 2;
 end;
 
-{ Cor do medidor para a % de uso (sempre a % usada, mesmo quando o medidor
-  mostra a % livre) }
-function CorUso(Pct: Integer): TColor;
+{ Cores dos medidores para normal, acima do limite 1 e acima do limite 2:
+  NormalColor, Threshold1Color e Threshold2Color da configuração (padrão em
+  UCONFIG.CorPadraoNivel). O texto usa um tom mais escuro da mesma cor.    }
+function CorNivel(Nv: Integer): TColor;
 begin
   if CnfData.Sys.Threshold1<=0 then { configuração ainda não carregada }
-    case NivelUso(Pct) of
-      0: Result:= $00D3EDC2;
-      1: Result:= $00CAFFFF;
-    else
-      Result:= $00E9D2FF;
-    end
+    Result:= CorPadraoNivel[Nv]
   else
-    case NivelUso(Pct) of
+    case Nv of
       0: Result:= CnfData.Sys.NormalColor;
       1: Result:= CnfData.Sys.Threshold1Color;
     else
       Result:= CnfData.Sys.Threshold2Color;
     end;
+end;
+
+function CorNivelTexto(Nv: Integer): TColor;
+const Padrao: array[0..2] of TColor = ($0E700E, $005A8A, $1C2BC4);
+var C: TColor;
+begin
+  C:= ColorToRGB(CorNivel(Nv));
+  if C=CorPadraoNivel[Nv] then
+    Result:= Padrao[Nv]
+  else
+    Result:= RGB(GetRValue(C)*2 div 3, GetGValue(C)*2 div 3, GetBValue(C)*2 div 3);
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Visual-novo:-cores,-painéis-e-desenho--------------------}
+{ Visual no estilo do Windows 11. Os componentes ficam no .dfm; aqui estão
+  as cores, o TPanel com cantos arredondados (estilo escolhido pelo Tag) e
+  as rotinas de desenho com GDI+ (antialiasing) usadas pelos TPaintBox, em
+  unidades de 96 dpi escaladas para o DPI atual.                            }
+const
+  { Estilos do TPanel (Tag) }
+  ecCartao = 101;      { cartão branco com borda, cantos de 8 }
+  ecBotao = 102;       { botão sem fundo (ícone ou texto); realce sob o mouse }
+  ecBotaoTitulo = 103; { botão da barra de título, sem cantos }
+  ecFechar = 104;      { Fechar da barra de título: vermelho sob o mouse }
+  ecSecao = 105;       { item da barra de seções: azul-claro quando Selecionado }
+  ecContorno = 106;    { botão secundário, com contorno }
+  ecPrimario = 107;    { botão principal, na cor de destaque (Color) }
+  ecChip = 108;        { opção arredondada; Selecionado = escolhida }
+  ecEtiqueta = 109;    { etiqueta arredondada com contorno, sem clique }
+
+  { Cores (TColor = $BBGGRR; no comentário, #RRGGBB) }
+  CorBorda = TColor($E5E5E5);
+  CorTexto1 = TColor($1B1B1B);
+  CorTexto2 = TColor($424242);
+  CorTexto3 = TColor($616161);
+  CorAcento = TColor($B85F00);       { #005FB8 }
+  CorAcentoEsc = TColor($7A3D00);    { #003D7A }
+  CorAcentoClaro = TColor($F6ECE0);  { #E0ECF6 }
+  CorQuente = TColor($E9E9E9);
+  CorQuenteClaro = TColor($F0F0F0);
+  CorPressionado = TColor($E0E0E0);
+  CorContorno = TColor($D5D5D5);
+  CorInativo = TColor($A0A0A0);
+  CorTrilho = TColor($EDEDED);
+  CorMemoria = TColor($0677D9);      { #D97706 }
+  CorFecharQuente = TColor($1C2BC4); { #C42B1C }
+  CorFaixaAtencao = TColor($A6E3FB); { #FBE3A6 }
+  CorFaixaAlta = TColor($CBC9F6);    { #F6C9CB }
+  CorAlarmeAtivo = TColor($4AA316);  { #16A34A }
+  CorAlarmeBorda = TColor($3D8015);  { #15803D }
+  { anel de cada tipo de data na Agenda (municipal em âmbar, bem distinto
+    do verde-azulado do estadual) }
+  CorTipo: array[TTipoData] of TColor =
+    ($1C2BC4, $6C7B0F, $009ADA, $9E00B4, $912D5C);
+
+  LimiteTempAtencao = 80;  { °C, como em VerificaTemperatura }
+  LimiteTempAlta = 90;
+  AmostrasHistorico = 300; { UFerramentas: uma por segundo, 5 minutos }
+
+  DiasSemanaExtenso: array[1..7] of string = ('Domingo', 'Segunda-feira',
+    'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado');
+  MesesExtenso: array[1..12] of string = ('janeiro', 'fevereiro', 'março',
+    'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro',
+    'novembro', 'dezembro');
+
+type
+  TAlinTexto = (txEsq, txDir, txCentro);
+
+{ Ex.: 'Segunda-feira, 26 de outubro de 2026' }
+function DataPorExtenso(D: TDateTime): string;
+var A, M, Dd: Word;
+begin
+  DecodeDate(D, A, M, Dd);
+  Result:= Format('%s, %d de %s de %d', [DiasSemanaExtenso[DayOfWeek(D)], Dd,
+    MesesExtenso[M], A]);
+end;
+
+function PctUso(Parte, Total: UInt64): Integer;
+begin
+  if Total = 0 then Result:= 0 else Result:= Round(100.0 * Parte / Total);
+end;
+
+{ Ex.: '12,5 de 16 GB' }
+function TextoGB(Usado, Total: UInt64): string;
+const GB = 1073741824.0;
+var FS: TFormatSettings;
+begin
+  FS:= TFormatSettings.Create;
+  FS.DecimalSeparator:= ',';
+  Result:= FormatFloat('0.#', Usado/GB, FS)+' de '+FormatFloat('0.#', Total/GB, FS)+' GB';
+end;
+
+{ Ex.: '163,7 GB', '1,8 TB', '512 MB' }
+function TextoTamanho(B: Int64): string;
+const KB = 1024.0;
+var FS: TFormatSettings;
+begin
+  FS:= TFormatSettings.Create;
+  FS.DecimalSeparator:= ',';
+  if B>=KB*KB*KB*KB then Result:= FormatFloat('0.#', B/(KB*KB*KB*KB), FS)+' TB' else
+  if B>=KB*KB*KB then Result:= FormatFloat('0.#', B/(KB*KB*KB), FS)+' GB' else
+    Result:= FormatFloat('0', B/(KB*KB), FS)+' MB';
+end;
+
+{ Cantos arredondados do Windows 11 (sem efeito nas versões anteriores) }
+procedure ArredondaJanela(Wnd: HWND);
+const DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+  DWMWCP_ROUND = 2;
+var Pref: Integer;
+begin
+  if not CheckWin32Version(6, 0) then Exit;
+  Pref:= DWMWCP_ROUND;
+  DwmSetWindowAttribute(Wnd, DWMWA_WINDOW_CORNER_PREFERENCE, @Pref, SizeOf(Pref));
+end;
+
+{ Sem a Segoe Fluent Icons (Windows 10), os ícones vêm da Segoe MDL2 Assets,
+  que tem os mesmos códigos }
+procedure TrocaFonteIcones(Raiz: TWinControl);
+var I: Integer;
+  F: TFont;
+begin
+  for I:= 0 to Raiz.ControlCount-1 do
+  begin
+    F:= TControlAcesso(Raiz.Controls[I]).Font;
+    if SameText(F.Name, 'Segoe Fluent Icons') then F.Name:= 'Segoe MDL2 Assets';
+    if Raiz.Controls[I] is TWinControl then
+      TrocaFonteIcones(TWinControl(Raiz.Controls[I]));
+  end;
+end;
+
+{--Primitivas-de-desenho-(GDI+)----------------------------------------------}
+
+function ARGBDe(C: TColor): ARGB;
+begin
+  C:= ColorToRGB(C);
+  Result:= $FF000000 or (ARGB(GetRValue(C)) shl 16) or (ARGB(GetGValue(C)) shl 8)
+    or ARGB(GetBValue(C));
+end;
+
+function RF(X, Y, W, H: Single): TGPRectF;
+begin
+  Result.X:= X;
+  Result.Y:= Y;
+  Result.Width:= W;
+  Result.Height:= H;
+end;
+
+function PF(X, Y: Single): TGPPointF;
+begin
+  Result.X:= X;
+  Result.Y:= Y;
+end;
+
+{ Primeira família instalada da lista }
+function Familia(const Nomes: array of string): TGPFontFamily;
+var I: Integer;
+begin
+  for I:= Low(Nomes) to High(Nomes) do
+    if Screen.Fonts.IndexOf(Nomes[I])>=0 then
+      Exit(TGPFontFamily.Create(Nomes[I]));
+  Result:= TGPFontFamily.Create('Tahoma');
+end;
+
+{ Retângulo de cantos arredondados; clNone: sem fundo ou sem borda }
+procedure Retangulo(G: TGPGraphics; X, Y, W, H, R: Single; Fundo, Borda: TColor);
+var P: TGPGraphicsPath;
+  B: TGPSolidBrush;
+  C: TGPPen;
+  D: Single;
+begin
+  if Borda<>clNone then
+  begin
+    X:= X+0.5;
+    Y:= Y+0.5;
+    W:= W-1;
+    H:= H-1;
+  end;
+  D:= R*2;
+  if D>H then D:= H;
+  if D>W then D:= W;
+  P:= TGPGraphicsPath.Create;
+  try
+    if D<=0 then
+      P.AddRectangle(RF(X, Y, W, H))
+    else
+    begin
+      P.AddArc(X, Y, D, D, 180, 90);
+      P.AddArc(X+W-D, Y, D, D, 270, 90);
+      P.AddArc(X+W-D, Y+H-D, D, D, 0, 90);
+      P.AddArc(X, Y+H-D, D, D, 90, 90);
+      P.CloseFigure;
+    end;
+    if Fundo<>clNone then
+    begin
+      B:= TGPSolidBrush.Create(ARGBDe(Fundo));
+      try
+        G.FillPath(B, P);
+      finally
+        B.Free;
+      end;
+    end;
+    if Borda<>clNone then
+    begin
+      C:= TGPPen.Create(ARGBDe(Borda), 1);
+      try
+        G.DrawPath(C, P);
+      finally
+        C.Free;
+      end;
+    end;
+  finally
+    P.Free;
+  end;
+end;
+
+{ Contorno de cantos arredondados (círculo se R = W/2 = H/2) }
+procedure Contorno(G: TGPGraphics; X, Y, W, H, R: Single; Cor: TColor;
+  Larg: Single; Tracejado: Boolean);
+var P: TGPGraphicsPath;
+  C: TGPPen;
+  D: Single;
+  Traco: array[0..1] of Single;
+begin
+  D:= R*2;
+  P:= TGPGraphicsPath.Create;
+  C:= TGPPen.Create(ARGBDe(Cor), Larg);
+  try
+    P.AddArc(X, Y, D, D, 180, 90);
+    P.AddArc(X+W-D, Y, D, D, 270, 90);
+    P.AddArc(X+W-D, Y+H-D, D, D, 0, 90);
+    P.AddArc(X, Y+H-D, D, D, 90, 90);
+    P.CloseFigure;
+    if Tracejado then
+    begin
+      Traco[0]:= 2;
+      Traco[1]:= 1.2;
+      C.SetDashPattern(@Traco[0], 2);
+    end;
+    G.DrawPath(C, P);
+  finally
+    C.Free;
+    P.Free;
+  end;
+end;
+
+{ Texto numa linha, posicionado pela linha de base (Tam em pixels) }
+procedure Texto(G: TGPGraphics; const S: string; Fam: TGPFontFamily;
+  Tam: Single; Cor: TColor; X, Base: Single; Alin: TAlinTexto = txEsq;
+  LargMax: Single = 0);
+var F: TGPFont;
+  B: TGPSolidBrush;
+  SF: TGPStringFormat;
+  Topo: Single;
+  R: TGPRectF;
+begin
+  if S='' then Exit;
+  F:= TGPFont.Create(Fam, Tam, FontStyleRegular, UnitPixel);
+  B:= TGPSolidBrush.Create(ARGBDe(Cor));
+  SF:= TGPStringFormat.Create(TGPStringFormat.GenericTypographic);
+  try
+    SF.SetFormatFlags(StringFormatFlagsNoWrap or StringFormatFlagsMeasureTrailingSpaces);
+    SF.SetTrimming(StringTrimmingEllipsisCharacter);
+    Topo:= Base - Tam*Fam.GetCellAscent(FontStyleRegular)/Fam.GetEmHeight(FontStyleRegular);
+    if LargMax<=0 then LargMax:= 1000;
+    case Alin of
+      txEsq: R:= RF(X, Topo, LargMax, Tam*2);
+      txDir:
+        begin
+          R:= RF(X-LargMax, Topo, LargMax, Tam*2);
+          SF.SetAlignment(StringAlignmentFar);
+        end;
+    else
+      R:= RF(X-LargMax/2, Topo, LargMax, Tam*2);
+      SF.SetAlignment(StringAlignmentCenter);
+    end;
+    G.DrawString(S, Length(S), F, R, SF, B);
+  finally
+    SF.Free;
+    B.Free;
+    F.Free;
+  end;
+end;
+
+{ Ícone da Segoe Fluent Icons (ou MDL2 Assets) num bitmap de 32 bits com
+  transparência, para TImageList com ColorDepth = cd32Bit }
+function IconeBitmap(Cod: Word; Tam: Integer; Cor: TColor): TBitmap;
+var Img: TGPBitmap;
+  G: TGPGraphics;
+  Fam: TGPFontFamily;
+  F: TGPFont;
+  B: TGPSolidBrush;
+  SF: TGPStringFormat;
+  Dados: Winapi.GDIPAPI.TBitmapData;
+  S: string;
+  Y: Integer;
+begin
+  Result:= TBitmap.Create;
+  Result.PixelFormat:= pf32bit;
+  Result.SetSize(Tam, Tam);
+  S:= Char(Cod);
+  Img:= TGPBitmap.Create(Tam, Tam, PixelFormat32bppARGB);
+  Fam:= Familia(['Segoe Fluent Icons', 'Segoe MDL2 Assets']);
+  F:= TGPFont.Create(Fam, Tam, FontStyleRegular, UnitPixel);
+  B:= TGPSolidBrush.Create(ARGBDe(Cor));
+  SF:= TGPStringFormat.Create(TGPStringFormat.GenericTypographic);
+  G:= TGPGraphics.Create(Img);
+  try
+    G.Clear(0);
+    G.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
+    SF.SetAlignment(StringAlignmentCenter);
+    SF.SetLineAlignment(StringAlignmentCenter);
+    G.DrawString(S, 1, F, RF(0, 0, Tam, Tam), SF, B);
+    G.Flush;
+    { copia os pixels (BGRA, alfa sem pré-multiplicar) para o TBitmap }
+    if Img.LockBits(MakeRect(0, 0, Tam, Tam), ImageLockModeRead,
+        PixelFormat32bppARGB, Dados)=Winapi.GDIPAPI.Ok then
+    try
+      for Y:= 0 to Tam-1 do
+        Move((PByte(Dados.Scan0)+Y*Dados.Stride)^, Result.ScanLine[Y]^, Tam*4);
+    finally
+      Img.UnlockBits(Dados);
+    end;
+    Result.AlphaFormat:= afDefined;
+  finally
+    G.Free;
+    SF.Free;
+    B.Free;
+    F.Free;
+    Fam.Free;
+    Img.Free;
+  end;
+end;
+
+{ Preenche a lista com os ícones (códigos da fonte de ícones), na ordem dos
+  ImageIndex, no tamanho de 16 pixels a 96 dpi }
+procedure CarregaIcones(Lista: TCustomImageList; const Codigos: array of Word;
+  Tam: Integer);
+var I: Integer;
+  Bmp: TBitmap;
+begin
+  Lista.Clear;
+  Lista.SetSize(Tam, Tam);
+  for I:= Low(Codigos) to High(Codigos) do
+  begin
+    Bmp:= IconeBitmap(Codigos[I], Tam, CorTexto2);
+    try
+      Lista.Add(Bmp, nil);
+    finally
+      Bmp.Free;
+    end;
+  end;
+end;
+
+{--TPanel-do-visual-novo-----------------------------------------------------}
+
+function TPanel.Clicavel: Boolean;
+begin
+  Result:= (Tag>=ecBotao) and (Tag<=ecChip);
+end;
+
+procedure TPanel.Loaded;
+var I: Integer;
+begin
+  inherited;
+  if not Clicavel then Exit;
+  { o clique no ícone ou no texto vale como clique no painel }
+  for I:= 0 to ControlCount-1 do
+    if (Controls[I] is TLabel) and not Assigned(TLabel(Controls[I]).OnClick) then
+      TLabel(Controls[I]).OnClick:= FilhoClick;
+end;
+
+procedure TPanel.FilhoClick(Sender: TObject);
+begin
+  Click;
+end;
+
+procedure TPanel.SetSelecionado(Value: Boolean);
+var I: Integer;
+begin
+  if FSelecionado=Value then Exit;
+  FSelecionado:= Value;
+  { seção: ícone e texto na cor de destaque }
+  if Tag=ecSecao then
+    for I:= 0 to ControlCount-1 do
+      if Controls[I] is TLabel then
+        if Value then TLabel(Controls[I]).Font.Color:= CorAcento
+        else TLabel(Controls[I]).Font.Color:= CorTexto2;
+  Invalidate;
+end;
+
+{ Realce enquanto o mouse está sobre o painel ou sobre um TLabel dele (os
+  filhos avisam o pai com CM_MOUSEENTER/CM_MOUSELEAVE) }
+procedure TPanel.AtualizaQuente;
+var P: TPoint;
+  Q: Boolean;
+begin
+  Q:= Clicavel and Enabled and HandleAllocated and GetCursorPos(P) and
+    PtInRect(ClientRect, ScreenToClient(P));
+  if not Q then FPressionado:= False;
+  if Q<>FQuente then
+  begin
+    FQuente:= Q;
+    Invalidate;
+  end;
+end;
+
+procedure TPanel.CMMouseEnter(var Message: TMessage);
+begin
+  inherited;
+  AtualizaQuente;
+end;
+
+procedure TPanel.CMMouseLeave(var Message: TMessage);
+begin
+  inherited;
+  AtualizaQuente;
+end;
+
+procedure TPanel.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  if (Button=mbLeft) and Clicavel then
+  begin
+    FPressionado:= True;
+    Invalidate;
+  end;
+  inherited;
+end;
+
+procedure TPanel.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  if FPressionado then
+  begin
+    FPressionado:= False;
+    Invalidate;
+  end;
+  inherited;
+end;
+
+procedure TPanel.Paint;
+var G: TGPGraphics;
+  Esc, R: Single;
+  Fundo, Borda, CorTxt: TColor;
+  Ativo, Quente, Press: Boolean;
+  Rc: TRect;
+begin
+  if (Tag<ecCartao) or (Tag>ecEtiqueta) then
+  begin
+    inherited;
+    Exit;
+  end;
+  Esc:= CurrentPPI/96;
+  if Esc<=0 then Esc:= 1;
+  Ativo:= Clicavel and Enabled;
+  Quente:= Ativo and FQuente;
+  Press:= Quente and FPressionado;
+  Fundo:= clNone;
+  Borda:= clNone;
+  CorTxt:= Font.Color;
+  R:= 4;
+  case Tag of
+    ecCartao:
+      begin
+        Fundo:= Color;
+        Borda:= CorBorda;
+        R:= 8;
+      end;
+    ecBotao, ecBotaoTitulo:
+      begin
+        if Tag=ecBotaoTitulo then R:= 0;
+        if Press then Fundo:= CorPressionado else
+        if Quente then Fundo:= CorQuente;
+      end;
+    ecFechar:
+      begin
+        R:= 0;
+        if Quente then
+        begin
+          Fundo:= CorFecharQuente;
+          CorTxt:= clWhite;
+        end;
+      end;
+    ecSecao:
+      begin
+        R:= 6;
+        if FSelecionado then Fundo:= CorAcentoClaro else
+        if Press then Fundo:= CorPressionado else
+        if Quente then Fundo:= CorQuente;
+      end;
+    ecContorno:
+      begin
+        Borda:= CorContorno;
+        if Press then Fundo:= CorPressionado else
+        if Quente then Fundo:= CorQuenteClaro else
+          Fundo:= Color;
+        if not Enabled then CorTxt:= CorInativo;
+      end;
+    ecPrimario:
+      begin
+        if not Enabled then Fundo:= TColor($BFBFBF) else
+        if Quente then Fundo:= CorAcentoEsc else
+          Fundo:= Color;
+      end;
+    ecChip:
+      begin
+        R:= Height/Esc/2;
+        if FSelecionado then
+        begin
+          Fundo:= CorAcentoClaro;
+          CorTxt:= CorAcento;
+        end else
+        begin
+          Borda:= CorContorno;
+          if Quente then Fundo:= CorQuenteClaro else Fundo:= Color;
+        end;
+        if not Enabled then CorTxt:= CorInativo;
+      end;
+    ecEtiqueta:
+      begin
+        R:= Height/Esc/2;
+        Fundo:= Color;
+        Borda:= TColor($E0E0E0);
+      end;
+  end;
+  { fora dos cantos, a cor do pai }
+  Canvas.Brush.Style:= bsSolid;
+  if Parent<>nil then Canvas.Brush.Color:= TControlAcesso(Parent).Color
+  else Canvas.Brush.Color:= Color;
+  Canvas.FillRect(ClientRect);
+  if (Fundo<>clNone) or (Borda<>clNone) then
+  begin
+    G:= TGPGraphics.Create(Canvas.Handle);
+    try
+      G.SetSmoothingMode(SmoothingModeAntiAlias);
+      G.ScaleTransform(Esc, Esc);
+      Retangulo(G, 0, 0, Width/Esc, Height/Esc, R, Fundo, Borda);
+    finally
+      G.Free;
+    end;
+  end;
+  if ShowCaption and (Caption<>'') then
+  begin
+    Canvas.Font:= Font;
+    Canvas.Font.Color:= CorTxt;
+    Canvas.Brush.Style:= bsClear;
+    Rc:= ClientRect;
+    DrawText(Canvas.Handle, PChar(Caption), -1, Rc, DT_CENTER or DT_VCENTER or
+      DT_SINGLELINE or DT_NOPREFIX or DT_END_ELLIPSIS);
+  end;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -2015,12 +2731,9 @@ begin
   Application.HintColor := clAqua;
   Application.OnHint := ShowHint;
   FormatSettings.ShortDateFormat:= 'dd/mm/yyyy';
-  MonthCalendar1.Date:= Now;
-  { Hint com o nome do feriado ao passar o mouse sobre o dia }
-  MonthCalendar1.ShowHint:= True;
-  TMonthCalendarAcesso(MonthCalendar1).OnMouseMove:= MonthCalendar1MouseMove;
-  PageControl1.ActivePage:= TabSheet3; { abre direto no status de CPU/memória }
-  ComboBox1.ItemIndex:= 0; { 'Todos' os navegadores }
+  PageControl1.ActivePage:= TabSheet3; { abre direto no Monitor }
+  FLimpezaLinhas:= TStringList.Create;
+  FNavegador:= 0; { 'Todos' os navegadores }
   CarregaOpcoesLimpeza;
   { Reiniciado como administrador (ReiniciaComoAdmin): abre na aba de limpeza }
   if FindCmdLineSwitch('elevado') then
@@ -2034,7 +2747,7 @@ begin
   TCount:= 0;
   StartSlideShow:= True;
   StartCPU:= False;
-  GetUsageCPU:= True; { exibe o uso da CPU (SpeedButton2 liga/desliga) }
+  GetUsageCPU:= True;
   StProcess:= False;
   StSch1:= False;
   StOk:= False;
@@ -2044,11 +2757,7 @@ begin
   StMem1:= True;
   CriaMenusFerramentas;
   IniciaTemperatura; { leitura em segundo plano, a cada 5 s }
-  FDiscoOcupado:= True;
-  SpeedButton14.Hint:= 'Mostrando espaço ocupado (clique para ver o livre)';
   AtualizaDiscos;
-  LabelX4.Caption:= ' Memória em uso';
-  SpeedButton10.Hint:= 'Mostrando memória em uso (clique para ver a livre)';
   Posicionar(1);
   SempreVisivel(True);
   Image1.OnProgress := ProgressUpdate;
@@ -2056,6 +2765,7 @@ begin
   WrnTimeCount:= 0;
   CrnCount:= 0;
   MemInfo.dwLength:= Sizeof(MemInfo);
+  CriaVisual;
 end;
 
 {----------------------------------------------------------------------------}
@@ -2223,14 +2933,13 @@ begin
     MainForm.Top:= CnfData.Frm.PosY;
     MainForm.Left:= CnfData.Frm.PosX;
   end;
+  GarantirNaTela;
+  AtualizaSecoes;
   {---------------------------------------------------------}
   if (CnfData.Frm.StPlayWav=True) and (FileExists(CnfData.Frm.WAVFile)=True) then
   begin
     PlaySound(PChar(string(CnfData.Frm.WAVFile)), 0, SND_ASYNC or SND_FILENAME);
   end;
-  LabelEffect1.Caption := FormatDateTime('hh:nn:ss',Now);
-  LabelEffect2.Caption:= DiaSemana(Now)+FormatDateTime(' - dd/mm/yyyy',Now);
-  LabelX6.Caption:= FormatDateTime(' dd/mm/yyyy',MonthCalendar1.Date);
   if FileExists(GetRunDir+Prg+'.TXT')=True then Memo1.Lines.LoadFromFile(GetRunDir+Prg+'.TXT');
   EditorChanged:= False;
   StBegin:= True;
@@ -2244,6 +2953,7 @@ begin
   {---------------------------------------------------------}
   Memo5.Top:= Memo1.Top;
   Memo5.Height:= Memo1.Height;
+  ShMemo5.SetBounds(ShMemo5.Left, ShMemo1.Top, ShMemo5.Width, ShMemo1.Height);
   {---------------------------------------------------------}
   StringGrid1.Cells[1,0]:= 'Nome';
   StringGrid1.Cells[2,0]:= 'Telefone1';
@@ -2252,20 +2962,53 @@ end;
 
 {----------------------------------------------------------------------------}
 {------Relogio-analogico-(substitui-o-componente-TClock)---------------------}
-{ Cor do mostrador = Clock1.Color; cor dos ponteiros = Clock1.Font.Color     }
+{ Mostrador com borda, como os cartões do visual novo: marcas das horas,
+  números 12, 3, 6 e 9 e o ponteiro de segundos na cor de destaque. Cor do
+  mostrador = Clock1.Color; cor dos ponteiros de hora e minuto =
+  Clock1.Font.Color (as duas escolhidas na configuração)                   }
 procedure TMainForm.Clock1Paint(Sender: TObject);
 var Bmp: TBitmap;
-  W, H, CX, CY, R, Lap, Ofs, M: Integer;
+  G: TGPGraphics;
+  C: TGPPen;
+  B: TGPSolidBrush;
+  F: TGPFont;
+  SF: TGPStringFormat;
+  W, H, M: Integer;
+  CX, CY, R, A, R1, R2, Tam: Single;
   Hr, Mi, Se, MSec: Word;
-  Ang, SR: Double;
-  P: TPoint;
-  Rc: TRect;
+  Cor: TColor;
 
-  procedure Ponteiro(A, Escala: Double; Espessura: Integer);
+  { R*Fator, com Minimo em pixels }
+  function Med(Fator, Minimo: Single): Single;
   begin
-    Bmp.Canvas.Pen.Width:= Espessura;
-    Bmp.Canvas.MoveTo(CX, CY);
-    Bmp.Canvas.LineTo(CX + Trunc(Escala*R*Sin(A)), CY - Trunc(Escala*R*Cos(A)));
+    Result:= R*Fator;
+    if Result<Minimo then Result:= Minimo;
+  end;
+
+  { segmento do centro (recuado Cauda*R) até Escala*R no ângulo A (radianos,
+    a partir das 12 horas, sentido horário) }
+  procedure Ponteiro(A, Escala, Cauda, Larg: Single; Cor: TColor);
+  var P: TGPPen;
+  begin
+    P:= TGPPen.Create(ARGBDe(Cor), Larg);
+    try
+      P.SetLineCap(LineCapRound, LineCapRound, DashCapRound);
+      G.DrawLine(P, CX-Cauda*R*Sin(A), CY+Cauda*R*Cos(A),
+        CX+Escala*R*Sin(A), CY-Escala*R*Cos(A));
+    finally
+      P.Free;
+    end;
+  end;
+
+  procedure Circulo(Raio: Single; Cor: TColor);
+  var P: TGPSolidBrush;
+  begin
+    P:= TGPSolidBrush.Create(ARGBDe(Cor));
+    try
+      G.FillEllipse(P, CX-Raio, CY-Raio, Raio*2, Raio*2);
+    finally
+      P.Free;
+    end;
   end;
 
 begin
@@ -2274,37 +3017,91 @@ begin
   Bmp:= TBitmap.Create;
   try
     Bmp.SetSize(W, H);
-    Bmp.Canvas.Brush.Style:= bsSolid;
-    Bmp.Canvas.Brush.Color:= Clock1.Color;
-    Bmp.Canvas.FillRect(Rect(0, 0, W, H));
-    CX:= W div 2;
-    CY:= H div 2;
-    if CX <= CY then R:= CX else R:= CY;
-    Lap:= R div 8;
-    if Lap < 6 then Lap:= 6;
-    Dec(R, Lap + 2);
-    Ofs:= Lap div 2;
-    {marcas das horas}
-    M:= 0;
-    while M < 60 do
-    begin
-      Ang:= M*2*Pi/60;
-      SR:= R + Ofs;
-      P:= Point(CX + Trunc(SR*Sin(Ang)), CY - Trunc(SR*Cos(Ang)));
-      if M mod 15 = 0 then
-        Rc:= Rect(P.X - Ofs, P.Y - Ofs, P.X + Ofs, P.Y + Ofs)
-      else
-        Rc:= Rect(P.X - 2, P.Y - 2, P.X + 2, P.Y + 2);
-      Frame3D(Bmp.Canvas, Rc, clBtnHighlight, clBtnShadow, 1);
-      Inc(M, 5);
+    G:= TGPGraphics.Create(Bmp.Canvas.Handle);
+    try
+      G.SetSmoothingMode(SmoothingModeAntiAlias);
+      G.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
+      G.Clear(ARGBDe(PnConteudo.Color));
+      CX:= W/2;
+      CY:= H/2;
+      if W<H then R:= W/2-Px(8) else R:= H/2-Px(8);
+      if R<Px(20) then R:= Px(20);
+      { mostrador }
+      Circulo(R, Clock1.Color);
+      C:= TGPPen.Create(ARGBDe(CorBorda), Px(1));
+      try
+        G.DrawEllipse(C, CX-R, CY-R, R*2, R*2);
+      finally
+        C.Free;
+      end;
+      { marcas: minutos (pontos) e horas (traços; mais fortes nos quartos) }
+      for M:= 0 to 59 do
+      begin
+        A:= M*2*Pi/60;
+        if M mod 5<>0 then
+        begin
+          R1:= R*0.90;
+          Tam:= Med(0.012, 1);
+          B:= TGPSolidBrush.Create(ARGBDe(CorContorno));
+          try
+            G.FillEllipse(B, CX+R1*Sin(A)-Tam, CY-R1*Cos(A)-Tam, Tam*2, Tam*2);
+          finally
+            B.Free;
+          end;
+        end else
+        begin
+          if M mod 15=0 then
+          begin
+            R2:= R*0.80;
+            Cor:= CorTexto1;
+            Tam:= Med(0.03, 2);
+          end else
+          begin
+            R2:= R*0.84;
+            Cor:= CorTexto3;
+            Tam:= Med(0.018, 1.5);
+          end;
+          C:= TGPPen.Create(ARGBDe(Cor), Tam);
+          try
+            C.SetLineCap(LineCapRound, LineCapRound, DashCapRound);
+            G.DrawLine(C, CX+R*0.92*Sin(A), CY-R*0.92*Cos(A),
+              CX+R2*Sin(A), CY-R2*Cos(A));
+          finally
+            C.Free;
+          end;
+        end;
+      end;
+      { números 12, 3, 6 e 9 }
+      F:= TGPFont.Create(FFamSemi, Med(0.14, 9), FontStyleRegular, UnitPixel);
+      B:= TGPSolidBrush.Create(ARGBDe(CorTexto2));
+      SF:= TGPStringFormat.Create;
+      try
+        SF.SetAlignment(StringAlignmentCenter);
+        SF.SetLineAlignment(StringAlignmentCenter);
+        for M:= 1 to 4 do
+        begin
+          A:= M*Pi/2;
+          R1:= R*0.66;
+          G.DrawString(IntToStr(M*3), -1, F,
+            RF(CX+R1*Sin(A)-R*0.2, CY-R1*Cos(A)-R*0.12, R*0.4, R*0.24), SF, B);
+        end;
+      finally
+        SF.Free;
+        B.Free;
+        F.Free;
+      end;
+      { ponteiros }
+      DecodeTime(Now, Hr, Mi, Se, MSec);
+      Ponteiro((Hr mod 12)*2*Pi/12+Mi*2*Pi/720, 0.48, 0.08,
+        Med(0.055, 3), Clock1.Font.Color);
+      Ponteiro(Mi*2*Pi/60+Se*2*Pi/3600, 0.72, 0.08, Med(0.035, 2),
+        Clock1.Font.Color);
+      Ponteiro(Se*2*Pi/60, 0.82, 0.18, Med(0.012, 1), CorAcento);
+      Circulo(Med(0.04, 3), CorAcento);
+      Circulo(Med(0.015, 1), Clock1.Color);
+    finally
+      G.Free;
     end;
-    {ponteiros}
-    DecodeTime(Now, Hr, Mi, Se, MSec);
-    Bmp.Canvas.Pen.Color:= Clock1.Font.Color;
-    Ponteiro(Se*2*Pi/60, 1, 1);
-    Ponteiro(Mi*2*Pi/60, 0.95, 3);
-    Ponteiro((Hr mod 12)*2*Pi/12 + Mi*2*Pi/720, 0.60, 6);
-    Bmp.Canvas.Pen.Width:= 1;
     Clock1.Canvas.Draw(0, 0, Bmp);
   finally
     Bmp.Free;
@@ -2314,23 +3111,33 @@ end;
 
 {----------------------------------------------------------------------------}
 {-------------------------Procedure---AtualizaMemória------------------------}
-{ Atualiza os medidores da aba de Status. StMem1 (SpeedButton10) escolhe se
-  os medidores mostram a memória em uso (True) ou a memória livre (False).  }
-{ SwapGauge = arquivo de paginação; VirtualGauge = memória confirmada
-  (RAM + paginação: o máximo que os programas podem alocar).                }
+{ Barras de memória do Monitor: RAM, arquivo de paginação (SWAP) e memória
+  confirmada (RAM + paginação: o máximo que os programas podem alocar). A
+  cor segue os limites 1 e 2 da configuração, como na CPU e nos discos.     }
 procedure TMainForm.AtualizaMemoria;
 var PagTotal, PagUsado: UInt64;
 
-  function Pct(Parte, Total: UInt64): Integer;
+  procedure Barra(Pb: TPaintBox; LbPct, LbInfo: TLabel; Usado, Total: UInt64;
+    const SemTotal: string);
+  var P: Integer;
   begin
-    if Total = 0 then Result:= 0 else Result:= Round(100.0 * Parte / Total);
-  end;
-
-  { UsoPct = % em uso; o medidor mostra o uso ou o livre conforme StMem1 }
-  procedure Medidor(G: TGauge; UsoPct: Integer);
-  begin
-    if StMem1 then G.Progress:= UsoPct else G.Progress:= 100-UsoPct;
-    G.ForeColor:= CorUso(UsoPct);
+    P:= PctUso(Usado, Total);
+    if Pb.Tag<>P then
+    begin
+      Pb.Tag:= P;
+      Pb.Invalidate;
+    end;
+    if Total>0 then
+    begin
+      LbPct.Caption:= Format('%d%%', [P]);
+      LbPct.Font.Color:= CorNivelTexto(NivelUso(P));
+      LbInfo.Caption:= TextoGB(Usado, Total);
+    end else
+    begin
+      LbPct.Caption:= '';
+      LbInfo.Caption:= SemTotal;
+    end;
+    Pb.Hint:= LbInfo.Caption;
   end;
 
 begin
@@ -2339,114 +3146,104 @@ begin
   LePaginacao(PagTotal, PagUsado);
   with MemInfo do
   begin
-    Medidor(UseMemGauge, dwMemoryLoad);
-    Medidor(RamGauge, Pct(ullTotalPhys - ullAvailPhys, ullTotalPhys));
-    Medidor(SwapGauge, Pct(PagUsado, PagTotal));
-    Medidor(VirtualGauge, Pct(ullTotalPageFile - ullAvailPageFile, ullTotalPageFile));
+    Barra(PbRam, LbRamPct, LbRamInfo, ullTotalPhys - ullAvailPhys, ullTotalPhys, '');
+    Barra(PbSwap, LbSwapPct, LbSwapInfo, PagUsado, PagTotal, 'sem arquivo de paginação');
+    Barra(PbCommit, LbCommitPct, LbCommitInfo, ullTotalPageFile - ullAvailPageFile,
+      ullTotalPageFile, '');
   end;
-  {--------------------------------------------------------------------------}
-  Label1.Caption:= Format(' %s - (%s / %s)', [FmtValue(1,MemInfo.ullTotalPhys), FmtValue(1,MemInfo.ullTotalPhys - MemInfo.ullAvailPhys), FmtValue(1,MemInfo.ullAvailPhys)]);
-  RamGauge.Hint:= Label1.Caption;
-  if PagTotal>0 then
-    Label2.Caption:= Format(' %s - (%s / %s)', [FmtValue(1,PagTotal), FmtValue(1,PagUsado), FmtValue(1,PagTotal - PagUsado)])
-  else
-    Label2.Caption:= ' (sem arquivo de paginação)';
-  SwapGauge.Hint:= Label2.Caption;
-  Label3.Caption:= Format(' %d%%', [MemInfo.dwMemoryLoad]);
-  UseMemGauge.Hint:= Label3.Caption;
-  Label4.Caption:= Format(' %s - (%s / %s)', [FmtValue(1,MemInfo.ullTotalPageFile), FmtValue(1,MemInfo.ullTotalPageFile - MemInfo.ullAvailPageFile), FmtValue(1,MemInfo.ullAvailPageFile)]);
-  VirtualGauge.Hint:= Label4.Caption;
-  Label7.Caption:= '=>'+Format(' %s', [FmtValue(1,MemInfo.ullTotalPhys)]);
 end;
 
 {----------------------------------------------------------------------------}
 {-------------------------Procedure---AtualizaDiscos-------------------------}
-{ Aba de Status dos Discos: um painel por disco fixo (até 4), na ordem das
-  letras. Painéis sem disco ficam ocultos. O Gauge mostra a % ocupada ou
-  livre (FDiscoOcupado / SpeedButton14); a cor segue Threshold1/Threshold2
-  sobre a % ocupada, como na memória e na CPU.                              }
+{ Seção Discos: uma linha por disco fixo (até 4, PnDisco1..PnDisco4), na
+  ordem das letras, e a Lixeira. Linhas sem disco ficam ocultas e o cartão
+  encolhe. A cor da barra segue os limites 1 e 2 sobre a % ocupada.        }
 procedure TMainForm.AtualizaDiscos;
-var Paineis: array[0..3] of TPanel;
-  Nomes, Valores: array[0..3] of TLabel;
-  Gauges: array[0..3] of TGauge;
-  Mascara: DWORD;
+var Linhas: array[0..3] of TPanel;
+  Nomes, Pcts, Infos, Sistemas: array[0..3] of TLabel;
+  Barras: array[0..3] of TPaintBox;
+  Mascara, Comp, Flags: DWORD;
   Letra: Char;
   Unid: string;
-  Livre, Total: Int64;
-  I, N, UsoPct: Integer;
-  Cor: TColor;
+  Livre, Total, LixBytes, LixItens: Int64;
+  I, N, P: Integer;
+  Nome, Sistema: array[0..MAX_PATH] of Char;
 begin
-  Paineis[0]:= Panel21; Nomes[0]:= Label14; Valores[0]:= Label15; Gauges[0]:= Gauge4;
-  Paineis[1]:= Panel22; Nomes[1]:= Label16; Valores[1]:= Label17; Gauges[1]:= Gauge5;
-  Paineis[2]:= Panel23; Nomes[2]:= Label18; Valores[2]:= Label19; Gauges[2]:= Gauge6;
-  Paineis[3]:= Panel24; Nomes[3]:= Label20; Valores[3]:= Label21; Gauges[3]:= Gauge7;
+  FDiscosSeg:= 0;
+  Linhas[0]:= PnDisco1; Nomes[0]:= LbDisco1Nome; Pcts[0]:= LbDisco1Pct;
+  Barras[0]:= PbDisco1; Infos[0]:= LbDisco1Info; Sistemas[0]:= LbDisco1Fs;
+  Linhas[1]:= PnDisco2; Nomes[1]:= LbDisco2Nome; Pcts[1]:= LbDisco2Pct;
+  Barras[1]:= PbDisco2; Infos[1]:= LbDisco2Info; Sistemas[1]:= LbDisco2Fs;
+  Linhas[2]:= PnDisco3; Nomes[2]:= LbDisco3Nome; Pcts[2]:= LbDisco3Pct;
+  Barras[2]:= PbDisco3; Infos[2]:= LbDisco3Info; Sistemas[2]:= LbDisco3Fs;
+  Linhas[3]:= PnDisco4; Nomes[3]:= LbDisco4Nome; Pcts[3]:= LbDisco4Pct;
+  Barras[3]:= PbDisco4; Infos[3]:= LbDisco4Info; Sistemas[3]:= LbDisco4Fs;
   N:= 0;
   Mascara:= GetLogicalDrives;
   for Letra:= 'A' to 'Z' do
   begin
-    if N>High(Paineis) then Break;
+    if N>High(Linhas) then Break;
     if Mascara and (1 shl (Ord(Letra)-Ord('A')))=0 then Continue;
     Unid:= Letra+':';
-    if GetDriveType(PChar(Unid+'\'))<>DRIVE_FIXED then Continue;
-    if not EspacoDisco(Unid, Livre, Total) then Continue;
-    UsoPct:= Round(100.0*(Total-Livre)/Total);
-    Cor:= CorUso(UsoPct);
-    Nomes[N].Caption:= 'Drive '+Unid;
-    Valores[N].Caption:= Format('%s - (%s / %s) ', [FmtValue(1,Total), FmtValue(1,Total-Livre), FmtValue(1,Livre)]);
-    Valores[N].Color:= Cor;
-    Gauges[N].ForeColor:= Cor;
-    if FDiscoOcupado then
-      Gauges[N].Progress:= UsoPct
-    else
-      Gauges[N].Progress:= 100-UsoPct;
-    Gauges[N].Hint:= Format('Disco %s - Total: %s '#13'Ocupado: %s (%s) '#13'Livre: %s (%s)',
+    if GetDriveType(PChar(Unid+''))<>DRIVE_FIXED then Continue;
+    if not EspacoDisco(Unid, Livre, Total) or (Total<=0) then Continue;
+    P:= Round(100.0*(Total-Livre)/Total);
+    if not GetVolumeInformation(PChar(Unid+''), @Nome[0], Length(Nome), nil, Comp,
+        Flags, @Sistema[0], Length(Sistema)) then
+    begin
+      Nome[0]:= #0;
+      Sistema[0]:= #0;
+    end;
+    if Nome[0]<>#0 then Nomes[N].Caption:= string(Nome)+' ('+Unid+')'
+    else Nomes[N].Caption:= 'Disco local ('+Unid+')';
+    Pcts[N].Caption:= Format('%d%%', [P]);
+    Pcts[N].Font.Color:= CorNivelTexto(NivelUso(P));
+    Barras[N].Tag:= P;
+    Barras[N].Invalidate;
+    Infos[N].Caption:= TextoTamanho(Livre)+' livres de '+TextoTamanho(Total);
+    Sistemas[N].Caption:= string(Sistema);
+    Linhas[N].Hint:= Format('Disco %s - Total: %s '#13'Ocupado: %s (%s) '#13'Livre: %s (%s)',
       [Unid, FmtValue(1,Total), FmtValue(1,Total-Livre), FmtPct(Total-Livre, Total),
        FmtValue(1,Livre), FmtPct(Livre, Total)]);
-    if not Paineis[N].Visible then
-    begin
-      { alTop: posiciona abaixo dos já visíveis para manter a ordem }
-      Paineis[N].Top:= TabSheet4.Height+N;
-      Paineis[N].Visible:= True;
-    end;
+    Linhas[N].Visible:= True;
     Inc(N);
   end;
-  for I:= N to High(Paineis) do Paineis[I].Visible:= False;
-end;
-
-procedure TMainForm.SpeedButton14Click(Sender: TObject);
-begin
-  { Alterna os medidores dos discos entre espaço ocupado e espaço livre }
-  FDiscoOcupado:= not FDiscoOcupado;
-  if FDiscoOcupado then
-    SpeedButton14.Hint:= 'Mostrando espaço ocupado (clique para ver o livre)'
+  for I:= N to High(Linhas) do Linhas[I].Visible:= False;
+  LbSemDiscos.Visible:= N=0;
+  if N=0 then PnUnidades.Height:= Px(76)
+  else PnUnidades.Height:= PnDisco1.Top+N*PnDisco1.Height+Px(4);
+  if InfoLixeira(LixBytes, LixItens) then
+    LbLixeiraInfo.Caption:= Format('%s · %d item(ns)', [TextoTamanho(LixBytes), LixItens])
   else
-    SpeedButton14.Hint:= 'Mostrando espaço livre (clique para ver o ocupado)';
-  AtualizaDiscos;
-end;
-
-procedure TMainForm.SpeedButton15Click(Sender: TObject);
-begin
-  AtualizaDiscos;
+    LbLixeiraInfo.Caption:= 'tamanho indisponível';
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
-var CpuUso, Temp: Double;
+var CpuUso: Double;
   Agora: TDateTime;
-  S, Fonte: string;
+  S: string;
 begin
   {--------------------------------------------------------------------------}
   Agora:= Now;
   Clock1.Invalidate;
-  S:= FormatDateTime('hh:nn:ss', Agora);
-  if LabelEffect1.Caption<>S then LabelEffect1.Caption:= S;
+  S:= FormatDateTime('hh:nn', Agora);
+  if LbHora.Caption<>S then
+  begin
+    LbHora.Caption:= S;
+    PosicionaSegundos;
+  end;
+  LbSegundos.Caption:= FormatDateTime(':ss', Agora);
   {--------------------------------------------------------------------------}
   { Virada do dia. Compara a data (e não só o instante 00:00:00), para não
     perder a troca se o timer pular esse segundo ou o PC estiver suspenso. }
-  S:= DiaSemana(Agora)+FormatDateTime(' - dd/mm/yyyy', Agora);
-  if Start and (LabelEffect2.Caption<>S) then
+  S:= DataPorExtenso(Agora);
+  if LbData.Caption<>S then
   begin
-    LabelEffect2.Caption:= S;
-    MonthCalendar1.Date:= Agora;
+    LbData.Caption:= S;
+    { a Agenda volta para o mês de hoje }
+    FDiaSel:= Date;
+    FMes:= StartOfTheMonth(Date);
+    AtualizaAgenda;
   end;
   if (Start=True) and (ConfigForm.CheckBox2.Checked= True) and (StSch1=False)
   and ((ConfigForm.CheckBox3.Checked= True) or ((ConfigForm.CheckBox3.Checked= False)
@@ -2530,26 +3327,21 @@ begin
   end;
   {----Memória----------------------------------------------------------------}
   AtualizaMemoria;
-  {----Discos (somente com a aba visível)-------------------------------------}
-  if PageControl1.ActivePage= TabSheet4 then AtualizaDiscos;
-  {----CPU-------------------------------------------------------------------}
-  { A CPU eh medida sempre (o Icone da bandeja depende dela); o SpeedButton2
-    liga/desliga apenas a exibicao na aba de Status. }
-  if GetCPUUsage(CpuUso) then FCpuUso:= CpuUso;
-  if GetUsageCPU= True then
+  {----Discos (somente com a seção visível, a cada 10 s)---------------------}
+  if PnDiscos.Visible then
   begin
-    S:= FormatFloat('CPU Usage: 0.00 %',FCpuUso);
-    if TemperaturaCPU(Temp, Fonte) then
-    begin
-      S:= S+Format(' (%.0f °C)', [Temp]);
-      Label5.Hint:= 'Temperatura da CPU ('+Fonte+')';
-    end;
-    Label5.Caption := S;
-    Gauge1.Progress:= Round(FCpuUso);
-    Gauge2.Progress:= Round(FCpuUso);
-    Gauge1.ForeColor:= CorUso(Round(FCpuUso));
-    Gauge2.ForeColor:= Gauge1.ForeColor;
+    Inc(FDiscosSeg);
+    if FDiscosSeg>=10 then AtualizaDiscos;
   end;
+  {----Agenda: relê as datas a cada 30 s (Datas.txt e contatos)--------------}
+  if PnAgenda.Visible and (FMes>0) and AtualizaCacheAgenda then
+  begin
+    PbCalendario.Invalidate;
+    PbProximas.Invalidate;
+  end;
+  {----CPU-------------------------------------------------------------------}
+  { A CPU é medida sempre (o ícone da bandeja depende dela) }
+  if GetCPUUsage(CpuUso) then FCpuUso:= CpuUso;
   {--------------------------------------------------------------------------}
   Caption := Format('Painel - Versão %s - '+#13+'CPU: = %d%% - '+#13+'Memory: = %d%%',
     [Vrs,Round(FCpuUso),MemInfo.dwMemoryLoad]);
@@ -2560,6 +3352,9 @@ begin
   RegistraUso(Round(FCpuUso), MemInfo.dwMemoryLoad);
   VerificaUsoAlto(Round(FCpuUso), MemInfo.dwMemoryLoad);
   VerificaTemperatura;
+  AtualizaMonitor;
+  AtualizaAvisos;
+  if PnLimpeza.Visible then AtualizaLimpeza;
   {--Alerta de disco e limpeza automática (a cada 10 minutos)---------------}
   VerificaTarefas;
   {--------------------------------------------------------------------------}
@@ -2583,9 +3378,14 @@ begin
   {--------------------------------------------------------------------------}
 end;
 
+{ Rodapé: a dica do controle sob o mouse ou, sem dica, a versão }
 procedure TMainForm.ShowHint(Sender: TObject);
+var S: string;
 begin
-  Panel4.Caption:= Application.Hint;
+  S:= StringReplace(GetShortHint(Application.Hint), #13, ' ', [rfReplaceAll]);
+  S:= StringReplace(S, #10, '', [rfReplaceAll]);
+  if S='' then S:= 'Painel '+Vrs;
+  LbRodape.Caption:= S;
 end;
 
 procedure TMainForm.FormKeyPress(Sender: TObject; var Key: Char);
@@ -2661,6 +3461,9 @@ begin
   PdhQuery:= 0;
   FinalizaTemperatura;
   FreeAndNil(FClipboard);
+  FreeAndNil(FLimpezaLinhas);
+  FreeAndNil(FFamTexto);
+  FreeAndNil(FFamSemi);
   if EditorChanged then Memo1.Lines.SaveToFile(GetRunDir+Prg+'.TXT');
   FreeAndNil(BmpImg);
   FreeAndNil(MyBmpImage);
@@ -2834,52 +3637,27 @@ begin
   Close;
 end;
 
-procedure TMainForm.LabelEffect1MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  LabelEffect1.Hint:= FormatDateTime('hh:nn:ss',Now);
-end;
-
-procedure TMainForm.LabelEffect2MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  LabelEffect2.Hint:= DiaSemana(Now)+FormatDateTime(' - dd/mm/yyyy',Now);
-end;
-
 procedure TMainForm.FormClosedView;
 begin
- {ShowMessage(InttoStr(MainForm.Height)+' - '+InttoStr(Panel1.Height));}
-  if StEx= True then
+  { Recolhido (StEx = False): só a barra de título, o relógio e os avisos }
+  if PnConteudo.Visible and not StEx then FAlturaExpandida:= ClientHeight;
+  AutoSize:= False;
+  if StEx then
   begin
-    SpeedButton8.Glyph.Modified:= True;
-    SpeedButton8.Glyph.Empty;
-    ImageList3.Draw(SpeedButton8.Glyph.Canvas,0,0,0);
-    ImageList3.Draw(SpeedButton8.Glyph.Canvas,0,0,2);
-    SpeedButton8.Glyph.Modified:= True;
-    Panel4.Visible:= True;
-    Panel5.Visible:= True;
-    MainForm.AutoSize:= False;
-    MainForm.Height:= 326;
-    Panel1.Height:= 302;
-    MainForm.AutoSize:= True;
-    {-------------------------------------------------------}
-    Panel4.Align:= alNone;
-    Panel4.Align:= alBottom;
-    {-------------------------------------------------------}
+    if FAlturaExpandida>0 then ClientHeight:= FAlturaExpandida;
+    PnNavegacao.Visible:= True;
+    PnRodape.Visible:= True;
+    PnConteudo.Visible:= True;
+    BtCompactar.Caption:= Char($E70E);
   end else
   begin
-    SpeedButton8.Glyph.Modified:= True;
-    SpeedButton8.Glyph.Empty;
-    ImageList3.Draw(SpeedButton8.Glyph.Canvas,0,0,0);
-    ImageList3.Draw(SpeedButton8.Glyph.Canvas,0,0,1);
-    SpeedButton8.Glyph.Modified:= True;
-    Panel4.Visible:= False;
-    Panel5.Visible:= False;
-    MainForm.AutoSize:= False;
-    MainForm.Height:= 102;
-    Panel1.Height:= 100;
-    MainForm.AutoSize:= True;
+    PnNavegacao.Visible:= False;
+    PnRodape.Visible:= False;
+    PnConteudo.Visible:= False;
+    ClientHeight:= PnTopo.Height;
+    BtCompactar.Caption:= Char($E70D);
   end;
+  GarantirNaTela;
   CnfData.Frm.StExView:= StEx;
   ConfigForm.SaveCnfFile;
 end;
@@ -2968,19 +3746,6 @@ begin
       Application.Terminate;
 end;
 
-procedure TMainForm.SpeedButton2Click(Sender: TObject);
-begin
-  { Liga/desliga apenas a exibição; a medição continua para o ícone da bandeja }
-  GetUsageCPU:= not (GetUsageCPU);
-  if (GetUsageCPU= False) then
-  begin
-    Label5.Caption:='';
-    Label5.Color:= Panel28.Color;
-    Gauge1.Progress:=0;
-    Gauge2.Progress:=0;
-  end;
-end;
-
 procedure TMainForm.ExecuteList;
 var Count: LongInt;
 begin
@@ -3032,6 +3797,10 @@ begin
     SpeedButton4.Hint:= 'Iniciar';
   end;
   BmpAnimator3.Enabled:= StOk;
+  { visual novo: ícone de iniciar/parar no lugar do bitmap }
+  if SpeedButton4.Glyph.Empty then
+    if StOk then SpeedButton4.Caption:= Char($E769)
+    else SpeedButton4.Caption:= Char($E768);
 end;
 
 procedure TMainForm.SpeedButton5Click(Sender: TObject);
@@ -3042,6 +3811,7 @@ end;
 
 procedure TMainForm.PageControl1Change(Sender: TObject);
 begin
+  AtualizaSecoes; { mostra a área das abas antes de focar controles nela }
   if PageControl1.ActivePage= TabSheet9 then
     BmpAnimator3.Enabled:= StOk else
       BmpAnimator3.Enabled:= False;
@@ -3066,9 +3836,9 @@ end;
 
 procedure TMainForm.Alarm1Click(Sender: TObject);
 begin
-  if ConfigForm.CheckBox2.Checked then LEDPaint1.Brush.Color:= clRed else LEDPaint1.Brush.Color:= clMaroon;
   ConfigForm.CheckBox2.Checked:= not (ConfigForm.CheckBox2.Checked);
   Alarm1.Checked:= ConfigForm.CheckBox2.Checked;
+  AtualizaAvisos; { etiqueta do alarme sob a data }
 end;
 
 
@@ -3098,6 +3868,24 @@ begin
   CnfData.Frm.StLockForm:= Valor;
   ConfigForm.CheckListBox2.Checked[1]:= Valor;
   if ConfigForm.SaveCnfFile then ConfigForm.ApplyCnfData;
+end;
+
+{ Ao abrir os menus, Alarme, Transparente e Movimento da janela mostram a
+  caixa de seleção marcada ou vazia (ImageIndex 25 ou 24 na ImgBandeja)
+  conforme a configuração }
+procedure TMainForm.MenusPopup(Sender: TObject);
+const Caixa: array[Boolean] of Integer = (24, 25);
+begin
+  Alarm1.Checked:= ConfigForm.CheckBox2.Checked;
+  Transparent1.Checked:= CnfData.Frm.StAlphaBlend;
+  Transparent2.Checked:= CnfData.Frm.StAlphaBlend;
+  Lock1.Checked:= CnfData.Frm.StLockForm;
+  Lock2.Checked:= CnfData.Frm.StLockForm;
+  Alarm1.ImageIndex:= Caixa[Alarm1.Checked];
+  Transparent1.ImageIndex:= Caixa[Transparent1.Checked];
+  Transparent2.ImageIndex:= Caixa[Transparent2.Checked];
+  Lock1.ImageIndex:= Caixa[Lock1.Checked];
+  Lock2.ImageIndex:= Caixa[Lock2.Checked];
 end;
 
 procedure TMainForm.Transparent1Click(Sender: TObject);
@@ -3147,8 +3935,8 @@ var A, M, Dd: Word;
   Dia: Integer;
   S, N: string;
 begin
-  { Percorre o ano do calendário em ordem cronológica }
-  DecodeDate(MonthCalendar1.Date, A, M, Dd);
+  { Percorre o ano do mês exibido na Agenda, em ordem cronológica }
+  DecodeDate(FMes, A, M, Dd);
   S:= Format('Feriados e datas de %d:', [A])+#13;
   for Dia:= Trunc(EncodeDate(A, 1, 1)) to Trunc(EncodeDate(A, 12, 31)) do
   begin
@@ -3159,60 +3947,6 @@ begin
   if N='' then N:= #13'(nenhum)';
   S:= S+#13#13+'Aniversários nos próximos 30 dias:'+#13+N;
   ShowMessage(S);
-end;
-
-{ Marca em negrito os feriados de cada mês exibido. A VCL informa mês e ano.
-  Não usa BoldDays: com lista vazia (mês sem feriado, ex.: Mar/Jul/Ago de
-  2026) o laço da VCL usa contador LongWord, High([]) = -1 vira $FFFFFFFF e
-  ele lê memória aleatória, deixando vários dias em negrito sem motivo. }
-procedure TMainForm.MonthCalendar1GetMonthBoldInfo(Sender: TObject;
-  Month, Year: LongWord; var MonthBoldInfo: LongWord);
-var Dia: Integer;
-begin
-  MonthBoldInfo:= 0;
-  if (Month<1) or (Month>12) or (Year<1) or (Year>9999) then Exit;
-  for Dia:= 1 to MonthDays[IsLeapYear(Year)][Month] do
-    if DescricaoDia(EncodeDate(Year, Month, Dia), ' / ')<>'' then
-      MonthBoldInfo:= MonthBoldInfo or (LongWord(1) shl (Dia-1));
-end;
-
-procedure TMainForm.MonthCalendar1Click(Sender: TObject);
-begin
-  LabelX6.Caption:= FormatDateTime('dd/mm/yyyy',MonthCalendar1.Date);
-  Panel4.Caption:= DescricaoDia(MonthCalendar1.Date, ' / ');
-end;
-
-{----------------------------------------------------------------------------}
-{-------------------------Procedure---MonthCalendar1MouseMove----------------}
-{ Mostra um hint com o nome do feriado quando o mouse está sobre o dia.
-  O evento é ligado em FormCreate (OnMouseMove não é publicado no
-  TMonthCalendar, por isso não aparece no Object Inspector). }
-procedure TMainForm.MonthCalendar1MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-var HT: TMCHitTestInfo;
-  D: TDateTime;
-  S: string;
-begin
-  S:= '';
-  FillChar(HT, SizeOf(HT), 0);
-  HT.cbSize:= SizeOf(HT);
-  HT.pt:= Point(X, Y);
-  SendMessage(MonthCalendar1.Handle, MCM_HITTEST, 0, LPARAM(@HT));
-  { dia do mês (inclusive os dias cinza do mês anterior/seguinte) }
-  if (HT.uHit and not (MCHT_PREV or MCHT_NEXT)) = MCHT_CALENDARDATE then
-  try
-    D:= EncodeDate(HT.st.wYear, HT.st.wMonth, HT.st.wDay);
-    S:= DescricaoDia(D, #13);
-    if S<>'' then S:= FormatDateTime('dd/mm/yyyy', D)+' - '+S;
-  except
-    S:= '';
-  end;
-  if S<>MonthCalendar1.Hint then
-  begin
-    MonthCalendar1.Hint:= S;
-    Application.CancelHint;
-    if S<>'' then Application.ActivateHint(Mouse.CursorPos);
-  end;
 end;
 
 { Página anterior/seguinte. O SelectNextPage dispara o PageControl1Change,
@@ -3488,26 +4222,9 @@ begin
   AddrForm.PageControl1.ActivePageIndex:= 2;
 end;
 
-procedure TMainForm.SpeedButton10Click(Sender: TObject);
-begin
-  { Alterna os medidores entre memória em uso e memória livre.
-    Nao afeta o Ícone da bandeja, que sempre usa a % de memória em uso. }
-  StMem1:= not (StMem1);
-  if StMem1 then
-  begin
-    LabelX4.Caption:= ' Memória em uso';
-    SpeedButton10.Hint:= 'Mostrando memória em uso (clique para ver a livre)';
-  end else
-  begin
-    LabelX4.Caption:= ' Memória livre';
-    SpeedButton10.Hint:= 'Mostrando memória livre (clique para ver a em uso)';
-  end;
-  AtualizaMemoria; { atualiza já, sem esperar o próximo ciclo do Timer1 }
-end;
-
 {----------------------------------------------------------------------------}
 {-------------------Limpeza-de-arquivos-temporarios--------------------------}
-{ As listas de pastas usam o formato "Rótulo|Caminho": o Memo3 mostra o total
+{ As listas de pastas usam o formato "Rótulo|Caminho": a seção Limpeza mostra o total
   de cada rótulo (ex.: "Chrome - Maria") e a limpeza usa o caminho.          }
 const SepRotulo = '|'; { caractere que não pode existir em nomes de pastas }
 
@@ -3773,7 +4490,7 @@ begin
   end;
 end;
 
-{ Mostra no Memo3 quanto será limpo, somado por rótulo }
+{ Mostra na seção Limpeza (FLimpezaLinhas) quanto será limpo, somado por rótulo }
 procedure TMainForm.MostraPastas(Pastas: TStringList; const Cabecalho: string;
   Lixeira: Boolean);
 var Rotulos: TStringList;
@@ -3784,7 +4501,7 @@ var Rotulos: TStringList;
 begin
   Screen.Cursor:= crHourGlass;
   Rotulos:= TStringList.Create;
-  Memo3.Lines.BeginUpdate;
+  FLimpezaLinhas.BeginUpdate;
   try
     SetLength(Bytes, Pastas.Count); { iniciados com zero }
     SetLength(Qtds, Pastas.Count);
@@ -3794,39 +4511,39 @@ begin
       if R<0 then R:= Rotulos.Add(Pastas.Names[I]);
       SomaPasta(Pastas.ValueFromIndex[I], Bytes[R], Qtds[R]);
     end;
-    Memo3.Clear;
-    Memo3.Lines.Add(Cabecalho);
+    FLimpezaLinhas.Clear;
+    FLimpezaLinhas.Add(Cabecalho);
     Total:= 0;
     QtdTotal:= 0;
     for R:= 0 to Rotulos.Count-1 do
     begin
       Inc(Total, Bytes[R]);
       Inc(QtdTotal, Qtds[R]);
-      Memo3.Lines.Add(Rotulos[R]);
-      Memo3.Lines.Add(Format('   %s em %d arquivo(s)', [FmtValue(1, Bytes[R]), Qtds[R]]));
+      FLimpezaLinhas.Add(Rotulos[R]);
+      FLimpezaLinhas.Add(Format('   %s em %d arquivo(s)', [FmtValue(1, Bytes[R]), Qtds[R]]));
     end;
     if Lixeira and InfoLixeira(LixBytes, LixItens) then
     begin
       Inc(Total, LixBytes);
       Inc(QtdTotal, Integer(LixItens));
-      Memo3.Lines.Add('Lixeira');
-      Memo3.Lines.Add(Format('   %s em %d item(ns)', [FmtValue(1, LixBytes), LixItens]));
+      FLimpezaLinhas.Add('Lixeira');
+      FLimpezaLinhas.Add(Format('   %s em %d item(ns)', [FmtValue(1, LixBytes), LixItens]));
     end else
       Lixeira:= False;
     if (Rotulos.Count=0) and not Lixeira then
-      Memo3.Lines.Add('Nada a limpar com as opções escolhidas.')
+      FLimpezaLinhas.Add('Nada a limpar com as opções escolhidas.')
     else
-      Memo3.Lines.Add(Format('Total a limpar: %s (%d arquivos)', [FmtValue(1, Total), QtdTotal]));
-    Gauge3.Progress:= 0;
+      FLimpezaLinhas.Add(Format('Total a limpar: %s (%d arquivos)', [FmtValue(1, Total), QtdTotal]));
+    FLimpezaProgresso:= 0;
   finally
-    Memo3.Lines.EndUpdate;
+    FLimpezaLinhas.EndUpdate;
     Rotulos.Free;
     Screen.Cursor:= crDefault;
   end;
-  Memo3.SelStart:= 0;
+  AtualizaLimpeza;
 end;
 
-{ Cabeçalho do Memo3 conforme o alcance da limpeza }
+{ Cabeçalho da lista da limpeza conforme o alcance }
 function CabecalhoLimpeza: string;
 begin
   if ShIsUserAnAdmin then
@@ -3835,7 +4552,7 @@ begin
     Result:= 'Limpeza - perfil atual';
 end;
 
-{ Mostra no Memo3 o que será limpo com as opções atuais }
+{ Mostra na seção Limpeza o que será limpo com as opções atuais }
 procedure TMainForm.MostraTemporarios;
 var Pastas: TStringList;
   Ignorados: string;
@@ -3844,7 +4561,10 @@ begin
   try
     MostraPastas(Pastas, CabecalhoLimpeza, FOpcoes.Lixeira);
     if Ignorados<>'' then
-      Memo3.Lines.Add('Navegador aberto (ignorado): '+Ignorados);
+    begin
+      FLimpezaLinhas.Add('Navegador aberto (ignorado): '+Ignorados);
+      AtualizaLimpeza;
+    end;
   finally
     Pastas.Free;
   end;
@@ -3852,7 +4572,7 @@ end;
 
 { Apaga o conteúdo das pastas da lista (as pastas em si são mantidas) e,
   se pedido, esvazia a Lixeira. Arquivos em uso ou sem permissão (comum em
-  C:\Windows\Temp sem executar como administrador) são mantidos. O Gauge3
+  C:\Windows\Temp sem executar como administrador) são mantidos. O progresso
   avança conforme os bytes. O resultado fica em FUltLiberado/FUltApagados. }
 procedure TMainForm.LimpaPastas(Pastas: TStringList; const Cabecalho: string;
   Lixeira: Boolean);
@@ -3864,10 +4584,11 @@ var I, Qtd, Apagados, Mantidos: Integer;
   begin
     Inc(Feito, N);
     if (Total>0) and (Feito<=Total) then
-      Gauge3.Progress:= Round(100.0*Feito/Total);
+      FLimpezaProgresso:= Round(100.0*Feito/Total);
     if GetTickCount-Ultimo>=100 then { mantém a janela respondendo }
     begin
       Ultimo:= GetTickCount;
+      AtualizaLimpeza; { barra de progresso }
       Application.ProcessMessages;
     end;
   end;
@@ -3906,12 +4627,10 @@ var I, Qtd, Apagados, Mantidos: Integer;
 begin
   if FLimpando then Exit;
   FLimpando:= True;
-  SpeedButton11.Enabled:= False;
-  SpeedButton13.Enabled:= False;
-  ComboBox1.Enabled:= False;
+  AtualizaLimpeza; { desabilita os botões }
   Screen.Cursor:= crHourGlass;
   try
-    { 1ª passagem: total para o Gauge3 (bytes + 1 por arquivo) }
+    { 1ª passagem: total para o progresso (bytes + 1 por arquivo) }
     Total:= 0;
     for I:= 0 to Pastas.Count-1 do
     begin
@@ -3924,9 +4643,8 @@ begin
     Apagados:= 0;
     Mantidos:= 0;
     Ultimo:= GetTickCount;
-    Gauge3.MaxValue:= 100;
-    Gauge3.Progress:= 0;
-    Memo3.Lines.Add('Limpando...');
+    FLimpezaProgresso:= 0;
+    FLimpezaLinhas.Add('Limpando...');
     if Lixeira and InfoLixeira(LixBytes, LixItens) and (LixItens>0) and
        EsvaziaLixeira then
     begin
@@ -3937,28 +4655,25 @@ begin
       LimpaPasta(Pastas.ValueFromIndex[I], True);
     { Resultado: resumo da limpeza seguido do que permaneceu nas pastas }
     MostraPastas(Pastas, Cabecalho, Lixeira);
-    Gauge3.Progress:= 100;
+    FLimpezaProgresso:= 100;
     I:= 0;
-    Memo3.Lines.Insert(I, Format('Limpeza concluída: %s liberados (%d arquivos)',
+    FLimpezaLinhas.Insert(I, Format('Limpeza concluída: %s liberados (%d arquivos)',
       [FmtValue(1, Liberado), Apagados]));
     Inc(I);
     if Mantidos>0 then
     begin
-      Memo3.Lines.Insert(I, Format('Mantidos %d arquivo(s) em uso ou sem permissão', [Mantidos]));
+      FLimpezaLinhas.Insert(I, Format('Mantidos %d arquivo(s) em uso ou sem permissão', [Mantidos]));
       Inc(I);
     end;
-    Memo3.Lines.Insert(I, '--- Permanece nas pastas ---');
-    Memo3.Lines[Memo3.Lines.Count-1]:= StringReplace(Memo3.Lines[Memo3.Lines.Count-1],
+    FLimpezaLinhas.Insert(I, '--- Permanece nas pastas ---');
+    FLimpezaLinhas[FLimpezaLinhas.Count-1]:= StringReplace(FLimpezaLinhas[FLimpezaLinhas.Count-1],
       'Total a limpar', 'Total restante', []);
-    Memo3.SelStart:= 0;
     FUltLiberado:= Liberado;
     FUltApagados:= Apagados;
   finally
     Screen.Cursor:= crDefault;
-    SpeedButton11.Enabled:= True;
-    SpeedButton13.Enabled:= True;
-    ComboBox1.Enabled:= True;
     FLimpando:= False;
+    AtualizaLimpeza;
   end;
 end;
 
@@ -3971,12 +4686,13 @@ begin
   try
     LimpaPastas(Pastas, CabecalhoLimpeza, FOpcoes.Lixeira);
     if Ignorados<>'' then
-      Memo3.Lines.Add('Navegador aberto (ignorado): '+Ignorados);
+      FLimpezaLinhas.Add('Navegador aberto (ignorado): '+Ignorados);
   finally
     Pastas.Free;
   end;
   FOpcoes.Ultima:= Now;
   SalvaOpcoesLimpeza;
+  AtualizaLimpeza;
 end;
 
 {-------------------Opções-da-limpeza-(Painel.ini)---------------------------}
@@ -4241,7 +4957,7 @@ begin
   TrayIconData.uFlags:= 0;
 end;
 
-{ Limpa o cache do navegador escolhido no ComboBox1 ('Todos' = todos os
+{ Limpa o cache do navegador escolhido (PnNav0..PnNav5; 'Todos' = todos os
   navegadores conhecidos), em todos os perfis se executado como administrador. }
 procedure TMainForm.LimpaNavegador(const Navegador: string);
 var Pastas, Perfis: TStringList;
@@ -4417,8 +5133,7 @@ end;
 
 procedure TMainForm.SpeedButton13Click(Sender: TObject);
 begin
-  if ComboBox1.ItemIndex<0 then ComboBox1.ItemIndex:= 0;
-  LimpaNavegador(ComboBox1.Items[ComboBox1.ItemIndex]);
+  LimpaNavegador(ChipNavegador(FNavegador).Caption);
 end;
 
 { Botão Copiar da janela de Informações do Sistema: copia o trecho
@@ -4510,11 +5225,14 @@ procedure TMainForm.CriaMenusFerramentas;
 
   procedure Insere(Alvo: TMenu; Indice: Integer);
 
-    function Item(const Texto: string; Evento: TNotifyEvent): TMenuItem;
+    { Icone: ImageIndex na ImgBandeja (comum aos dois menus) }
+    function Item(const Texto: string; Evento: TNotifyEvent;
+      Icone: Integer = -1): TMenuItem;
     begin
       Result:= TMenuItem.Create(Self);
       Result.Caption:= Texto;
       Result.OnClick:= Evento;
+      Result.ImageIndex:= Icone;
       Alvo.Items.Insert(Indice, Result);
       Inc(Indice);
     end;
@@ -4522,16 +5240,16 @@ procedure TMainForm.CriaMenusFerramentas;
   begin
     if Indice<0 then Indice:= Alvo.Items.Count; { item de referência não encontrado }
     Item('-', nil);
-    Item('&Processos...', ProcessosClick);
-    Item('&Histórico de CPU e memória...', HistoricoClick);
-    Item('&Bloquear o computador', BloquearClick);
-    Item('&Desligar o monitor', DesligarMonitorClick);
+    Item('&Processos...', ProcessosClick, 6);
+    Item('&Histórico de CPU e memória...', HistoricoClick, 7);
+    Item('&Bloquear o computador', BloquearClick, 8);
+    Item('&Desligar o monitor', DesligarMonitorClick, 9);
     { no menu da janela o PowerShell fica junto do Prompt MS-DOS }
-    if Alvo=PopupMenu1 then Item('Power&Shell', PowerShellClick);
+    if Alvo=PopupMenu1 then Item('Power&Shell', PowerShellClick, 10);
     Item('-', nil);
-    FMenuClip[Ord(Alvo=PopupMenu2)]:= Item('Área de &transferência', nil);
+    FMenuClip[Ord(Alvo=PopupMenu2)]:= Item('Área de &transferência', nil, 11);
     Item('-', nil);
-    Item('Verificar &atualização...', AtualizacaoClick);
+    Item('Verificar &atualização...', AtualizacaoClick, 12);
   end;
 
 var M: TMenuItem;
@@ -4542,8 +5260,11 @@ begin
   M:= TMenuItem.Create(Self);
   M.Caption:= 'Power&Shell';
   M.OnClick:= PowerShellClick;
+  M.ImageIndex:= 10;
   I:= PopupMenu2.Items.IndexOf(Dos1);
   if I<0 then PopupMenu2.Items.Add(M) else PopupMenu2.Items.Insert(I+1, M);
+  PopupMenu1.OnPopup:= MenusPopup;
+  PopupMenu2.OnPopup:= MenusPopup;
   AtualizaMenuClipboard;
 end;
 
@@ -4730,6 +5451,7 @@ end;
 procedure TMainForm.CreateWnd;
 begin
   inherited;
+  ArredondaJanela(Handle);
   RegistraAtalho;
   AddClipboardFormatListener(Handle);
 end;
@@ -4884,6 +5606,927 @@ begin
   if ShellExecute(Handle, 'open', 'powershell.exe', nil,
       PChar(GetEnvironmentVariable('USERPROFILE')), SW_SHOWNORMAL) <= 32 then
     MessageDlg('Não foi possível abrir o PowerShell.', mtWarning, [mbOk], 0);
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Visual-novo:-seções--------------------------------------}
+{ Título, relógio, barra de seções e rodapé ficam em PnTopo, PnNavegacao e
+  PnRodape. Monitor, Agenda, Discos e Limpeza são os painéis PnMonitor,
+  PnAgenda, PnDiscos e PnLimpeza, sobrepostos em PnConteudo; as abas
+  TabSheet3, TabSheet2, TabSheet4 e TabSheet5 (vazias) só marcam a seção
+  ativa no PageControl1, que mostra as abas antigas da seção "Mais".       }
+procedure TMainForm.CriaVisual;
+const
+  { ícones do menu Mais, na ordem do ImageIndex dos itens: anotações,
+    imagens, relógio, informações do sistema, cronômetro, contatos, sobre }
+  IconesMais: array[0..6] of Word =
+    ($E70B, $EB9F, $E917, $E770, $E916, $E77B, $E946);
+  { ícones dos menus da bandeja (PopupMenu1) e da janela (PopupMenu2):
+    detalhes, alarme, transparente, destravar, fechar, sobre (itens do .dfm)
+    e processos, histórico, bloquear, desligar o monitor, PowerShell, área
+    de transferência, verificar atualização (itens de CriaMenusFerramentas);
+    só do PopupMenu2: configuração, prompt MS-DOS, bloco de notas,
+    calculadora, executar, imprimir imagem, printer setup, abrir figura,
+    salvar figura, minimizar e fechar o formulário; caixa de seleção vazia
+    e marcada (Alarme, Transparente e Movimento da janela, MenusPopup) }
+  IconesBandeja: array[0..25] of Word =
+    ($E8A7, $EA8F, $E790, $E785, $E8BB, $E946,
+     $E8FD, $E81C, $E72E, $E7F4, $E756, $E77F, $E895,
+     $E713, $E756, $E70B, $E8EF, $E768, $E749, $E90F, $E8E5, $E792,
+     $E921, $E711, $E739, $E73A);
+var I: Integer;
+  Ativa: TTabSheet;
+begin
+  FFamTexto:= Familia(['Segoe UI']);
+  FFamSemi:= Familia(['Segoe UI Semibold', 'Segoe UI']);
+  if Screen.Fonts.IndexOf('Segoe Fluent Icons')<0 then TrocaFonteIcones(Self);
+  FMes:= StartOfTheMonth(Date);
+  FDiaSel:= Date;
+  CarregaIcones(ImgMais, IconesMais, Px(16));
+  CarregaIcones(ImgBandeja, IconesBandeja, Px(16));
+  { PageControl1 sem a fileira de guias e com a moldura fora da área
+    visível (PnConteudoResize) }
+  Ativa:= PageControl1.ActivePage;
+  for I:= 0 to PageControl1.PageCount-1 do
+    PageControl1.Pages[I].TabVisible:= False;
+  PageControl1.ActivePage:= Ativa;
+  PageControl1.Align:= alNone;
+  PnConteudoResize(PnConteudo);
+  LbRodape.Caption:= 'Painel '+Vrs;
+  PosicionaSegundos;
+  FAlturaExpandida:= ClientHeight;
+  AtualizaNavegadores;
+  AtualizaAgenda;
+  AtualizaSecoes;
+  AtualizaLimpeza;
+  AtualizaAvisos;
+end;
+
+{ Tipo de fonte do relógio digital, escolhido na configuração; o tamanho, o
+  estilo e a cor continuam os do visual novo. Fonte não instalada: fica a
+  atual. }
+procedure TMainForm.DefineFonteRelogio(const Nome: string);
+begin
+  if (Nome='') or (Screen.Fonts.IndexOf(Nome)<0) then Exit;
+  LbHora.Font.Name:= Nome;
+  PosicionaSegundos;
+end;
+
+{ Tipo de fonte da data, como o do relógio digital }
+procedure TMainForm.DefineFonteData(const Nome: string);
+begin
+  if (Nome='') or (Screen.Fonts.IndexOf(Nome)<0) then Exit;
+  LbData.Font.Name:= Nome;
+end;
+
+{ Os segundos logo depois de hh:nn, na mesma linha de base, e o LED do
+  alarme à direita dos segundos }
+procedure TMainForm.PosicionaSegundos;
+var TM: TTextMetric;
+  Base: Integer;
+begin
+  Canvas.Font:= LbHora.Font;
+  GetTextMetrics(Canvas.Handle, TM);
+  Base:= LbHora.Top+TM.tmAscent;
+  Canvas.Font:= LbSegundos.Font;
+  GetTextMetrics(Canvas.Handle, TM);
+  LbSegundos.SetBounds(LbHora.Left+LbHora.Width+Px(2), Base-TM.tmAscent,
+    LbSegundos.Width, LbSegundos.Height);
+  { centro do LED na altura do meio dos algarismos dos segundos }
+  ShAlarme.SetBounds(LbSegundos.Left+Canvas.TextWidth(':00')+Px(8),
+    Base-(TM.tmAscent-TM.tmInternalLeading) div 2-ShAlarme.Height div 2,
+    ShAlarme.Width, ShAlarme.Height);
+end;
+
+procedure TMainForm.PnConteudoResize(Sender: TObject);
+var R: TRect;
+begin
+  if PageControl1.Align<>alNone then Exit; { ainda carregando o .dfm }
+  { área das páginas (o DisplayRect é protegido no TPageControl) }
+  R:= PageControl1.ClientRect;
+  PageControl1.Perform(TCM_ADJUSTRECT, 0, LPARAM(@R));
+  PageControl1.SetBounds(-R.Left, -R.Top,
+    PnConteudo.ClientWidth+PageControl1.Width-(R.Right-R.Left),
+    PnConteudo.ClientHeight+PageControl1.Height-(R.Bottom-R.Top));
+end;
+
+function TMainForm.Escala: Single;
+begin
+  Result:= CurrentPPI/96;
+  if Result<=0 then Result:= 1;
+end;
+
+{ Medida de 96 dpi convertida para o DPI atual }
+function TMainForm.Px(V: Single): Integer;
+begin
+  Result:= Round(V*Escala);
+end;
+
+{ GDI+ sobre o TPaintBox, em unidades de 96 dpi }
+function TMainForm.NovoGrafico(Pb: TPaintBox): TGPGraphics;
+begin
+  Result:= TGPGraphics.Create(Pb.Canvas.Handle);
+  Result.SetSmoothingMode(SmoothingModeAntiAlias);
+  Result.SetTextRenderingHint(TextRenderingHintClearTypeGridFit);
+  Result.ScaleTransform(Escala, Escala);
+end;
+
+{ Mostra o painel da seção ativa e destaca o botão dela }
+procedure TMainForm.AtualizaSecoes;
+var A: TTabSheet;
+begin
+  A:= PageControl1.ActivePage;
+  PnMonitor.Visible:= A=TabSheet3;
+  PnAgenda.Visible:= A=TabSheet2;
+  PnDiscos.Visible:= A=TabSheet4;
+  PnLimpeza.Visible:= A=TabSheet5;
+  PageControl1.Visible:= not (PnMonitor.Visible or PnAgenda.Visible or
+    PnDiscos.Visible or PnLimpeza.Visible);
+  PnSecMonitor.Selecionado:= PnMonitor.Visible;
+  PnSecAgenda.Selecionado:= PnAgenda.Visible;
+  PnSecDiscos.Selecionado:= PnDiscos.Visible;
+  PnSecLimpeza.Selecionado:= PnLimpeza.Visible;
+  PnSecMais.Selecionado:= PageControl1.Visible;
+end;
+
+procedure TMainForm.SelecionaAba(Aba: TTabSheet);
+begin
+  if PageControl1.ActivePage=Aba then Exit;
+  PageControl1.ActivePage:= Aba;
+  PageControl1Change(PageControl1);
+end;
+
+procedure TMainForm.SecaoClick(Sender: TObject);
+var P: TPoint;
+begin
+  if Sender=PnSecMonitor then SelecionaAba(TabSheet3) else
+  if Sender=PnSecAgenda then SelecionaAba(TabSheet2) else
+  if Sender=PnSecDiscos then SelecionaAba(TabSheet4) else
+  if Sender=PnSecLimpeza then SelecionaAba(TabSheet5) else
+  if Sender=PnSecMais then
+  begin
+    P:= PnSecMais.ClientToScreen(Point(0, PnSecMais.Height));
+    PopupMais.Popup(P.X, P.Y);
+  end;
+end;
+
+procedure TMainForm.MaisClick(Sender: TObject);
+begin
+  if Sender=MiAnotacoes then SelecionaAba(TabSheet7) else
+  if Sender=MiImagens then SelecionaAba(TabSheet1) else
+  if Sender=MiRelogio then SelecionaAba(TabSheet8) else
+  if Sender=MiInformacoes then SelecionaAba(TabSheet6) else
+  if Sender=MiCronometro then SelecionaAba(TabSheet9) else
+  if Sender=MiContatos then SelecionaAba(TabSheet11) else
+  if Sender=MiSobre then SelecionaAba(TabSheet10);
+end;
+
+{ Mantém a janela inteira dentro da área de trabalho do monitor }
+procedure TMainForm.GarantirNaTela;
+var R: TRect;
+begin
+  R:= Screen.MonitorFromRect(BoundsRect).WorkareaRect;
+  if Left+Width>R.Right then Left:= R.Right-Width;
+  if Top+Height>R.Bottom then Top:= R.Bottom-Height;
+  if Left<R.Left then Left:= R.Left;
+  if Top<R.Top then Top:= R.Top;
+end;
+
+{ Etiquetas sob a data (próxima data e alarme, PnAviso1 e PnAviso2, com a
+  largura do texto) e o atalho global no rodapé }
+procedure TMainForm.AtualizaAvisos;
+var Avisos: TArray<string>;
+  Etiquetas: array[0..1] of TPanel;
+  I, P, X, L: Integer;
+  S: string;
+begin
+  { próxima data (feriado, data pessoal, aniversário): uma vez por dia }
+  if FAvisoDia<>Date then
+  begin
+    FAvisoDia:= Date;
+    FAvisoData:= '';
+    for I:= 0 to 60 do
+    begin
+      S:= DescricaoDia(Date+I, #1);
+      if S='' then Continue;
+      P:= Pos(#1, S);
+      if P>0 then S:= Copy(S, 1, P-1);
+      case I of
+        0: FAvisoData:= 'Hoje: '+S;
+        1: FAvisoData:= S+' amanhã';
+      else
+        FAvisoData:= Format('%s em %d dias', [S, I]);
+      end;
+      Break;
+    end;
+  end;
+  Avisos:= nil;
+  if FAvisoData<>'' then Avisos:= Avisos+[FAvisoData];
+  if Assigned(ConfigForm) and ConfigForm.CheckBox2.Checked then
+    Avisos:= Avisos+['Alarme '+string(CnfData.Sch.SchHora)];
+  { LED do alarme: aceso (verde) se ativo, apagado se desativado }
+  if Assigned(ConfigForm) and ConfigForm.CheckBox2.Checked then
+  begin
+    ShAlarme.Brush.Color:= CorAlarmeAtivo;
+    ShAlarme.Pen.Color:= CorAlarmeBorda;
+    ShAlarme.Hint:= 'Alarme ativo ('+string(CnfData.Sch.SchHora)+')';
+  end else
+  begin
+    ShAlarme.Brush.Color:= CorTrilho;
+    ShAlarme.Pen.Color:= CorContorno;
+    ShAlarme.Hint:= 'Alarme desativado';
+  end;
+  Etiquetas[0]:= PnAviso1;
+  Etiquetas[1]:= PnAviso2;
+  Canvas.Font:= PnAviso1.Font;
+  X:= PnAviso1.Left;
+  for I:= 0 to High(Etiquetas) do
+  begin
+    if I<=High(Avisos) then S:= Avisos[I] else S:= '';
+    L:= Canvas.TextWidth(S)+Px(18);
+    if X+L>PnTopo.ClientWidth-Px(18) then L:= PnTopo.ClientWidth-Px(18)-X;
+    if (S='') or (L<Px(40)) then
+    begin
+      Etiquetas[I].Visible:= False;
+      Continue;
+    end;
+    if Etiquetas[I].Caption<>S then Etiquetas[I].Caption:= S;
+    Etiquetas[I].Hint:= S;
+    Etiquetas[I].SetBounds(X, Etiquetas[I].Top, L, Etiquetas[I].Height);
+    Etiquetas[I].Visible:= True;
+    X:= X+L+Px(6);
+  end;
+  if FAtalhoAtivo then S:= FAtalhoTexto else S:= '';
+  if LbAtalho.Caption<>S then LbAtalho.Caption:= S;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Visual-novo:-Monitor-------------------------------------}
+{ Valores do Monitor, a cada segundo (Timer1); as barras de memória ficam em
+  AtualizaMemoria }
+procedure TMainForm.AtualizaMonitor;
+var T1, T2, P: Integer;
+  Fonte: string;
+begin
+  LimitesUso(T1, T2);
+  P:= Round(FCpuUso);
+  LbCpuValor.Caption:= Format('%d%%', [P]);
+  LbCpuValor.Font.Color:= CorNivelTexto(NivelUso(P));
+  P:= PctUso(MemInfo.ullTotalPhys - MemInfo.ullAvailPhys, MemInfo.ullTotalPhys);
+  LbMemValor.Caption:= Format('%d%%', [P]);
+  LbMemValor.Font.Color:= CorNivelTexto(NivelUso(P));
+  LbNivel1.Caption:= Format('Atenção ≥%d%%', [T1]);
+  LbNivel2.Caption:= Format('Crítico ≥%d%%', [T2]);
+  FTempOk:= TemperaturaCPU(FTemp, Fonte);
+  if FTempOk then
+  begin
+    LbTempInfo.Caption:= Format('alerta %d °C', [LimiteTempAlta]);
+    PbTemperatura.Hint:= 'Temperatura da CPU ('+Fonte+')';
+  end else
+  begin
+    LbTempInfo.Caption:= 'indisponível';
+    PbTemperatura.Hint:= Fonte;
+  end;
+  if PnMonitor.Visible then
+  begin
+    PbGrafico.Invalidate;
+    PbTemperatura.Invalidate;
+  end;
+end;
+
+{ Uso da CPU (área azul) e da memória (linha laranja) nos últimos 5 minutos,
+  com linhas tracejadas nos limites 1 e 2 (rótulos à direita) }
+procedure TMainForm.GraficoPaint(Sender: TObject);
+var G: TGPGraphics;
+  Cpu, Mem: TArray<Byte>;
+  N, I, T1, T2: Integer;
+  X, Y, W, H: Single;
+  Pts: TArray<TGPPointF>;
+  Caneta: TGPPen;
+  Pincel: TGPSolidBrush;
+  Traco: array[0..1] of Single;
+
+  function PX_(I: Integer): Single;
+  begin
+    Result:= X + W*(AmostrasHistorico-1-(N-1-I))/(AmostrasHistorico-1);
+  end;
+
+  function PY_(V: Integer): Single;
+  begin
+    Result:= Y + H - H*V/100;
+  end;
+
+  procedure Limite(V: Integer; Cor, CorTxt: TColor);
+  begin
+    Caneta:= TGPPen.Create(ARGBDe(Cor), 1);
+    try
+      Caneta.SetDashPattern(@Traco[0], 2);
+      G.DrawLine(Caneta, X, PY_(V), X+W, PY_(V));
+    finally
+      Caneta.Free;
+    end;
+    Texto(G, Format('%d%%', [V]), FFamTexto, 9, CorTxt, X+W+4, PY_(V)+3);
+  end;
+
+begin
+  if FFamTexto=nil then Exit;
+  LimitesUso(T1, T2);
+  G:= NovoGrafico(PbGrafico);
+  try
+    X:= 0;
+    Y:= 4;
+    W:= PbGrafico.Width/Escala-26;
+    H:= PbGrafico.Height/Escala-8;
+    Traco[0]:= 3;
+    Traco[1]:= 3;
+    { grade }
+    Caneta:= TGPPen.Create(ARGBDe(CorTrilho), 1);
+    try
+      G.DrawLine(Caneta, X, Y+H*0.5, X+W, Y+H*0.5);
+      G.DrawLine(Caneta, X, Y+H, X+W, Y+H);
+    finally
+      Caneta.Free;
+    end;
+    Limite(T1, CorNivel(1), CorNivelTexto(1));
+    Limite(T2, CorNivel(2), CorNivelTexto(2));
+    CopiaHistorico(Cpu, Mem);
+    N:= Length(Cpu);
+    if N<2 then Exit;
+    { CPU: área preenchida + linha }
+    SetLength(Pts, N+2);
+    for I:= 0 to N-1 do Pts[I]:= PF(PX_(I), PY_(Cpu[I]));
+    Pts[N]:= PF(PX_(N-1), Y+H);
+    Pts[N+1]:= PF(PX_(0), Y+H);
+    Pincel:= TGPSolidBrush.Create(ARGBDe(CorAcentoClaro));
+    try
+      G.FillPolygon(Pincel, PGPPointF(@Pts[0]), N+2);
+    finally
+      Pincel.Free;
+    end;
+    Caneta:= TGPPen.Create(ARGBDe(CorAcento), 1.6);
+    try
+      Caneta.SetLineJoin(LineJoinRound);
+      G.DrawLines(Caneta, PGPPointF(@Pts[0]), N);
+    finally
+      Caneta.Free;
+    end;
+    { memória }
+    for I:= 0 to N-1 do Pts[I]:= PF(PX_(I), PY_(Mem[I]));
+    Caneta:= TGPPen.Create(ARGBDe(CorMemoria), 1.8);
+    try
+      Caneta.SetLineJoin(LineJoinRound);
+      G.DrawLines(Caneta, PGPPointF(@Pts[0]), N);
+    finally
+      Caneta.Free;
+    end;
+  finally
+    G.Free;
+  end;
+end;
+
+{ Mostrador de 270° de 0 a 100 °C, com as faixas de atenção e alta }
+procedure TMainForm.TemperaturaPaint(Sender: TObject);
+var G: TGPGraphics;
+  Caneta: TGPPen;
+  T: Double;
+  Nv: Integer;
+  CX, CY, R: Single;
+
+  procedure Arco(Cor: TColor; De, Ate: Double);
+  begin
+    if Ate<=De then Exit;
+    Caneta.SetColor(ARGBDe(Cor));
+    G.DrawArc(Caneta, CX-R, CY-R, 2*R, 2*R, 135+270*De/100, 270*(Ate-De)/100);
+  end;
+
+begin
+  if FFamTexto=nil then Exit;
+  G:= NovoGrafico(PbTemperatura);
+  try
+    CX:= PbTemperatura.Width/Escala/2;
+    CY:= PbTemperatura.Height/Escala/2;
+    R:= 29;
+    Caneta:= TGPPen.Create(ARGBDe(CorTrilho), 7);
+    try
+      Arco(CorTrilho, 0, LimiteTempAtencao);
+      Arco(CorFaixaAtencao, LimiteTempAtencao, LimiteTempAlta);
+      Arco(CorFaixaAlta, LimiteTempAlta, 100);
+      if FTempOk then
+      begin
+        T:= FTemp;
+        if T<0 then T:= 0;
+        if T>100 then T:= 100;
+        if FTemp<LimiteTempAtencao then Nv:= 0 else
+        if FTemp<LimiteTempAlta then Nv:= 1 else
+          Nv:= 2;
+        Arco(CorNivel(Nv), 0, T);
+        Texto(G, Format('%.0f°', [FTemp]), FFamSemi, 16, CorTexto1, CX, CY+5, txCentro, 60);
+      end else
+        Texto(G, '--', FFamSemi, 16, CorTexto3, CX, CY+5, txCentro, 60);
+    finally
+      Caneta.Free;
+    end;
+    Texto(G, '°C', FFamTexto, 9, CorTexto3, CX, CY+26, txCentro, 40);
+  finally
+    G.Free;
+  end;
+end;
+
+{ Barra arredondada; Tag = % (a cor segue os limites 1 e 2, exceto no
+  progresso da limpeza) }
+procedure TMainForm.BarraPaint(Sender: TObject);
+var Pb: TPaintBox;
+  G: TGPGraphics;
+  W, H, L: Single;
+  P: Integer;
+  Cor: TColor;
+begin
+  Pb:= Sender as TPaintBox;
+  P:= Pb.Tag;
+  if P<0 then P:= 0;
+  if P>100 then P:= 100;
+  G:= NovoGrafico(Pb);
+  try
+    W:= Pb.Width/Escala;
+    H:= Pb.Height/Escala;
+    Retangulo(G, 0, 0, W, H, H/2, CorTrilho, clNone);
+    if Pb=PbProgresso then Cor:= CorAcento else Cor:= CorNivel(NivelUso(P));
+    L:= W*P/100;
+    if (L>0) and (L<H) then L:= H;
+    if L>0 then Retangulo(G, 0, 0, L, H, H/2, Cor, clNone);
+  finally
+    G.Free;
+  end;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Visual-novo:-Agenda--------------------------------------}
+
+{ Tipo de maior prioridade entre as datas do dia }
+function TipoPrincipal(const L: TArray<TDataDia>; out Tipo: TTipoData): Boolean;
+var I: Integer;
+begin
+  Result:= Length(L)>0;
+  if not Result then Exit;
+  Tipo:= L[0].Tipo;
+  for I:= 1 to High(L) do
+    if L[I].Tipo<Tipo then Tipo:= L[I].Tipo;
+end;
+
+{ Ex.: 'Feriado municipal · Salvador · segunda-feira · em 13 dias' }
+function SubTexto(const It: TItemData): string;
+var Dif, P: Integer;
+begin
+  case It.Data.Tipo of
+    tdNacional: Result:= 'Feriado nacional';
+    tdEstadual: Result:= 'Feriado estadual';
+    tdMunicipal: Result:= 'Feriado municipal';
+    tdAniversario: Result:= 'Agenda de contatos';
+  else
+    Result:= 'Data pessoal';
+  end;
+  P:= Pos(' - ', It.Data.Classe);
+  if (P>0) and (It.Data.Tipo in [tdEstadual, tdMunicipal]) then
+    Result:= Result+' · '+Copy(It.Data.Classe, P+3, MaxInt);
+  Result:= Result+' · '+AnsiLowerCase(DiasSemanaExtenso[DayOfWeek(It.Dia)]);
+  Dif:= Trunc(It.Dia)-Trunc(Date);
+  if Dif=0 then Result:= Result+' · hoje' else
+  if Dif=1 then Result:= Result+' · amanhã' else
+  if Dif>1 then Result:= Result+Format(' · em %d dias', [Dif]) else
+    Result:= Result+Format(' · há %d dias', [-Dif]);
+end;
+
+{ Datas do dia para a Agenda: feriado nacional, Datas.txt e aniversários }
+function TMainForm.DatasDia(Dia: TDateTime): TArray<TDataDia>;
+var Item: TDataDia;
+begin
+  Result:= nil;
+  Item.Texto:= NomeFeriado(Dia);
+  if Item.Texto<>'' then
+  begin
+    Item.Tipo:= tdNacional;
+    Item.Classe:= 'nacional - Brasil';
+    Result:= [Item];
+  end;
+  Result:= Result+DatasDoDia(Dia);
+end;
+
+{ Relê as datas do calendário e da lista se mudou o mês, o dia escolhido ou
+  o dia de hoje, ou a cada 30 s; True se releu }
+function TMainForm.AtualizaCacheAgenda: Boolean;
+var Inicio, Dia: TDateTime;
+  I, J: Integer;
+  L: TArray<TDataDia>;
+  Item: TItemData;
+begin
+  Inicio:= FMes - (DayOfWeek(FMes)-1); { domingo da 1ª semana }
+  Result:= not ((Inicio=FCacheInicio) and (FDiaSel=FCacheDia) and
+    (Date=FCacheHoje) and (GetTickCount64-FCacheQuando<30000));
+  if not Result then Exit;
+  FCacheInicio:= Inicio;
+  FCacheDia:= FDiaSel;
+  FCacheHoje:= Date;
+  FCacheQuando:= GetTickCount64;
+  FCacheLista:= nil;
+  for I:= 0 to High(FCacheDias) do FCacheDias[I]:= DatasDia(Inicio+I);
+  if FDiaSel=Date then
+  begin
+    { próximas datas a partir de hoje: até 8, nos próximos 6 meses }
+    for I:= 0 to 183 do
+    begin
+      Dia:= Date+I;
+      L:= DatasDia(Dia);
+      for J:= 0 to High(L) do
+      begin
+        Item.Dia:= Dia;
+        Item.Data:= L[J];
+        FCacheLista:= FCacheLista+[Item];
+      end;
+      if Length(FCacheLista)>=8 then Break;
+    end;
+  end else
+  begin
+    L:= DatasDia(FDiaSel);
+    for J:= 0 to High(L) do
+    begin
+      Item.Dia:= FDiaSel;
+      Item.Data:= L[J];
+      FCacheLista:= FCacheLista+[Item];
+    end;
+  end;
+end;
+
+{ Semanas (linhas) do mês exibido }
+function TMainForm.LinhasAgenda: Integer;
+begin
+  Result:= (Trunc(EndOfTheMonth(FMes))-Trunc(FMes-(DayOfWeek(FMes)-1))) div 7 + 1;
+end;
+
+{ Título do mês, altura do calendário (5 ou 6 semanas) e título da lista }
+procedure TMainForm.AtualizaAgenda;
+var A, M, D: Word;
+begin
+  AtualizaCacheAgenda;
+  DecodeDate(FMes, A, M, D);
+  LbMes.Caption:= AnsiUpperCase(Copy(MesesExtenso[M], 1, 1))+
+    Copy(MesesExtenso[M], 2, MaxInt)+' '+IntToStr(A);
+  PbCalendario.Height:= Px(20+LinhasAgenda*28);
+  { a legenda está ancorada embaixo do cartão }
+  PnCalendario.Height:= PbCalendario.Top+PbCalendario.Height+Px(40);
+  if FDiaSel=Date then LbProximasTitulo.Caption:= 'Próximas datas'
+  else LbProximasTitulo.Caption:= Format('%d de %s', [DayOf(FDiaSel),
+    MesesExtenso[MonthOf(FDiaSel)]]);
+  PbCalendario.Invalidate;
+  PbProximas.Invalidate;
+end;
+
+{ Dica do dia: a data e o nome de cada feriado ou data }
+function TMainForm.DicaDia(Dia: Integer): string;
+var I, J: Integer;
+begin
+  Result:= FormatDateTime('dd/mm/yyyy', Dia);
+  I:= Dia-Trunc(FCacheInicio);
+  if (I>=0) and (I<=High(FCacheDias)) then
+    for J:= 0 to High(FCacheDias[I]) do
+      Result:= Result+#13+FCacheDias[I][J].Texto;
+end;
+
+{ Dia sob o ponto (X, Y) do PbCalendario; 0 = nenhum }
+function TMainForm.DiaEm(X, Y: Integer): Integer;
+var LX, LY, Col: Single;
+  C, L: Integer;
+begin
+  Result:= 0;
+  LX:= X/Escala;
+  LY:= Y/Escala-20;
+  Col:= PbCalendario.Width/Escala/7;
+  if (LX<0) or (LY<0) or (Col<=0) then Exit;
+  C:= Trunc(LX/Col);
+  L:= Trunc(LY/28);
+  if (C>6) or (L>=LinhasAgenda) then Exit;
+  Result:= Trunc(FCacheInicio)+L*7+C;
+end;
+
+{ Calendário do mês com um anel colorido por tipo de data; hoje em azul }
+procedure TMainForm.CalendarioPaint(Sender: TObject);
+const CelH = 28;
+  Raio = 12;
+  YG = 20;
+  Iniciais: array[1..7] of string = ('D', 'S', 'T', 'Q', 'Q', 'S', 'S');
+var G: TGPGraphics;
+  A, M, D: Word;
+  Col, CX, CY: Single;
+  Linhas, I, Dia, Hoje: Integer;
+  T: TTipoData;
+  Tem, Fora: Boolean;
+  CorNum: TColor;
+begin
+  if FFamTexto=nil then Exit;
+  AtualizaCacheAgenda;
+  G:= NovoGrafico(PbCalendario);
+  try
+    Col:= PbCalendario.Width/Escala/7;
+    Hoje:= Trunc(Date);
+    DecodeDate(FMes, A, M, D);
+    Linhas:= LinhasAgenda;
+    for I:= 1 to 7 do
+      Texto(G, Iniciais[I], FFamTexto, 10, CorTexto3, Col*(I-0.5), 14, txCentro, Col);
+    for I:= 0 to Linhas*7-1 do
+    begin
+      Dia:= Trunc(FCacheInicio)+I;
+      CX:= Col*((I mod 7)+0.5);
+      CY:= YG+CelH*(I div 7)+CelH/2;
+      Fora:= MonthOf(Dia)<>M;
+      Tem:= not Fora and TipoPrincipal(FCacheDias[I], T);
+      if Dia=Hoje then
+      begin
+        Retangulo(G, CX-Raio, CY-Raio, 2*Raio, 2*Raio, Raio, CorAcento, clNone);
+        if Tem then
+          Contorno(G, CX-Raio-2.5, CY-Raio-2.5, 2*Raio+5, 2*Raio+5, Raio+2.5,
+            CorTipo[T], 2, T=tdAniversario);
+        CorNum:= clWhite;
+      end else
+      begin
+        if Dia=Trunc(FDiaSel) then
+          Retangulo(G, CX-Raio, CY-Raio, 2*Raio, 2*Raio, Raio, CorAcentoClaro, clNone)
+        else
+        if Dia=FDiaQuente then
+          Retangulo(G, CX-Raio, CY-Raio, 2*Raio, 2*Raio, Raio, CorQuente, clNone);
+        if Tem then
+        begin
+          Contorno(G, CX-Raio+1, CY-Raio+1, 2*Raio-2, 2*Raio-2, Raio-1,
+            CorTipo[T], 2, T=tdAniversario);
+          CorNum:= CorTipo[T];
+        end else
+        if Fora then CorNum:= CorInativo
+        else CorNum:= CorTexto1;
+      end;
+      if Tem or (Dia=Hoje) then
+        Texto(G, IntToStr(DayOf(Dia)), FFamSemi, 11, CorNum, CX, CY+4, txCentro, Col)
+      else
+        Texto(G, IntToStr(DayOf(Dia)), FFamTexto, 11, CorNum, CX, CY+4, txCentro, Col);
+    end;
+  finally
+    G.Free;
+  end;
+end;
+
+procedure TMainForm.CalendarioMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var D: Integer;
+begin
+  D:= DiaEm(X, Y);
+  if D=FDiaQuente then Exit;
+  FDiaQuente:= D;
+  if D<>0 then
+  begin
+    PbCalendario.Cursor:= crHandPoint;
+    PbCalendario.Hint:= DicaDia(D);
+  end else
+  begin
+    PbCalendario.Cursor:= crDefault;
+    PbCalendario.Hint:= '';
+  end;
+  Application.CancelHint;
+  PbCalendario.Invalidate;
+end;
+
+procedure TMainForm.CalendarioMouseLeave(Sender: TObject);
+begin
+  if FDiaQuente=0 then Exit;
+  FDiaQuente:= 0;
+  PbCalendario.Invalidate;
+end;
+
+{ Clique num dia: mostra as datas dele; de novo, volta às próximas datas }
+procedure TMainForm.CalendarioMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var D: Integer;
+begin
+  if Button<>mbLeft then Exit;
+  D:= DiaEm(X, Y);
+  if D=0 then Exit;
+  if D=Trunc(FDiaSel) then FDiaSel:= Date else FDiaSel:= D;
+  FMes:= StartOfTheMonth(FDiaSel);
+  AtualizaAgenda;
+end;
+
+procedure TMainForm.AgendaNavClick(Sender: TObject);
+begin
+  if Sender=BtMesAnterior then FMes:= IncMonth(FMes, -1) else
+  if Sender=BtMesSeguinte then FMes:= IncMonth(FMes, 1) else
+  begin
+    FMes:= StartOfTheMonth(Date);
+    FDiaSel:= Date;
+  end;
+  AtualizaAgenda;
+end;
+
+{ Lista: próximas datas ou as datas do dia escolhido }
+procedure TMainForm.ProximasPaint(Sender: TObject);
+var G: TGPGraphics;
+  I, Qtd: Integer;
+  Y, W, H: Single;
+begin
+  if FFamTexto=nil then Exit;
+  AtualizaCacheAgenda;
+  G:= NovoGrafico(PbProximas);
+  try
+    W:= PbProximas.Width/Escala;
+    H:= PbProximas.Height/Escala;
+    if Length(FCacheLista)=0 then
+    begin
+      Texto(G, 'Nenhuma data', FFamTexto, 12, CorTexto3, 0, 16);
+      Exit;
+    end;
+    Qtd:= Trunc((H-4)/42);
+    if Qtd>Length(FCacheLista) then Qtd:= Length(FCacheLista);
+    Y:= 0;
+    for I:= 0 to Qtd-1 do
+    begin
+      Contorno(G, 0, Y+2, 36, 36, 8, CorTipo[FCacheLista[I].Data.Tipo], 2,
+        FCacheLista[I].Data.Tipo=tdAniversario);
+      Texto(G, IntToStr(DayOf(FCacheLista[I].Dia)), FFamSemi, 13, CorTexto1, 18,
+        Y+20, txCentro, 36);
+      Texto(G, AnsiUpperCase(Copy(MesesExtenso[MonthOf(FCacheLista[I].Dia)], 1, 3)),
+        FFamTexto, 9, CorTexto3, 18, Y+32, txCentro, 36);
+      Texto(G, FCacheLista[I].Data.Texto, FFamTexto, 12, CorTexto1, 44, Y+18,
+        txEsq, W-44);
+      Texto(G, SubTexto(FCacheLista[I]), FFamTexto, 10, CorTexto3, 44, Y+33,
+        txEsq, W-44);
+      Y:= Y+42;
+    end;
+  finally
+    G.Free;
+  end;
+end;
+
+{----------------------------------------------------------------------------}
+{-------------------Visual-novo:-Discos-e-Limpeza----------------------------}
+
+procedure TMainForm.AtualizarDiscosClick(Sender: TObject);
+begin
+  AtualizaDiscos;
+end;
+
+procedure TMainForm.IrLimpezaClick(Sender: TObject);
+begin
+  SelecionaAba(TabSheet5);
+end;
+
+{ O texto da limpeza (FLimpezaLinhas) tem: cabeçalho ('Limpeza - perfil
+  atual'), pares rótulo / '   tamanho em N arquivo(s)', 'Total a limpar:
+  ...' (ou 'Total restante') e mensagens (resultado, navegador aberto...). }
+procedure ParteLimpeza(L: TStrings; out Titulo, Total: string;
+  out Rot, Tam, Msgs: TArray<string>);
+var I, P: Integer;
+  S: string;
+begin
+  Titulo:= '';
+  Total:= '';
+  Rot:= nil;
+  Tam:= nil;
+  Msgs:= nil;
+  I:= 0;
+  while I<L.Count do
+  begin
+    S:= L[I];
+    if (I<L.Count-1) and L[I+1].StartsWith('   ') then
+    begin
+      Rot:= Rot+[S];
+      S:= Trim(L[I+1]);
+      P:= Pos(' em ', S);
+      if P>0 then S:= Copy(S, 1, P-1);
+      Tam:= Tam+[S];
+      Inc(I, 2);
+      Continue;
+    end;
+    if S.StartsWith('Total ') then Total:= S else
+    if (Titulo='') and (S.StartsWith('Limpeza - ') or S.StartsWith('Cache ')) then
+      Titulo:= S else
+    if (S<>'') and (S<>'Limpando...') and not S.StartsWith('---') then
+      Msgs:= Msgs+[S];
+    Inc(I);
+  end;
+end;
+
+{ Cabeçalho, botões, progresso e última limpeza da seção Limpeza }
+procedure TMainForm.AtualizaLimpeza;
+var Titulo, Total, S: string;
+  Rot, Tam, Msgs: TArray<string>;
+  I: Integer;
+begin
+  if FLimpezaLinhas=nil then Exit;
+  ParteLimpeza(FLimpezaLinhas, Titulo, Total, Rot, Tam, Msgs);
+  LbLimpezaPerfil.Caption:= Titulo;
+  BtAtualizarLimpeza.Visible:= not FLimpando;
+  BtLimpar.Enabled:= not FLimpando;
+  BtLimparCache.Enabled:= not FLimpando;
+  for I:= 0 to 5 do ChipNavegador(I).Enabled:= not FLimpando;
+  PbProgresso.Visible:= FLimpando or
+    ((FLimpezaProgresso>0) and (FLimpezaProgresso<100));
+  if PbProgresso.Tag<>FLimpezaProgresso then
+  begin
+    PbProgresso.Tag:= FLimpezaProgresso;
+    PbProgresso.Invalidate;
+  end;
+  if FLimpando then S:= Format('Limpando... %d%%', [FLimpezaProgresso]) else
+  if FOpcoes.Ultima>0 then S:= 'Última: '+FormatDateTime('dd/mm hh:nn', FOpcoes.Ultima)
+  else S:= '';
+  LbLimpezaStatus.Caption:= S;
+  PbLimpeza.Invalidate;
+end;
+
+{ Itens a limpar com o tamanho, total e mensagens }
+procedure TMainForm.LimpezaPaint(Sender: TObject);
+var G: TGPGraphics;
+  Titulo, Total: string;
+  Rot, Tam, Msgs: TArray<string>;
+  I, N, P: Integer;
+  Y, W, H, Reserva: Single;
+  Cor: TColor;
+begin
+  if (FLimpezaLinhas=nil) or (FFamTexto=nil) then Exit;
+  ParteLimpeza(FLimpezaLinhas, Titulo, Total, Rot, Tam, Msgs);
+  G:= NovoGrafico(PbLimpeza);
+  try
+    W:= PbLimpeza.Width/Escala;
+    H:= PbLimpeza.Height/Escala;
+    Y:= 0;
+    { itens: o que sobrar depois do total e das mensagens }
+    Reserva:= 32 + Length(Msgs)*15;
+    N:= Length(Rot);
+    if Y+N*20>H-Reserva then N:= Trunc((H-Reserva-Y)/20)-1;
+    if N<0 then N:= 0;
+    for I:= 0 to N-1 do
+    begin
+      Texto(G, Rot[I], FFamTexto, 12, CorTexto1, 0, Y+14, txEsq, W-70);
+      Texto(G, Tam[I], FFamSemi, 12, CorTexto1, W, Y+14, txDir);
+      Y:= Y+20;
+    end;
+    if N<Length(Rot) then
+    begin
+      Texto(G, Format('e mais %d item(ns)', [Length(Rot)-N]), FFamTexto, 10,
+        CorTexto3, 0, Y+14);
+      Y:= Y+20;
+    end;
+    if Total<>'' then
+    begin
+      Retangulo(G, 0, Y+5, W, 1, 0, CorTrilho, clNone);
+      P:= Pos(':', Total);
+      if P>0 then
+      begin
+        Texto(G, Copy(Total, 1, P-1), FFamSemi, 12, CorTexto1, 0, Y+24);
+        Texto(G, Trim(Copy(Total, P+1, MaxInt)), FFamSemi, 12, CorTexto1, W, Y+24, txDir);
+      end else
+        Texto(G, Total, FFamSemi, 12, CorTexto1, 0, Y+24, txEsq, W);
+      Y:= Y+32;
+    end;
+    for I:= 0 to High(Msgs) do
+    begin
+      if Msgs[I].StartsWith('Limpeza concluída') then Cor:= CorNivelTexto(0) else
+      if Msgs[I].StartsWith('Navegador aberto') then Cor:= CorNivelTexto(1) else
+        Cor:= CorTexto3;
+      Texto(G, Msgs[I], FFamTexto, 10, Cor, 0, Y+11, txEsq, W);
+      Y:= Y+15;
+    end;
+  finally
+    G.Free;
+  end;
+end;
+
+procedure TMainForm.AtualizarLimpezaClick(Sender: TObject);
+begin
+  if FLimpando then Exit;
+  MostraTemporarios;
+end;
+
+{ Opções de navegador do cache: PnNav0 ('Todos') a PnNav5 }
+function TMainForm.ChipNavegador(I: Integer): TPanel;
+begin
+  case I of
+    1: Result:= PnNav1;
+    2: Result:= PnNav2;
+    3: Result:= PnNav3;
+    4: Result:= PnNav4;
+    5: Result:= PnNav5;
+  else
+    Result:= PnNav0;
+  end;
+end;
+
+procedure TMainForm.AtualizaNavegadores;
+var I: Integer;
+begin
+  for I:= 0 to 5 do ChipNavegador(I).Selecionado:= I=FNavegador;
+end;
+
+procedure TMainForm.NavegadorClick(Sender: TObject);
+var I: Integer;
+begin
+  for I:= 0 to 5 do
+    if Sender=ChipNavegador(I) then FNavegador:= I;
+  AtualizaNavegadores;
 end;
 
 end.

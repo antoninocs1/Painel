@@ -141,6 +141,7 @@
         <DCCReference Include="UAnim.pas"/>
         <DCCReference Include="UStartup.pas"/>
         <DCCReference Include="UFerramentas.pas"/>
+        <DCCReference Include="UDatas.pas"/>
         <DCCReference Include="UMain.pas">
             <Form>MainForm</Form>
         </DCCReference>

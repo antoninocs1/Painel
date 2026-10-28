@@ -57,6 +57,8 @@ procedure ProgramasInicializacao;
 procedure GerenciadorProcessos;
 function ProcessoMaiorMemoria(out Nome: string; out Bytes: Int64): Boolean;
 procedure RegistraUso(CpuPct, MemPct: Integer);
+{ Amostras guardadas, da mais antiga para a mais recente }
+procedure CopiaHistorico(out Cpu, Mem: TArray<Byte>);
 procedure MostraHistorico(Limite1, Limite2: Integer);
 procedure BloquearComputador;
 procedure DesligarMonitor;
@@ -932,6 +934,19 @@ begin
   HistMem[HistPos]:= Limita(MemPct);
   HistPos:= (HistPos+1) mod MaxHist;
   if HistQtd<MaxHist then Inc(HistQtd);
+end;
+
+procedure CopiaHistorico(out Cpu, Mem: TArray<Byte>);
+var I, Idx: Integer;
+begin
+  SetLength(Cpu, HistQtd);
+  SetLength(Mem, HistQtd);
+  for I:= 0 to HistQtd-1 do
+  begin
+    Idx:= (HistPos-HistQtd+I+MaxHist) mod MaxHist;
+    Cpu[I]:= HistCpu[Idx];
+    Mem[I]:= HistMem[Idx];
+  end;
 end;
 
 type

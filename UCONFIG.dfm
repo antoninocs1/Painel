@@ -594,12 +594,28 @@ object ConfigForm: TConfigForm
               Left = 2
               Top = 320
               Width = 278
-              Height = 55
+              Height = 42
               Align = alBottom
               Max = 25
               Position = 25
               TabOrder = 4
               OnChange = TrackBar1Change
+            end
+            object LbTransparencia: TLabel
+              Left = 2
+              Top = 362
+              Width = 278
+              Height = 13
+              Align = alBottom
+              Alignment = taCenter
+              AutoSize = False
+              Caption = '100%'
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -9
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
             end
             object ComboBox3: TComboBox
               Left = 6

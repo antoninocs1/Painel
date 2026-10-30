@@ -70,6 +70,7 @@ type
     ComboBox1: TComboBox;
     CheckListBox2: TCheckListBox;
     Label15: TLabel;
+    LbTransparencia: TLabel;
     TrackBar1: TTrackBar;
     GroupBox2: TGroupBox;
     Scale: TComboBox;
@@ -222,7 +223,9 @@ type
     procedure SpeedButton8Click(Sender: TObject);
     procedure SpeedButton13Click(Sender: TObject);
     procedure SpeedButton15Click(Sender: TObject);
-    function SetNewColor1(Opt: byte; ComponentColor1: TColor): TColor;
+    function SetNewColor1(Opt: byte; ComponentColor1: TColor;
+      const Alvo: string = ''; Amostra: TShape = nil): TColor;
+    procedure ColorDialog1Show(Sender: TObject);
     procedure ComboBox3Change(Sender: TObject);
     procedure SpeedButton16Click(Sender: TObject);
     procedure CheckBox5Click(Sender: TObject);
@@ -238,6 +241,8 @@ type
     procedure SpeedButton23Click(Sender: TObject);
   private
     { Private declarations }
+    FCorAlvo: string;  { controle cuja cor está sendo escolhida (título do diálogo) }
+    procedure MostraTransparencia;
   public
     { Public declarations }
   end;
@@ -452,6 +457,7 @@ begin
          CheckListBox1.Checked[2]:= CnfData.Img.StImgAdjtoRect;
          FilterComboBox1.ItemIndex:= CnfData.Img.FilterFileType;
          TrackBar1.Position:= CnfData.Frm.AlphaBlendValue1;
+         MostraTransparencia;
          if CnfData.Img.PictureDuration >0 then
          SpinEdit1.Value:= CnfData.Img.PictureDuration
            else SpinEdit1.Value:= 2;
@@ -853,17 +859,17 @@ end;
 
 procedure TConfigForm.SpeedButton20Click(Sender: TObject);
 begin
-  Shape2.Brush.Color:= SetNewColor1(1,Shape2.Brush.Color);
+  Shape2.Brush.Color:= SetNewColor1(1,Shape2.Brush.Color,'Situação Normal',Shape2);
 end;
 
 procedure TConfigForm.SpeedButton21Click(Sender: TObject);
 begin
-  Shape3.Brush.Color:= SetNewColor1(1,Shape3.Brush.Color);
+  Shape3.Brush.Color:= SetNewColor1(1,Shape3.Brush.Color,'Limiar de Alerta1',Shape3);
 end;
 
 procedure TConfigForm.SpeedButton22Click(Sender: TObject);
 begin
-  Shape4.Brush.Color:= SetNewColor1(1,Shape4.Brush.Color);
+  Shape4.Brush.Color:= SetNewColor1(1,Shape4.Brush.Color,'Limiar de Alerta2',Shape4);
 end;
 
 procedure TConfigForm.SpeedButton23Click(Sender: TObject);
@@ -1096,6 +1102,14 @@ begin
     MainForm.AlphaBlendValue:= 255
   else
     MainForm.AlphaBlendValue:= Trunc(TrackBar1.Position * 10);
+  MostraTransparencia;
+end;
+
+{ Percentual da posição do TrackBar1, centralizado embaixo dele }
+procedure TConfigForm.MostraTransparencia;
+begin
+  if TrackBar1.Max>0 then
+    LbTransparencia.Caption:= Format('%d%%', [Round(TrackBar1.Position*100/TrackBar1.Max)]);
 end;
 
 procedure TConfigForm.CheckBox1Click(Sender: TObject);
@@ -1271,24 +1285,45 @@ begin
   end;
 end;
 
-function TConfigForm.SetNewColor1(Opt: byte; ComponentColor1: TColor): TColor;
+{ Mostra a cor do controle na amostra (Shape1, se Amostra = nil) e, com
+  Opt = 1, abre o ColorDialog1 já apontando essa cor: paleta completa com a
+  cor atual marcada (e na 1ª cor personalizada) e o controle no título }
+function TConfigForm.SetNewColor1(Opt: byte; ComponentColor1: TColor;
+  const Alvo: string = ''; Amostra: TShape = nil): TColor;
+var Atual: TColor;
 begin
-  Shape1.Brush.Color:= ComponentColor1;
-  ColorDialog1.Color:= ComponentColor1;
-  if (Opt=1) and (ColorDialog1.Execute) then
+  if Amostra=nil then Amostra:= Shape1;
+  Amostra.Brush.Color:= ComponentColor1;
+  Result:= ComponentColor1;
+  if Opt<>1 then Exit;
+  Atual:= ColorToRGB(ComponentColor1);
+  FCorAlvo:= Alvo;
+  if FCorAlvo='' then FCorAlvo:= 'Cor';
+  FCorAlvo:= Format('%s - atual: RGB(%d, %d, %d)', [FCorAlvo, GetRValue(Atual),
+    GetGValue(Atual), GetBValue(Atual)]);
+  ColorDialog1.Options:= ColorDialog1.Options+[cdFullOpen, cdAnyColor];
+  ColorDialog1.CustomColors.Values['ColorA']:= IntToHex(Atual and $FFFFFF, 6);
+  ColorDialog1.Color:= Atual;
+  ColorDialog1.OnShow:= ColorDialog1Show;
+  if ColorDialog1.Execute then
   begin
     Result:= ColorDialog1.Color;
-    Shape1.Brush.Color:= ColorDialog1.Color;
-  end else Result:= ComponentColor1;
+    Amostra.Brush.Color:= Result;
+  end;
+end;
+
+procedure TConfigForm.ColorDialog1Show(Sender: TObject);
+begin
+  SetWindowText(ColorDialog1.Handle, PChar(FCorAlvo));
 end;
 
 procedure TConfigForm.SpeedButton15Click(Sender: TObject);
 begin
   case ComboBox3.ItemIndex of
-    0: MainForm.LbHora.Font.Color:= SetNewColor1(1,MainForm.LbHora.Font.Color);
-    1: MainForm.LbData.Font.Color:= SetNewColor1(1,MainForm.LbData.Font.Color);
-    2: MainForm.Clock1.Color:= SetNewColor1(1,MainForm.Clock1.Color);
-    3: MainForm.Clock1.Font.Color:= SetNewColor1(1,MainForm.Clock1.Font.Color);
+    0: MainForm.LbHora.Font.Color:= SetNewColor1(1,MainForm.LbHora.Font.Color,ComboBox3.Text);
+    1: MainForm.LbData.Font.Color:= SetNewColor1(1,MainForm.LbData.Font.Color,ComboBox3.Text);
+    2: MainForm.Clock1.Color:= SetNewColor1(1,MainForm.Clock1.Color,ComboBox3.Text);
+    3: MainForm.Clock1.Font.Color:= SetNewColor1(1,MainForm.Clock1.Font.Color,ComboBox3.Text);
   end;
 end;
 

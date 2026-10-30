@@ -132,6 +132,7 @@ type
     LbData: TLabel;
     PnAviso1: TPanel;
     PnAviso2: TPanel;
+    PbMini: TPaintBox;
     PnNavegacao: TPanel;
     PnSecMonitor: TPanel;
     LbSecMonitorIco: TLabel;
@@ -168,9 +169,16 @@ type
     LbAtras: TLabel;
     LbAgora: TLabel;
     ShSeparador: TShape;
+    PbIcoCpu: TPaintBox;
+    LbCpus: TLabel;
+    LbCpuPct: TLabel;
+    LbCpuMhz: TLabel;
+    PbCpu: TPaintBox;
     PbTemperatura: TPaintBox;
+    PbIcoTemp: TPaintBox;
     LbTempTitulo: TLabel;
     LbTempInfo: TLabel;
+    PbIcoRam: TPaintBox;
     LbRam: TLabel;
     LbRamPct: TLabel;
     PbRam: TPaintBox;
@@ -199,6 +207,9 @@ type
     PnAtPowerShell: TPanel;
     LbAtPowerShellIco: TLabel;
     LbAtPowerShell: TLabel;
+    PnAtPrompt: TPanel;
+    LbAtPromptIco: TLabel;
+    LbAtPrompt: TLabel;
     PnAtExecutar: TPanel;
     LbAtExecutarIco: TLabel;
     LbAtExecutar: TLabel;
@@ -487,6 +498,8 @@ type
     procedure PnConteudoResize(Sender: TObject);
     procedure GraficoPaint(Sender: TObject);
     procedure TemperaturaPaint(Sender: TObject);
+    procedure IconePaint(Sender: TObject);
+    procedure MiniPaint(Sender: TObject);
     procedure BarraPaint(Sender: TObject);
     procedure CalendarioPaint(Sender: TObject);
     procedure CalendarioMouseMove(Sender: TObject; Shift: TShiftState;
@@ -2416,8 +2429,124 @@ begin
   end;
 end;
 
+{ Ícones desenhados (sem equivalente na fonte de ícones), no retângulo
+  (X, Y, W, H) e em contorno na cor Cor: processador, pente de memória,
+  termômetro e bloco de notas com espiral }
+const
+  IcoCpu = 1;
+  IcoRam = 2;
+  IcoTermometro = 3;
+  IcoBlocoNotas = 4;
+
+procedure DesenhaIcone(G: TGPGraphics; Ico: Integer; X, Y, W, H: Single; Cor: TColor);
+var C: TGPPen;
+  B: TGPSolidBrush;
+  P: TGPGraphicsPath;
+  S, Lw, M, Q, Hp, Pad, Gap, Cw, Wt, CX, Rb, T, Hi, Y0, Yb, A: Single;
+  I, N: Integer;
+begin
+  if W<H then S:= W else S:= H;
+  Lw:= S/12;
+  if Lw<1 then Lw:= 1;
+  C:= TGPPen.Create(ARGBDe(Cor), Lw);
+  B:= TGPSolidBrush.Create(ARGBDe(Cor));
+  try
+    C.SetLineCap(LineCapRound, LineCapRound, DashCapRound);
+    case Ico of
+      IcoCpu:
+        begin
+          { chip com 3 pinos em cada lado e o núcleo no meio }
+          X:= X+(W-S)/2;
+          Y:= Y+(H-S)/2;
+          M:= S*0.22;
+          Contorno(G, X+M, Y+M, S-2*M, S-2*M, S*0.07, Cor, Lw, False);
+          Retangulo(G, X+S*0.38, Y+S*0.38, S*0.24, S*0.24, S*0.03, Cor, clNone);
+          for I:= 1 to 3 do
+          begin
+            Q:= M+(S-2*M)*I/4;
+            G.DrawLine(C, X+Q, Y+Lw/2, X+Q, Y+M);
+            G.DrawLine(C, X+Q, Y+S-M, X+Q, Y+S-Lw/2);
+            G.DrawLine(C, X+Lw/2, Y+Q, X+M, Y+Q);
+            G.DrawLine(C, X+S-M, Y+Q, X+S-Lw/2, Y+Q);
+          end;
+        end;
+      IcoRam:
+        begin
+          { pente de memória: placa com 4 chips e os contatos embaixo }
+          Hp:= H*0.62;
+          Y0:= Y+H*0.1;
+          Contorno(G, X+Lw/2, Y0, W-Lw, Hp, S*0.06, Cor, Lw, False);
+          Pad:= W*0.14;
+          Gap:= W*0.06;
+          Cw:= (W-2*Pad-3*Gap)/4;
+          for I:= 0 to 3 do
+            G.FillRectangle(B, X+Pad+I*(Cw+Gap), Y0+Hp*0.3, Cw, Hp*0.4);
+          N:= 6;
+          for I:= 0 to N-1 do
+          begin
+            Q:= X+Pad+(W-2*Pad)*I/(N-1);
+            G.DrawLine(C, Q, Y0+Hp+Lw, Q, Y+H-Lw/2);
+          end;
+        end;
+      IcoTermometro:
+        begin
+          { tubo com o bulbo embaixo (um só contorno) e o mercúrio }
+          Wt:= W;
+          if Wt>H*0.5 then Wt:= H*0.5;
+          CX:= X+W/2;
+          Rb:= Wt*0.42;
+          T:= Rb*0.5;
+          Y0:= Y+Lw/2;
+          Yb:= Y+H-Rb-Lw/2;
+          Hi:= Sqrt(Rb*Rb-T*T);
+          A:= ArcTan(Hi/T)*180/Pi;
+          P:= TGPGraphicsPath.Create;
+          try
+            P.AddArc(CX-T, Y0, 2*T, 2*T, 180, 180);
+            P.AddLine(CX+T, Y0+T, CX+T, Yb-Hi);
+            P.AddArc(CX-Rb, Yb-Rb, 2*Rb, 2*Rb, -A, 180+2*A);
+            P.CloseFigure;
+            G.DrawPath(C, P);
+          finally
+            P.Free;
+          end;
+          G.FillEllipse(B, CX-Rb*0.5, Yb-Rb*0.5, Rb, Rb);
+          G.DrawLine(C, CX, Yb, CX, Y0+T+(Yb-Y0)*0.3);
+        end;
+      IcoBlocoNotas:
+        begin
+          { folha com 4 argolas no alto e as linhas }
+          X:= X+(W-S)/2;
+          Y:= Y+(H-S)/2;
+          P:= TGPGraphicsPath.Create;
+          try
+            for I:= 0 to 3 do
+              P.AddEllipse(X+S*(0.24+I*0.173)-S*0.065, Y+Lw/2, S*0.13, S*0.24);
+            { a borda de cima da folha não passa por dentro das argolas }
+            G.SetClip(P, CombineModeExclude);
+            Contorno(G, X+S*0.12, Y+S*0.12, S*0.76, S*0.88-Lw/2, S*0.09, Cor, Lw, False);
+            G.ResetClip;
+            G.DrawPath(C, P);
+          finally
+            P.Free;
+          end;
+          if S>=24 then N:= 4 else N:= 3;
+          for I:= 0 to N-1 do
+          begin
+            Q:= Y+S*(0.42+0.4*I/(N-1));
+            G.DrawLine(C, X+S*0.3, Q, X+S*0.7, Q);
+          end;
+        end;
+    end;
+  finally
+    B.Free;
+    C.Free;
+  end;
+end;
+
 { Ícone da Segoe Fluent Icons (ou MDL2 Assets) num bitmap de 32 bits com
-  transparência, para TImageList com ColorDepth = cd32Bit }
+  transparência, para TImageList com ColorDepth = cd32Bit; códigos abaixo de
+  $100 são os ícones desenhados (DesenhaIcone) }
 function IconeBitmap(Cod: Word; Tam: Integer; Cor: TColor): TBitmap;
 var Img: TGPBitmap;
   G: TGPGraphics;
@@ -2441,10 +2570,17 @@ begin
   G:= TGPGraphics.Create(Img);
   try
     G.Clear(0);
-    G.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
-    SF.SetAlignment(StringAlignmentCenter);
-    SF.SetLineAlignment(StringAlignmentCenter);
-    G.DrawString(S, 1, F, RF(0, 0, Tam, Tam), SF, B);
+    if Cod<$100 then
+    begin
+      G.SetSmoothingMode(SmoothingModeAntiAlias);
+      DesenhaIcone(G, Cod, 0, 0, Tam, Tam, Cor);
+    end else
+    begin
+      G.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
+      SF.SetAlignment(StringAlignmentCenter);
+      SF.SetLineAlignment(StringAlignmentCenter);
+      G.DrawString(S, 1, F, RF(0, 0, Tam, Tam), SF, B);
+    end;
     G.Flush;
     { copia os pixels (BGRA, alfa sem pré-multiplicar) para o TBitmap }
     if Img.LockBits(MakeRect(0, 0, Tam, Tam), ImageLockModeRead,
@@ -3657,6 +3793,8 @@ begin
     ClientHeight:= PnTopo.Height;
     BtCompactar.Caption:= Char($E70D);
   end;
+  { recolhido: RAM, CPU e temperatura ao lado do relógio }
+  PbMini.Visible:= not StEx;
   GarantirNaTela;
   CnfData.Frm.StExView:= StEx;
   ConfigForm.SaveCnfFile;
@@ -5608,6 +5746,29 @@ begin
     MessageDlg('Não foi possível abrir o PowerShell.', mtWarning, [mbOk], 0);
 end;
 
+{ Nome e frequência nominal (MHz) do processador, do registro; 0 se não
+  achar }
+function InfoProcessador(out Nome: string): Integer;
+var Reg: TRegistry;
+begin
+  Result:= 0;
+  Nome:= '';
+  Reg:= TRegistry.Create(KEY_READ);
+  try
+    Reg.RootKey:= HKEY_LOCAL_MACHINE;
+    if Reg.OpenKeyReadOnly('HARDWARE\DESCRIPTION\System\CentralProcessor\0') then
+    try
+      if Reg.ValueExists('~MHz') then Result:= Reg.ReadInteger('~MHz');
+      if Reg.ValueExists('ProcessorNameString') then
+        Nome:= Trim(Reg.ReadString('ProcessorNameString'));
+    except
+      Result:= 0;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
 {----------------------------------------------------------------------------}
 {-------------------Visual-novo:-seções--------------------------------------}
 { Título, relógio, barra de seções e rodapé ficam em PnTopo, PnNavegacao e
@@ -5618,9 +5779,10 @@ end;
 procedure TMainForm.CriaVisual;
 const
   { ícones do menu Mais, na ordem do ImageIndex dos itens: anotações,
-    imagens, relógio, informações do sistema, cronômetro, contatos, sobre }
+    imagens, relógio, informações do sistema, cronômetro, contatos, sobre
+    (anotações e bloco de notas: bloco com espiral desenhado) }
   IconesMais: array[0..6] of Word =
-    ($E70B, $EB9F, $E917, $E770, $E916, $E77B, $E946);
+    (IcoBlocoNotas, $EB9F, $E917, $E770, $E916, $E77B, $E946);
   { ícones dos menus da bandeja (PopupMenu1) e da janela (PopupMenu2):
     detalhes, alarme, transparente, destravar, fechar, sobre (itens do .dfm)
     e processos, histórico, bloquear, desligar o monitor, PowerShell, área
@@ -5632,10 +5794,11 @@ const
   IconesBandeja: array[0..25] of Word =
     ($E8A7, $EA8F, $E790, $E785, $E8BB, $E946,
      $E8FD, $E81C, $E72E, $E7F4, $E756, $E77F, $E895,
-     $E713, $E756, $E70B, $E8EF, $E768, $E749, $E90F, $E8E5, $E792,
+     $E713, $E756, IcoBlocoNotas, $E8EF, $E768, $E749, $E90F, $E8E5, $E792,
      $E921, $E711, $E739, $E73A);
-var I: Integer;
+var I, Mhz: Integer;
   Ativa: TTabSheet;
+  Nome: string;
 begin
   FFamTexto:= Familia(['Segoe UI']);
   FFamSemi:= Familia(['Segoe UI Semibold', 'Segoe UI']);
@@ -5653,6 +5816,13 @@ begin
   PageControl1.Align:= alNone;
   PnConteudoResize(PnConteudo);
   LbRodape.Caption:= 'Painel '+Vrs;
+  Mhz:= InfoProcessador(Nome);
+  LbCpus.Caption:= Format('CPUs (%d) - ', [CPUCount]);
+  if Mhz>0 then LbCpuMhz.Caption:= Format('%d MHz', [Mhz])
+  else LbCpuMhz.Caption:= '';
+  LbCpus.Hint:= Nome;
+  LbCpuMhz.Hint:= Nome;
+  PbIcoCpu.Hint:= Nome;
   PosicionaSegundos;
   FAlturaExpandida:= ClientHeight;
   AtualizaNavegadores;
@@ -5679,11 +5849,11 @@ begin
   LbData.Font.Name:= Nome;
 end;
 
-{ Os segundos logo depois de hh:nn, na mesma linha de base, e o LED do
-  alarme à direita dos segundos }
+{ Os segundos logo depois de hh:nn, na mesma linha de base, o LED do
+  alarme à direita dos segundos e o painel compacto (PbMini) depois }
 procedure TMainForm.PosicionaSegundos;
 var TM: TTextMetric;
-  Base: Integer;
+  Base, X: Integer;
 begin
   Canvas.Font:= LbHora.Font;
   GetTextMetrics(Canvas.Handle, TM);
@@ -5696,6 +5866,10 @@ begin
   ShAlarme.SetBounds(LbSegundos.Left+Canvas.TextWidth(':00')+Px(8),
     Base-(TM.tmAscent-TM.tmInternalLeading) div 2-ShAlarme.Height div 2,
     ShAlarme.Width, ShAlarme.Height);
+  { painel compacto à direita, sem cobrir o LED (fontes largas: encolhe) }
+  X:= PnTopo.ClientWidth-Px(8)-Px(124);
+  if X<ShAlarme.Left+ShAlarme.Width+Px(6) then X:= ShAlarme.Left+ShAlarme.Width+Px(6);
+  PbMini.SetBounds(X, PbMini.Top, PnTopo.ClientWidth-Px(8)-X, PbMini.Height);
 end;
 
 procedure TMainForm.PnConteudoResize(Sender: TObject);
@@ -5872,6 +6046,14 @@ begin
   P:= Round(FCpuUso);
   LbCpuValor.Caption:= Format('%d%%', [P]);
   LbCpuValor.Font.Color:= CorNivelTexto(NivelUso(P));
+  { CPUs: quantidade, % de uso (na cor do limiar, logo depois do texto) e a
+    barra horizontal embaixo }
+  LbCpus.Caption:= Format('CPUs (%d) - ', [CPUCount]);
+  LbCpuPct.Caption:= Format('%d%%', [P]);
+  LbCpuPct.Font.Color:= CorNivelTexto(NivelUso(P));
+  LbCpuPct.Left:= LbCpus.Left+LbCpus.Width;
+  PbCpu.Tag:= P;
+  PbCpu.Hint:= Format('Uso da CPU: %d%%', [P]);
   P:= PctUso(MemInfo.ullTotalPhys - MemInfo.ullAvailPhys, MemInfo.ullTotalPhys);
   LbMemValor.Caption:= Format('%d%%', [P]);
   LbMemValor.Font.Color:= CorNivelTexto(NivelUso(P));
@@ -5891,6 +6073,14 @@ begin
   begin
     PbGrafico.Invalidate;
     PbTemperatura.Invalidate;
+    PbCpu.Invalidate;
+  end;
+  if PbMini.Visible then
+  begin
+    if FTempOk then Fonte:= Format('%.0f °C', [FTemp]) else Fonte:= 'indisponível';
+    PbMini.Hint:= Format('Memória %s · CPU %s · Temperatura %s', [LbMemValor.Caption,
+      LbCpuValor.Caption, Fonte]);
+    PbMini.Invalidate;
   end;
 end;
 
@@ -6003,10 +6193,11 @@ begin
   if FFamTexto=nil then Exit;
   G:= NovoGrafico(PbTemperatura);
   try
+    { centro um pouco acima do meio: embaixo ficam a abertura do arco e o °C }
     CX:= PbTemperatura.Width/Escala/2;
-    CY:= PbTemperatura.Height/Escala/2;
-    R:= 29;
-    Caneta:= TGPPen.Create(ARGBDe(CorTrilho), 7);
+    CY:= 27;
+    R:= 23;
+    Caneta:= TGPPen.Create(ARGBDe(CorTrilho), 6);
     try
       Arco(CorTrilho, 0, LimiteTempAtencao);
       Arco(CorFaixaAtencao, LimiteTempAtencao, LimiteTempAlta);
@@ -6020,13 +6211,95 @@ begin
         if FTemp<LimiteTempAlta then Nv:= 1 else
           Nv:= 2;
         Arco(CorNivel(Nv), 0, T);
-        Texto(G, Format('%.0f°', [FTemp]), FFamSemi, 16, CorTexto1, CX, CY+5, txCentro, 60);
+        Texto(G, Format('%.0f°', [FTemp]), FFamSemi, 13, CorNivelTexto(Nv), CX, CY+5, txCentro, 44);
       end else
-        Texto(G, '--', FFamSemi, 16, CorTexto3, CX, CY+5, txCentro, 60);
+        Texto(G, '--', FFamSemi, 13, CorTexto3, CX, CY+5, txCentro, 44);
     finally
       Caneta.Free;
     end;
-    Texto(G, '°C', FFamTexto, 9, CorTexto3, CX, CY+26, txCentro, 40);
+    Texto(G, '°C', FFamTexto, 9, CorTexto3, CX, CY+19, txCentro, 40);
+  finally
+    G.Free;
+  end;
+end;
+
+{ Ícone desenhado; Tag = IcoCpu, IcoRam, IcoTermometro ou IcoBlocoNotas }
+procedure TMainForm.IconePaint(Sender: TObject);
+var Pb: TPaintBox;
+  G: TGPGraphics;
+begin
+  Pb:= Sender as TPaintBox;
+  G:= NovoGrafico(Pb);
+  try
+    DesenhaIcone(G, Pb.Tag, 0, 0, Pb.Width/Escala, Pb.Height/Escala, CorTexto3);
+  finally
+    G.Free;
+  end;
+end;
+
+{ Painel compacto ao lado do relógio (só com a janela recolhida): memória,
+  CPU e temperatura, cada uma com ícone, valor e barra vertical }
+procedure TMainForm.MiniPaint(Sender: TObject);
+const Icones: array[0..2] of Integer = (IcoRam, IcoCpu, IcoTermometro);
+var G: TGPGraphics;
+  W, H, CW, X0, IW, BX, BY, BW, BH, L: Single;
+  I, P, Nv: Integer;
+  S: string;
+  Cor: TColor;
+begin
+  if FFamTexto=nil then Exit;
+  G:= NovoGrafico(PbMini);
+  try
+    W:= PbMini.Width/Escala;
+    H:= PbMini.Height/Escala;
+    Retangulo(G, 0, 0, W, H, 8, clWhite, CorBorda);
+    CW:= (W-4)/3;
+    for I:= 0 to 2 do
+    begin
+      case I of
+        0: begin
+             P:= PctUso(MemInfo.ullTotalPhys - MemInfo.ullAvailPhys, MemInfo.ullTotalPhys);
+             Nv:= NivelUso(P);
+             S:= Format('%d%%', [P]);
+           end;
+        1: begin
+             P:= Round(FCpuUso);
+             Nv:= NivelUso(P);
+             S:= Format('%d%%', [P]);
+           end;
+      else
+        if FTempOk then
+        begin
+          P:= Round(FTemp);
+          if FTemp<LimiteTempAtencao then Nv:= 0 else
+          if FTemp<LimiteTempAlta then Nv:= 1 else
+            Nv:= 2;
+          S:= Format('%d°C', [P]);
+        end else
+        begin
+          P:= 0;
+          Nv:= -1; { sem leitura: texto cinza }
+          S:= '--';
+        end;
+      end;
+      if P<0 then P:= 0;
+      if P>100 then P:= 100;
+      X0:= 2+I*CW;
+      { ícone e valor à esquerda, barra à direita }
+      BW:= 9;
+      BX:= X0+CW-BW-5;
+      BY:= 5;
+      BH:= H-10;
+      IW:= BX-X0-6;
+      DesenhaIcone(G, Icones[I], X0+5, 6, IW-2, 15, CorTexto3);
+      { valor na cor do limiar (como o % da memória no Monitor) }
+      if Nv<0 then Cor:= CorTexto3 else Cor:= CorNivelTexto(Nv);
+      Texto(G, S, FFamSemi, 9, Cor, X0+4+IW/2, H-6, txCentro, IW+4);
+      Retangulo(G, BX, BY, BW, BH, BW/2, CorTrilho, clNone);
+      L:= BH*P/100;
+      if (L>0) and (L<BW) then L:= BW;
+      if L>0 then Retangulo(G, BX, BY+BH-L, BW, L, BW/2, CorNivel(Nv), clNone);
+    end;
   finally
     G.Free;
   end;

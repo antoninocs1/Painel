@@ -258,6 +258,18 @@ object MainForm: TMainForm
       TabOrder = 4
       OnMouseDown = FormMouseDown
     end
+    object PbMini: TPaintBox
+      Left = 168
+      Top = 34
+      Width = 124
+      Height = 40
+      Anchors = [akTop, akRight]
+      ParentShowHint = False
+      ShowHint = True
+      Visible = False
+      OnMouseDown = FormMouseDown
+      OnPaint = MiniPaint
+    end
   end
   object PnNavegacao: TPanel
     Left = 0
@@ -2726,19 +2738,94 @@ object MainForm: TMainForm
           Brush.Color = 15592941
           Pen.Color = 15592941
         end
+        object PbIcoCpu: TPaintBox
+          Tag = 1
+          Left = 14
+          Top = 146
+          Width = 20
+          Height = 20
+          ParentShowHint = False
+          ShowHint = True
+          OnPaint = IconePaint
+        end
+        object LbCpus: TLabel
+          Left = 38
+          Top = 143
+          Width = 45
+          Height = 13
+          Caption = 'CPUs (8) - '
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 1776411
+          Font.Height = -10
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          Transparent = True
+        end
+        object LbCpuPct: TLabel
+          Left = 83
+          Top = 143
+          Width = 16
+          Height = 13
+          Caption = '9%'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 946190
+          Font.Height = -10
+          Font.Name = 'Segoe UI Semibold'
+          Font.Style = []
+          ParentFont = False
+          Transparent = True
+        end
+        object LbCpuMhz: TLabel
+          Left = 38
+          Top = 156
+          Width = 70
+          Height = 13
+          AutoSize = False
+          Caption = '1896 MHz'
+          EllipsisPosition = epEndEllipsis
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 6381921
+          Font.Height = -10
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
+          Transparent = True
+        end
+        object PbCpu: TPaintBox
+          Left = 14
+          Top = 171
+          Width = 88
+          Height = 6
+          ParentShowHint = False
+          ShowHint = True
+          OnPaint = BarraPaint
+        end
         object PbTemperatura: TPaintBox
-          Left = 20
-          Top = 148
-          Width = 72
-          Height = 72
+          Left = 24
+          Top = 180
+          Width = 64
+          Height = 52
           ParentShowHint = False
           ShowHint = True
           OnPaint = TemperaturaPaint
         end
+        object PbIcoTemp: TPaintBox
+          Tag = 3
+          Left = 19
+          Top = 235
+          Width = 10
+          Height = 22
+          OnPaint = IconePaint
+        end
         object LbTempTitulo: TLabel
-          Left = 11
-          Top = 222
-          Width = 90
+          Left = 28
+          Top = 234
+          Width = 74
           Height = 15
           Alignment = taCenter
           AutoSize = False
@@ -2753,9 +2840,9 @@ object MainForm: TMainForm
           Transparent = True
         end
         object LbTempInfo: TLabel
-          Left = 11
-          Top = 237
-          Width = 90
+          Left = 28
+          Top = 248
+          Width = 74
           Height = 14
           Alignment = taCenter
           AutoSize = False
@@ -2769,15 +2856,23 @@ object MainForm: TMainForm
           ParentFont = False
           Transparent = True
         end
-        object LbRam: TLabel
+        object PbIcoRam: TPaintBox
+          Tag = 2
           Left = 112
+          Top = 147
+          Width = 20
+          Height = 13
+          OnPaint = IconePaint
+        end
+        object LbRam: TLabel
+          Left = 135
           Top = 145
           Width = 85
           Height = 15
           Caption = 'Mem'#243'ria (RAM)'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 1776411
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
@@ -2794,7 +2889,7 @@ object MainForm: TMainForm
           EllipsisPosition = epEndEllipsis
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 946190
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Segoe UI Semibold'
           Font.Style = []
           ParentFont = False
@@ -2817,7 +2912,7 @@ object MainForm: TMainForm
           EllipsisPosition = epEndEllipsis
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 6381921
-          Font.Height = -11
+          Font.Height = -10
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
@@ -2831,7 +2926,7 @@ object MainForm: TMainForm
           Caption = 'Pagina'#231#227'o (SWAP)'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 1776411
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
@@ -2848,7 +2943,7 @@ object MainForm: TMainForm
           EllipsisPosition = epEndEllipsis
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 946190
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Segoe UI Semibold'
           Font.Style = []
           ParentFont = False
@@ -2871,7 +2966,7 @@ object MainForm: TMainForm
           EllipsisPosition = epEndEllipsis
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 6381921
-          Font.Height = -11
+          Font.Height = -10
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
@@ -2885,7 +2980,7 @@ object MainForm: TMainForm
           Caption = 'RAM + SWAP'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 1776411
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
@@ -2902,7 +2997,7 @@ object MainForm: TMainForm
           EllipsisPosition = epEndEllipsis
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 946190
-          Font.Height = -12
+          Font.Height = -11
           Font.Name = 'Segoe UI Semibold'
           Font.Style = []
           ParentFont = False
@@ -2925,7 +3020,7 @@ object MainForm: TMainForm
           EllipsisPosition = epEndEllipsis
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 6381921
-          Font.Height = -11
+          Font.Height = -10
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
@@ -3021,7 +3116,7 @@ object MainForm: TMainForm
           Tag = 106
           Left = 0
           Top = 0
-          Width = 65
+          Width = 52
           Height = 40
           Hint = 'Processos em execu'#231#227'o'
           BevelOuter = bvNone
@@ -3035,7 +3130,7 @@ object MainForm: TMainForm
           object LbAtProcessosIco: TLabel
             Left = 0
             Top = 4
-            Width = 65
+            Width = 52
             Height = 20
             Alignment = taCenter
             AutoSize = False
@@ -3053,7 +3148,7 @@ object MainForm: TMainForm
           object LbAtProcessos: TLabel
             Left = 0
             Top = 22
-            Width = 65
+            Width = 52
             Height = 14
             Alignment = taCenter
             AutoSize = False
@@ -3070,9 +3165,9 @@ object MainForm: TMainForm
         end
         object PnAtBloquear: TPanel
           Tag = 106
-          Left = 70
+          Left = 56
           Top = 0
-          Width = 65
+          Width = 52
           Height = 40
           Hint = 'Bloquear o computador'
           BevelOuter = bvNone
@@ -3086,7 +3181,7 @@ object MainForm: TMainForm
           object LbAtBloquearIco: TLabel
             Left = 0
             Top = 4
-            Width = 65
+            Width = 52
             Height = 20
             Alignment = taCenter
             AutoSize = False
@@ -3104,7 +3199,7 @@ object MainForm: TMainForm
           object LbAtBloquear: TLabel
             Left = 0
             Top = 22
-            Width = 65
+            Width = 52
             Height = 14
             Alignment = taCenter
             AutoSize = False
@@ -3121,9 +3216,9 @@ object MainForm: TMainForm
         end
         object PnAtPowerShell: TPanel
           Tag = 106
-          Left = 141
+          Left = 112
           Top = 0
-          Width = 65
+          Width = 52
           Height = 40
           Hint = 'Abrir o PowerShell'
           BevelOuter = bvNone
@@ -3137,7 +3232,7 @@ object MainForm: TMainForm
           object LbAtPowerShellIco: TLabel
             Left = 0
             Top = 4
-            Width = 65
+            Width = 52
             Height = 20
             Alignment = taCenter
             AutoSize = False
@@ -3155,7 +3250,7 @@ object MainForm: TMainForm
           object LbAtPowerShell: TLabel
             Left = 0
             Top = 22
-            Width = 65
+            Width = 52
             Height = 14
             Alignment = taCenter
             AutoSize = False
@@ -3170,11 +3265,62 @@ object MainForm: TMainForm
             Transparent = True
           end
         end
+        object PnAtPrompt: TPanel
+          Tag = 106
+          Left = 168
+          Top = 0
+          Width = 52
+          Height = 40
+          Hint = 'Abrir o Prompt de Comando'
+          BevelOuter = bvNone
+          Color = 16514043
+          ParentBackground = False
+          ParentShowHint = False
+          ShowCaption = False
+          ShowHint = True
+          TabOrder = 3
+          OnClick = Dos1Click
+          object LbAtPromptIco: TLabel
+            Left = 0
+            Top = 4
+            Width = 52
+            Height = 20
+            Alignment = taCenter
+            AutoSize = False
+            Caption = 'C:\>'
+            EllipsisPosition = epEndEllipsis
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = 1776411
+            Font.Height = -12
+            Font.Name = 'Consolas'
+            Font.Style = [fsBold]
+            ParentFont = False
+            Transparent = True
+            Layout = tlCenter
+          end
+          object LbAtPrompt: TLabel
+            Left = 0
+            Top = 22
+            Width = 52
+            Height = 14
+            Alignment = taCenter
+            AutoSize = False
+            Caption = 'Prompt'
+            EllipsisPosition = epEndEllipsis
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = 1776411
+            Font.Height = -10
+            Font.Name = 'Segoe UI'
+            Font.Style = []
+            ParentFont = False
+            Transparent = True
+          end
+        end
         object PnAtExecutar: TPanel
           Tag = 106
-          Left = 211
+          Left = 224
           Top = 0
-          Width = 65
+          Width = 52
           Height = 40
           Hint = 'Executar programa'
           BevelOuter = bvNone
@@ -3183,12 +3329,12 @@ object MainForm: TMainForm
           ParentShowHint = False
           ShowCaption = False
           ShowHint = True
-          TabOrder = 3
+          TabOrder = 4
           OnClick = Executar1Click
           object LbAtExecutarIco: TLabel
             Left = 0
             Top = 4
-            Width = 65
+            Width = 52
             Height = 20
             Alignment = taCenter
             AutoSize = False
@@ -3206,7 +3352,7 @@ object MainForm: TMainForm
           object LbAtExecutar: TLabel
             Left = 0
             Top = 22
-            Width = 65
+            Width = 52
             Height = 14
             Alignment = taCenter
             AutoSize = False
